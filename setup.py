@@ -5,7 +5,7 @@ with open('README.md', 'r') as f:
 version = '0.0.0'
 setup(
     name='tweetnlp',
-    packages=find_packages(exclude=["asset", "examples", "static", "templates", "tests"]),
+    packages=find_packages(exclude=["asset", "tests"]),
     version=version,
     license='MIT',
     description='TBA',
@@ -26,7 +26,14 @@ setup(
     ],
     include_package_data=True,
     test_suite='tests',
-    install_requires=[],
+    install_requires=[
+        'allennlp',
+        'scipy',
+        'numpy',
+        'seqeval',
+        'transformers',
+        'torch'
+    ],
     python_requires='>=3.6',
     entry_points={
         'console_scripts': [],
