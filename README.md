@@ -80,3 +80,11 @@ model.ner('Jacob Collier is a Grammy-awarded English artist from London.')  # Or
         {'type': 'location', 'entity': ['London.'], 'position': [8], 'probability': [0.9398059248924255]}]
 }
 ```
+
+- ***Sentence Embedding***
+
+```python
+model = tweetnlp.load('sentence_embedding')  # Or `model = tweetnlp.SentenceEmbedding()` 
+model.embedding("How many more days until opening day? 😩")  # Or `model.predict`
+```
+
