@@ -28,9 +28,9 @@ setup(
     test_suite='tests',
     install_requires=[
         'allennlp',
-        'scipy',
+        # 'scipy',
         'numpy',
-        'seqeval',
+        # 'seqeval',
         'transformers',
         'sentence_transformers',
         'torch'

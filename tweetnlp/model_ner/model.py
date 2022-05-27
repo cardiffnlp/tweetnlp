@@ -4,13 +4,13 @@ import json
 import logging
 import pickle
 
-from tqdm import tqdm
-import numpy as np
-from scipy.stats import bootstrap
+# from tqdm import tqdm
+# import numpy as np
+# from scipy.stats import bootstrap
 
 from allennlp.modules import ConditionalRandomField
 from allennlp.modules.conditional_random_field import allowed_transitions
-from seqeval.metrics import f1_score, precision_score, recall_score, classification_report
+# from seqeval.metrics import f1_score, precision_score, recall_score, classification_report
 
 import os
 import re
@@ -39,92 +39,92 @@ def pickle_load(path: str):
         return pickle.load(fp)
 
 
-def f1_with_ci(label_list,
-               pred_list,
-               random_seed: int = 0,
-               n_resamples: int = 1000,
-               confidence_level: List = None,
-               return_ci: bool = False,
-               average='macro'):
-    """ F1 with bootstrap CI (data.shape == (n_sample, 2)) """
-    data = np.array(list(zip(pred_list, label_list)), dtype=object)
+# def f1_with_ci(label_list,
+#                pred_list,
+#                random_seed: int = 0,
+#                n_resamples: int = 1000,
+#                confidence_level: List = None,
+#                return_ci: bool = False,
+#                average='macro'):
+#     """ F1 with bootstrap CI (data.shape == (n_sample, 2)) """
+#     data = np.array(list(zip(pred_list, label_list)), dtype=object)
+#
+#     def get_f1(xy, axis=None):
+#         assert len(xy.shape) in [2, 3], xy.shape
+#         prediction = xy[0]
+#         label = xy[1]
+#         if axis == -1 and len(xy.shape) == 3:
+#             assert average is not None
+#             tmp = []
+#             for i in tqdm(list(range(len(label)))):
+#                 tmp.append(f1_score(label[i, :], prediction[i, :], average=average))
+#             return np.array(tmp)
+#             # return np.array([f1_score(label[i, :], prediction[i, :], average=average)
+#             #                  for i in range(len(label))])
+#         assert average is not None
+#         return f1_score(label, prediction, average=average)
+#
+#     confidence_level = confidence_level if confidence_level is not None else [90, 95]
+#     mean_score = get_f1(data.T)
+#     ci = {}
+#     if return_ci:
+#         for c in confidence_level:
+#             logging.debug(f'computing confidence interval: {c}')
+#             res = bootstrap((data,),
+#                             get_f1,
+#                             confidence_level=c * 0.01,
+#                             method='percentile',
+#                             n_resamples=n_resamples,
+#                             random_state=np.random.default_rng(random_seed))
+#             ci[str(c)] = [res.confidence_interval.low, res.confidence_interval.high]
+#     return mean_score, ci
 
-    def get_f1(xy, axis=None):
-        assert len(xy.shape) in [2, 3], xy.shape
-        prediction = xy[0]
-        label = xy[1]
-        if axis == -1 and len(xy.shape) == 3:
-            assert average is not None
-            tmp = []
-            for i in tqdm(list(range(len(label)))):
-                tmp.append(f1_score(label[i, :], prediction[i, :], average=average))
-            return np.array(tmp)
-            # return np.array([f1_score(label[i, :], prediction[i, :], average=average)
-            #                  for i in range(len(label))])
-        assert average is not None
-        return f1_score(label, prediction, average=average)
 
-    confidence_level = confidence_level if confidence_level is not None else [90, 95]
-    mean_score = get_f1(data.T)
-    ci = {}
-    if return_ci:
-        for c in confidence_level:
-            logging.debug(f'computing confidence interval: {c}')
-            res = bootstrap((data,),
-                            get_f1,
-                            confidence_level=c * 0.01,
-                            method='percentile',
-                            n_resamples=n_resamples,
-                            random_state=np.random.default_rng(random_seed))
-            ci[str(c)] = [res.confidence_interval.low, res.confidence_interval.high]
-    return mean_score, ci
-
-
-def span_f1(pred_list: List,
-            label_list: List,
-            label2id: Dict,
-            span_detection_mode: bool = False,
-            return_ci: bool = False):
-
-    if span_detection_mode:
-        return_ci = False
-
-        def convert_to_binary_mask(entity_label):
-            if entity_label == 'O':
-                return entity_label
-            prefix = entity_label.split('-')[0]  # B or I
-            return '{}-entity'.format(prefix)
-
-        label_list = [[convert_to_binary_mask(_i) for _i in i] for i in label_list]
-        pred_list = [[convert_to_binary_mask(_i) for _i in i] for i in pred_list]
-
-    # compute metrics
-    logging.debug('\n{}'.format(classification_report(label_list, pred_list)))
-    m_micro, ci_micro = f1_with_ci(label_list, pred_list, average='micro', return_ci=return_ci)
-    m_macro, ci_macro = f1_with_ci(label_list, pred_list, average='macro', return_ci=return_ci)
-    metric = {
-        "micro/f1": m_micro,
-        "micro/f1_ci": ci_micro,
-        "micro/recall": recall_score(label_list, pred_list, average='micro'),
-        "micro/precision": precision_score(label_list, pred_list, average='micro'),
-        "macro/f1": m_macro,
-        "macro/f1_ci": ci_macro,
-        "macro/recall": recall_score(label_list, pred_list, average='macro'),
-        "macro/precision": precision_score(label_list, pred_list, average='macro'),
-    }
-    target_names = sorted([k.replace('B-', '') for k in label2id.keys() if k.startswith('B-')])
-    if not span_detection_mode:
-        metric["per_entity_metric"] = {}
-        for t in target_names:
-            _label_list = [[_i if _i.endswith(t) else 'O' for _i in i] for i in label_list]
-            _pred_list = [[_i if _i.endswith(t) else 'O' for _i in i] for i in pred_list]
-            m, ci = f1_with_ci(_label_list, _pred_list, return_ci=return_ci)
-            metric["per_entity_metric"][t] = {
-                "f1": m,
-                "f1_ci": ci,
-                "precision": precision_score(_label_list, _pred_list),
-                "recall": recall_score(_label_list, _pred_list)}
-    return metric
+# def span_f1(pred_list: List,
+#             label_list: List,
+#             label2id: Dict,
+#             span_detection_mode: bool = False,
+#             return_ci: bool = False):
+#
+#     if span_detection_mode:
+#         return_ci = False
+#
+#         def convert_to_binary_mask(entity_label):
+#             if entity_label == 'O':
+#                 return entity_label
+#             prefix = entity_label.split('-')[0]  # B or I
+#             return '{}-entity'.format(prefix)
+#
+#         label_list = [[convert_to_binary_mask(_i) for _i in i] for i in label_list]
+#         pred_list = [[convert_to_binary_mask(_i) for _i in i] for i in pred_list]
+#
+#     # compute metrics
+#     logging.debug('\n{}'.format(classification_report(label_list, pred_list)))
+#     m_micro, ci_micro = f1_with_ci(label_list, pred_list, average='micro', return_ci=return_ci)
+#     m_macro, ci_macro = f1_with_ci(label_list, pred_list, average='macro', return_ci=return_ci)
+#     metric = {
+#         "micro/f1": m_micro,
+#         "micro/f1_ci": ci_micro,
+#         "micro/recall": recall_score(label_list, pred_list, average='micro'),
+#         "micro/precision": precision_score(label_list, pred_list, average='micro'),
+#         "macro/f1": m_macro,
+#         "macro/f1_ci": ci_macro,
+#         "macro/recall": recall_score(label_list, pred_list, average='macro'),
+#         "macro/precision": precision_score(label_list, pred_list, average='macro'),
+#     }
+#     target_names = sorted([k.replace('B-', '') for k in label2id.keys() if k.startswith('B-')])
+#     if not span_detection_mode:
+#         metric["per_entity_metric"] = {}
+#         for t in target_names:
+#             _label_list = [[_i if _i.endswith(t) else 'O' for _i in i] for i in label_list]
+#             _pred_list = [[_i if _i.endswith(t) else 'O' for _i in i] for i in pred_list]
+#             m, ci = f1_with_ci(_label_list, _pred_list, return_ci=return_ci)
+#             metric["per_entity_metric"][t] = {
+#                 "f1": m,
+#                 "f1_ci": ci,
+#                 "precision": precision_score(_label_list, _pred_list),
+#                 "recall": recall_score(_label_list, _pred_list)}
+#     return metric
 
 
 def decode_ner_tags(tag_sequence, input_sequence, probability_sequence=None):
