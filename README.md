@@ -7,15 +7,68 @@
 All you need to understand Twitter is `tweetnlp`!
 
 ## Get Started
+
+Install TweetNLP with 
 ```shell
 pip install tweetnlp
 ```
 
-## Prediction
+and get started with 
+
+```python
+import tweetnlp
+```
+
+
+## Tweet/Sentence Classification
+
+- ***Sentiment Analysis***
+
+```python
+model = tweetnlp.load('sentiment')  # Or `model = tweetnlp.Sentiment()` 
+model.sentiment("How many more days until opening day? 😩")  # Or `model.predict`
+```
+
+- ***Irony Detection***
+
+```python
+model = tweetnlp.load('irony')  # Or `model = tweetnlp.Irony()` 
+model.irony('If you wanna look like a badass, have drama on social media')  # Or `model.predict`
+```
+
+- ***Hate Detection***
+
+```python
+model = tweetnlp.load('hate')  # Or `model = tweetnlp.Hate()` 
+model.hate('Whoever just unfollowed me you a bitch')  # Or `model.predict`
+```
+
+- ***Offensive Detection***
+
+```python
+model = tweetnlp.load('offensive')  # Or `model = tweetnlp.Offensive()` 
+model.offensive("All two of them taste like ass. ")  # Or `model.predict`
+```
+
+- ***Emoji Prediction***
+
+```python
+model = tweetnlp.load('emoji')  # Or `model = tweetnlp.Emoji()` 
+model.emoji('Beautiful sunset last night from the pontoon @ Tupper Lake, New York')  # Or `model.predict`
+```
+
+- ***Emotion Analysis***
+
+```python
+model = tweetnlp.load('emotion')  # Or `model = tweetnlp.Emotion()` 
+model.emotion('I love swimming for the same reason I love meditating...the feeling of weightlessness.')  # Or `model.predict`
+```
+
+## Information Extraction
+
 - ***Named Entity Recognition***
 
 ```python3
-import tweetnlp 
 model = tweetnlp.load('ner')  # Or `model = tweetnlp.NER()` 
 model.ner('Jacob Collier is a Grammy-awarded English artist from London.')  # Or `model.predict`
 >>> {
@@ -27,52 +80,3 @@ model.ner('Jacob Collier is a Grammy-awarded English artist from London.')  # Or
         {'type': 'location', 'entity': ['London.'], 'position': [8], 'probability': [0.9398059248924255]}]
 }
 ```
-
-- ***Sentiment Analysis***
-
-```python
-import tweetnlp 
-model = tweetnlp.load('sentiment')  # Or `model = tweetnlp.Sentiment()` 
-model.sentiment("How many more days until opening day? 😩")  # Or `model.predict`
-```
-
-- ***Irony Detection***
-
-```python
-import tweetnlp 
-model = tweetnlp.load('irony')  # Or `model = tweetnlp.Irony()` 
-model.irony('If you wanna look like a badass, have drama on social media')  # Or `model.predict`
-```
-
-- ***Hate Detection***
-
-```python
-import tweetnlp 
-model = tweetnlp.load('hate')  # Or `model = tweetnlp.Hate()` 
-model.hate('Whoever just unfollowed me you a bitch')  # Or `model.predict`
-```
-
-- ***Offensive Detection***
-
-```python
-import tweetnlp 
-model = tweetnlp.load('offensive')  # Or `model = tweetnlp.Offensive()` 
-model.offensive("All two of them taste like ass. ")  # Or `model.predict`
-```
-
-- ***Emoji Prediction***
-
-```python
-import tweetnlp 
-model = tweetnlp.load('emoji')  # Or `model = tweetnlp.Emoji()` 
-model.emoji('Beautiful sunset last night from the pontoon @ Tupper Lake, New York')  # Or `model.predict`
-```
-
-- ***Emotion Analysis***
-
-```python
-import tweetnlp 
-model = tweetnlp.load('emotion')  # Or `model = tweetnlp.Emotion()` 
-model.emotion('I love swimming for the same reason I love meditating...the feeling of weightlessness.')  # Or `model.predict`
-```
-
