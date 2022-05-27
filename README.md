@@ -88,3 +88,10 @@ model = tweetnlp.load('sentence_embedding')  # Or `model = tweetnlp.SentenceEmbe
 model.embedding("How many more days until opening day? 😩")  # Or `model.predict`
 ```
 
+## Language Model
+- ***Masked Language Model***
+
+```python
+model = tweetnlp.load('language_model')  # Or `model = tweetnlp.LanguageModel()` 
+model.mask_prediction("How many more <mask> until opening day? 😩")  # Or `model.predict`
+```
