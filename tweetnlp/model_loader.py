@@ -2,6 +2,8 @@ import logging
 
 from .model_ner.model import NER
 from .model_text_classification.model import Sentiment, Offensive, Irony, Hate, Emotion, Emoji
+from .model_mlm.model import LanguageModel
+from .model_sentence_embedding.model import SentenceEmbedding
 
 TASK_MODEL_CLASS = {
     'ner': NER,
@@ -10,7 +12,9 @@ TASK_MODEL_CLASS = {
     'irony': Irony,
     'hate': Hate,
     'emotion': Emotion,
-    'emoji': Emoji
+    'emoji': Emoji,
+    'language_model': LanguageModel,
+    'sentence_embedding': SentenceEmbedding
 }
 
 

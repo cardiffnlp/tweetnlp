@@ -327,7 +327,7 @@ class NER:
         self.model.to(self.device)
         if self.crf_layer is not None:
             self.crf_layer.to(self.device)
-        logging.debug('{} GPUs are in use'.format(torch.cuda.device_count()))
+        logging.debug(f'{torch.cuda.device_count()} GPUs are in use')
 
         # load pre processor
         if self.crf_layer is not None:
@@ -451,35 +451,36 @@ class NER:
             ind = 0
 
             inputs_list = []
-            for i in loader:
-                if not return_loader:
-                    i = {k: torch.unsqueeze(v, 0) for k, v in i.items()}
-                label = i.pop('labels').cpu().tolist()
-                pred, prob = self.encode_to_prediction(i)
-                assert len(label) == len(pred) == len(prob), str([len(label), len(pred), len(prob)])
-                input_ids = i.pop('input_ids').cpu().tolist()
-                for _i, _p, _prob, _l in zip(input_ids, pred, prob, label):
-                    assert len(_i) == len(_p) == len(_l)
-                    tmp = [(__p, __l, __prob) for __p, __l, __prob in zip(_p, _l, _prob) if __l != PAD_TOKEN_LABEL_ID]
-                    tmp_pred = list(list(zip(*tmp))[0])
-                    tmp_label = list(list(zip(*tmp))[1])
-                    tmp_prob = list(list(zip(*tmp))[2])
-                    if len(tmp_label) != len(labels[ind]):
-                        if len(tmp_label) < len(labels[ind]):
-                            logging.debug('found sequence possibly more than max_length')
-                            logging.debug('{}: \n\t - model loader: {}\n\t - label: {}'.format(ind, tmp_label, labels[ind]))
-                            tmp_pred = tmp_pred + [self.label2id['O']] * (len(labels[ind]) - len(tmp_label))
-                            tmp_prob = tmp_prob + [0.0] * (len(labels[ind]) - len(tmp_label))
-                        else:
-                            raise ValueError(
-                                '{}: \n\t - model loader: {}\n\t - label: {}'.format(ind, tmp_label, labels[ind]))
-                    assert len(tmp_pred) == len(labels[ind])
-                    assert len(inputs[ind]) == len(tmp_pred)
-                    pred_list.append(tmp_pred)
-                    label_list.append(labels[ind])
-                    inputs_list.append(inputs[ind])
-                    prob_list.append(tmp_prob)
-                    ind += 1
+            with torch.no_grad():
+                for i in loader:
+                    if not return_loader:
+                        i = {k: torch.unsqueeze(v, 0) for k, v in i.items()}
+                    label = i.pop('labels').cpu().tolist()
+                    pred, prob = self.encode_to_prediction(i)
+                    assert len(label) == len(pred) == len(prob), str([len(label), len(pred), len(prob)])
+                    input_ids = i.pop('input_ids').cpu().tolist()
+                    for _i, _p, _prob, _l in zip(input_ids, pred, prob, label):
+                        assert len(_i) == len(_p) == len(_l)
+                        tmp = [(__p, __l, __prob) for __p, __l, __prob in zip(_p, _l, _prob) if __l != PAD_TOKEN_LABEL_ID]
+                        tmp_pred = list(list(zip(*tmp))[0])
+                        tmp_label = list(list(zip(*tmp))[1])
+                        tmp_prob = list(list(zip(*tmp))[2])
+                        if len(tmp_label) != len(labels[ind]):
+                            if len(tmp_label) < len(labels[ind]):
+                                logging.debug('found sequence possibly more than max_length')
+                                logging.debug('{}: \n\t - model loader: {}\n\t - label: {}'.format(ind, tmp_label, labels[ind]))
+                                tmp_pred = tmp_pred + [self.label2id['O']] * (len(labels[ind]) - len(tmp_label))
+                                tmp_prob = tmp_prob + [0.0] * (len(labels[ind]) - len(tmp_label))
+                            else:
+                                raise ValueError(
+                                    '{}: \n\t - model loader: {}\n\t - label: {}'.format(ind, tmp_label, labels[ind]))
+                        assert len(tmp_pred) == len(labels[ind])
+                        assert len(inputs[ind]) == len(tmp_pred)
+                        pred_list.append(tmp_pred)
+                        label_list.append(labels[ind])
+                        inputs_list.append(inputs[ind])
+                        prob_list.append(tmp_prob)
+                        ind += 1
             label_list = [[self.id2label[__l] for __l in _l] for _l in label_list]
             pred_list = [[self.id2label[__p] for __p in _p] for _p in pred_list]
             if cache_file_prediction is not None:

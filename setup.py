@@ -32,6 +32,7 @@ setup(
         'numpy',
         'seqeval',
         'transformers',
+        'sentence_transformers',
         'torch'
     ],
     python_requires='>=3.6',

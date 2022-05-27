@@ -1,10 +1,12 @@
 """ Simple interface for CardiffNLP twitter models. """
+import logging
 import csv
 import json
 import os
 import urllib.request
 from typing import List, Dict
 
+import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoConfig
 
 DEFAULT_CACHE_DIR = f"{os.path.expanduser('~')}/.cache/tweetnlp/classification"
@@ -63,8 +65,15 @@ class Classifier:
             self.config, self.tokenizer, self.model = load_model(model_name, local_files_only=True)
         self.max_length = max_length
         self.label_to_id = label_to_id
+        # GPU setup
+        self.device = 'cuda' if torch.cuda.device_count() > 0 else 'cpu'
+        self.parallel = torch.cuda.device_count() > 1
+        if self.parallel:
+            self.model = torch.nn.DataParallel(self.model)
+        logging.debug(f'{torch.cuda.device_count()} GPUs are in use')
 
     def predict(self, text: str or List, batch_size: int = None):
+        self.model.eval()
         single_input_flag = False
         if type(text) is str:
             text = [text]
@@ -73,17 +82,25 @@ class Classifier:
         if batch_size is None:
             batch_size = len(text)
         _index = list(range(0, len(text), batch_size)) + [len(text) + 1]
-        output_list = []
-        for i in range(len(_index) - 1):
-            tmp_text = text[_index[i]: _index[i+1]]
-            encoded_input = self.tokenizer.batch_encode_plus(tmp_text, max_length=self.max_length, return_tensors='pt')
-            output = self.model(**encoded_input)
-            pred = output.logits.argmax(-1).cpu().tolist()
-            output_list += pred
+        predictions = []
+        probs = []
+        with torch.no_grad():
+            for i in range(len(_index) - 1):
+                tmp_text = text[_index[i]: _index[i+1]]
+                encoded_input = self.tokenizer.batch_encode_plus(
+                    tmp_text,
+                    max_length=self.max_length,
+                    return_tensors='pt',
+                    padding=True,
+                    truncation=True)
+                output = self.model(**{k: v.to(self.device) for k, v in encoded_input.items()})
+                prob = torch.softmax(output.logits, -1).cpu()
+                probs += prob.max(-1)[0].tolist()
+                predictions += prob.argmax(-1).tolist()
+            out = [{'label': self.label_to_id[str(p)], 'probability': pr} for pr, p in zip(probs, predictions)]
         if single_input_flag:
-            return self.label_to_id[str(output_list[0])]
-        else:
-            return [self.label_to_id[str(p)] for p in output_list]
+            return out[0]
+        return out
 
 
 class Sentiment:
