@@ -9,8 +9,8 @@ The python library `tweetnlp` provides a collection of useful tools to analyze/u
 emoji prediction, and named-entity recognition.
 
 Resources:
-- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu?usp=sharing)
-- [TweetNLP online demo](https://tweetnlp.org/demo/)
+- Quick Tour with Colab Notebook: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu?usp=sharing)
+- Play with TweetNLP Online Demo: [link](https://tweetnlp.org/demo/)
 
 
 ## Get Started
@@ -26,10 +26,11 @@ import tweetnlp
 ```
 
 ## Tweet/Sentence Classification
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu#scrollTo=KAZYjeskBqL4&line=4&uniqifier=1)
+
 The classification module consists of six different tasks (Sentiment Analysis, Irony Detection, Hate Detection, Offensive Detection, Emoji Prediction, and Emotion Analysis).
 In each example, the model is instantiated by `tweetnlp.load("task-name")`, and run the prediction by giving a text or a list of 
 texts.
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu#scrollTo=KAZYjeskBqL4&line=4&uniqifier=1)
 
 
 - ***Sentiment Analysis***
@@ -81,10 +82,11 @@ model.emotion('I love swimming for the same reason I love meditating...the feeli
 ```
 
 ## Information Extraction
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu#scrollTo=WeREiLEjBlrj&line=3&uniqifier=1)
+
 The information extraction module consists of named-entity recognition (NER) model specifically trained for tweets.
 The model is instantiated by `tweetnlp.load("ner")`, and run the prediction by giving a text or a list of texts.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu#scrollTo=WeREiLEjBlrj&line=3&uniqifier=1)
 
 - ***Named Entity Recognition***
 
@@ -102,9 +104,9 @@ model.ner('Jacob Collier is a Grammy-awarded English artist from London.')  # Or
 ```
 
 ## Language Modeling
-Masked language model predicts masked token in the given sentence. This is instantiated by `tweetnlp.load('language_model')`, and run the prediction by giving a text or a list of texts. Please make sure that each text has `<mask>` token, that is the objective of the model to predict.
-
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu#scrollTo=COOoZHVAFCIG&line=2&uniqifier=1)
+
+Masked language model predicts masked token in the given sentence. This is instantiated by `tweetnlp.load('language_model')`, and run the prediction by giving a text or a list of texts. Please make sure that each text has `<mask>` token, that is the objective of the model to predict.
 
 ```python
 model = tweetnlp.load('language_model')  # Or `model = tweetnlp.LanguageModel()` 
