@@ -29,6 +29,11 @@ __all__ = 'NER'
 PAD_TOKEN_LABEL_ID = nn.CrossEntropyLoss().ignore_index
 
 
+def user_name_handler(_string):
+    pass
+
+
+
 def pickle_save(obj, path: str):
     with open(path, "wb") as fp:
         pickle.dump(obj, fp)

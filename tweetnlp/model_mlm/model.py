@@ -1,4 +1,5 @@
 """ Simple interface for CardiffNLP masked language models. """
+# TODO: Add preprocessing to handle the twitter username
 import logging
 import re
 from typing import List

@@ -1,5 +1,6 @@
 """ Sentence embedding """
-#TODO: Add dense search with sentence-transformers
+# TODO: Add dense search with sentence-transformers
+# TODO: Add preprocessing to handle the twitter username
 from typing import List
 
 import torch

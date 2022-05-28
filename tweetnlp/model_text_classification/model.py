@@ -1,4 +1,5 @@
 """ Simple interface for CardiffNLP twitter models. """
+# TODO: Add preprocessing to handle the twitter username
 import logging
 import csv
 import json

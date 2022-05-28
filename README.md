@@ -4,7 +4,14 @@
 [![PyPI status](https://img.shields.io/pypi/status/tweetnlp.svg)](https://pypi.python.org/pypi/tweetnlp/)
 
 # TweetNLP
-All you need to understand Twitter is `tweetnlp`!
+TweetNLP (`tweetnlp`) for all the NLP enthusiasts working on Twitter! 
+The python library `tweetnlp` provides a collection of useful tools to analyze/understand tweets such as sentiment analysis,
+emoji prediction, and named-entity recognition.
+
+Resources:
+- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu?usp=sharing)
+- [TweetNLP online demo](https://tweetnlp.org/demo/)
+
 
 ## Get Started
 
@@ -12,21 +19,25 @@ Install TweetNLP with
 ```shell
 pip install tweetnlp
 ```
-
 and get started with 
 
-```python
+```python3
 import tweetnlp
 ```
 
-
 ## Tweet/Sentence Classification
+The classification module consists of six different tasks (Sentiment Analysis, Irony Detection, Hate Detection, Offensive Detection, Emoji Prediction, and Emotion Analysis).
+In each example, the model is instantiated by `tweetnlp.load("task-name")`, and run the prediction by giving a text or a list of 
+texts.
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu#scrollTo=KAZYjeskBqL4&line=4&uniqifier=1)
+
 
 - ***Sentiment Analysis***
 
 ```python
 model = tweetnlp.load('sentiment')  # Or `model = tweetnlp.Sentiment()` 
-model.sentiment("How many more days until opening day? 😩")  # Or `model.predict`
+model.sentiment("Yes, including Medicare and social security saving👍")  # Or `model.predict`
+>>> {'label': 'positive', 'probability': 0.8018065094947815}
 ```
 
 - ***Irony Detection***
@@ -34,6 +45,7 @@ model.sentiment("How many more days until opening day? 😩")  # Or `model.predi
 ```python
 model = tweetnlp.load('irony')  # Or `model = tweetnlp.Irony()` 
 model.irony('If you wanna look like a badass, have drama on social media')  # Or `model.predict`
+>>> {'label': 'irony', 'probability': 0.9160911440849304}
 ```
 
 - ***Hate Detection***
@@ -41,6 +53,7 @@ model.irony('If you wanna look like a badass, have drama on social media')  # Or
 ```python
 model = tweetnlp.load('hate')  # Or `model = tweetnlp.Hate()` 
 model.hate('Whoever just unfollowed me you a bitch')  # Or `model.predict`
+>>> {'label': 'not-hate', 'probability': 0.7263831496238708}
 ```
 
 - ***Offensive Detection***
@@ -48,13 +61,15 @@ model.hate('Whoever just unfollowed me you a bitch')  # Or `model.predict`
 ```python
 model = tweetnlp.load('offensive')  # Or `model = tweetnlp.Offensive()` 
 model.offensive("All two of them taste like ass. ")  # Or `model.predict`
+>>> {'label': 'offensive', 'probability': 0.8600459098815918}
 ```
 
 - ***Emoji Prediction***
 
 ```python
 model = tweetnlp.load('emoji')  # Or `model = tweetnlp.Emoji()` 
-model.emoji('Beautiful sunset last night from the pontoon @ Tupper Lake, New York')  # Or `model.predict`
+model.emoji('Beautiful sunset last night from the pontoon @TupperLakeNY')  # Or `model.predict`
+>>> {'label': '😊', 'probability': 0.3179638981819153}
 ```
 
 - ***Emotion Analysis***
@@ -62,9 +77,14 @@ model.emoji('Beautiful sunset last night from the pontoon @ Tupper Lake, New Yor
 ```python
 model = tweetnlp.load('emotion')  # Or `model = tweetnlp.Emotion()` 
 model.emotion('I love swimming for the same reason I love meditating...the feeling of weightlessness.')  # Or `model.predict`
+>>> {'label': 'joy', 'probability': 0.7345258593559265}
 ```
 
 ## Information Extraction
+The information extraction module consists of named-entity recognition (NER) model specifically trained for tweets.
+The model is instantiated by `tweetnlp.load("ner")`, and run the prediction by giving a text or a list of texts.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu#scrollTo=WeREiLEjBlrj&line=3&uniqifier=1)
 
 - ***Named Entity Recognition***
 
@@ -81,17 +101,25 @@ model.ner('Jacob Collier is a Grammy-awarded English artist from London.')  # Or
 }
 ```
 
-- ***Sentence Embedding***
+## Language Modeling
+Masked language model predicts masked token in the given sentence. This is instantiated by `tweetnlp.load('language_model')`, and run the prediction by giving a text or a list of texts. Please make sure that each text has `<mask>` token, that is the objective of the model to predict.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu#scrollTo=COOoZHVAFCIG&line=2&uniqifier=1)
+
+```python
+model = tweetnlp.load('language_model')  # Or `model = tweetnlp.LanguageModel()` 
+model.mask_prediction("How many more <mask> until opening day? 😩")  # Or `model.predict`
+```
+
+## Tweet/Sentence Embedding
 
 ```python
 model = tweetnlp.load('sentence_embedding')  # Or `model = tweetnlp.SentenceEmbedding()` 
 model.embedding("How many more days until opening day? 😩")  # Or `model.predict`
 ```
 
-## Language Model
-- ***Masked Language Model***
-
-```python
-model = tweetnlp.load('language_model')  # Or `model = tweetnlp.LanguageModel()` 
-model.mask_prediction("How many more <mask> until opening day? 😩")  # Or `model.predict`
-```
+## Reference
+- TweetEval
+- T-NER
+- TimeLM
+- etc
