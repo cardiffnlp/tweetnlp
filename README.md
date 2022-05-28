@@ -6,7 +6,8 @@
 # TweetNLP
 TweetNLP for all the NLP enthusiasts working on Twitter! 
 The python library `tweetnlp` provides a collection of useful tools to analyze/understand tweets such as sentiment analysis,
-emoji prediction, and named-entity recognition.
+emoji prediction, and named-entity recognition, powered by state-of-the-art language modeling trained on tweets.
+
 
 Resources:
 - Quick Tour with Colab Notebook: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu?usp=sharing)
