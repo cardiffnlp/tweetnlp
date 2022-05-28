@@ -4,7 +4,7 @@
 [![PyPI status](https://img.shields.io/pypi/status/tweetnlp.svg)](https://pypi.python.org/pypi/tweetnlp/)
 
 # TweetNLP
-TweetNLP (`tweetnlp`) for all the NLP enthusiasts working on Twitter! 
+TweetNLP for all the NLP enthusiasts working on Twitter! 
 The python library `tweetnlp` provides a collection of useful tools to analyze/understand tweets such as sentiment analysis,
 emoji prediction, and named-entity recognition.
 
