@@ -33,7 +33,9 @@ setup(
         # 'seqeval',
         'transformers',
         'sentence_transformers',
-        'torch'
+        'torch',
+        'gensim',
+        'gdown'
     ],
     python_requires='>=3.6',
     entry_points={
