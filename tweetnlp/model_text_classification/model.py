@@ -18,9 +18,10 @@ MODEL_LIST = {
     'irony': "cardiffnlp/twitter-roberta-base-irony",
     'offensive': "cardiffnlp/twitter-roberta-base-offensive",
     'sentiment': "cardiffnlp/twitter-roberta-base-sentiment-latest",
+    'topic_single': 'antypasd/tweet-topic-21-single',
+    'topic_multi': 'antypasd/tweet-topic-21-multi'
     # 'stance': "cardiffnlp/twitter-roberta-base-stance-climate"
 }
-
 
 def load_model(model, local_files_only: bool = False):
     config = AutoConfig.from_pretrained(model, local_files_only=local_files_only)
@@ -29,7 +30,7 @@ def load_model(model, local_files_only: bool = False):
     return config, tokenizer, model
 
 
-def download_label2dict(task):
+def download_id2label(task):
     path = f'{DEFAULT_CACHE_DIR}/id2label/{task}'
     if not os.path.exists(path):
         os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -59,13 +60,17 @@ def preprocess(text):
 
 class Classifier:
 
-    def __init__(self, model_name: str, max_length: int, label_to_id: Dict):
+    def __init__(self, model_name: str, max_length: int, id_to_label: Dict = None, multi_label: bool = False):
         try:
             self.config, self.tokenizer, self.model = load_model(model_name)
         except Exception:
             self.config, self.tokenizer, self.model = load_model(model_name, local_files_only=True)
         self.max_length = max_length
-        self.label_to_id = label_to_id
+        self.multi_label = multi_label
+        if id_to_label is None:
+            self.id_to_label = {str(v): k for k, v in self.config.label2id.items()}
+        else:
+            self.id_to_label = id_to_label
         # GPU setup
         self.device = 'cuda' if torch.cuda.device_count() > 0 else 'cpu'
         self.parallel = torch.cuda.device_count() > 1
@@ -95,52 +100,72 @@ class Classifier:
                     padding=True,
                     truncation=True)
                 output = self.model(**{k: v.to(self.device) for k, v in encoded_input.items()})
-                prob = torch.softmax(output.logits, -1).cpu()
-                probs += prob.max(-1)[0].tolist()
-                predictions += prob.argmax(-1).tolist()
-            out = [{'label': self.label_to_id[str(p)], 'probability': pr} for pr, p in zip(probs, predictions)]
+                if self.multi_label:
+                    prob = torch.sigmoid(output.logits).cpu().tolist()
+                    predictions += [[n for n, p in enumerate(_pr) if p > 0.5] for _pr in prob]
+                    probs += [{self.id_to_label[str(n)]: p for n, p in enumerate(_pr)} for _pr in prob]
+
+                else:
+                    prob = torch.softmax(output.logits, -1).cpu()
+                    probs += prob.max(-1)[0].tolist()
+                    predictions += prob.argmax(-1).tolist()
+
+            if self.multi_label:
+                out = [{'label': [self.id_to_label[str(_p)] for _p in p], 'probability': pr} for pr, p in zip(probs, predictions)]
+            else:
+                out = [{'label': self.id_to_label[str(p)], 'probability': pr} for pr, p in zip(probs, predictions)]
         if single_input_flag:
             return out[0]
         return out
 
 
+class TopicClassification:
+
+    def __init__(self, model: str = None, max_length: int = 128, single_class: bool = False):
+        if single_class:
+            self.model = Classifier(MODEL_LIST['topic_single'] if model is None else model, max_length)
+        else:
+            self.model = Classifier(MODEL_LIST['topic_multi'] if model is None else model, max_length, multi_label=True)
+        self.topic = self.predict = self.model.predict  # function alias
+
+
 class Sentiment:
 
     def __init__(self, model: str = None, max_length: int = 128):
-        self.model = Classifier(MODEL_LIST['sentiment'] if model is None else model, max_length, download_label2dict('sentiment'))
+        self.model = Classifier(MODEL_LIST['sentiment'] if model is None else model, max_length, download_id2label('sentiment'))
         self.sentiment = self.predict = self.model.predict  # function alias
 
 
 class Offensive:
 
     def __init__(self, model: str = None, max_length: int = 128):
-        self.model = Classifier(MODEL_LIST['offensive'] if model is None else model, max_length, download_label2dict('offensive'))
+        self.model = Classifier(MODEL_LIST['offensive'] if model is None else model, max_length, download_id2label('offensive'))
         self.offensive = self.predict = self.model.predict  # function alias
 
 
 class Irony:
 
     def __init__(self, model: str = None, max_length: int = 128):
-        self.model = Classifier(MODEL_LIST['irony'] if model is None else model, max_length, download_label2dict('irony'))
+        self.model = Classifier(MODEL_LIST['irony'] if model is None else model, max_length, download_id2label('irony'))
         self.irony = self.predict = self.model.predict  # function alias
 
 
 class Hate:
 
     def __init__(self, model: str = None, max_length: int = 128):
-        self.model = Classifier(MODEL_LIST['hate'] if model is None else model, max_length, download_label2dict('hate'))
+        self.model = Classifier(MODEL_LIST['hate'] if model is None else model, max_length, download_id2label('hate'))
         self.hate = self.predict = self.model.predict  # function alias
 
 
 class Emotion:
 
     def __init__(self, model: str = None, max_length: int = 128):
-        self.model = Classifier(MODEL_LIST['emotion'] if model is None else model, max_length, download_label2dict('emotion'))
+        self.model = Classifier(MODEL_LIST['emotion'] if model is None else model, max_length, download_id2label('emotion'))
         self.emotion = self.predict = self.model.predict  # function alias
 
 
 class Emoji:
 
     def __init__(self, model: str = None, max_length: int = 128):
-        self.model = Classifier(MODEL_LIST['emoji'] if model is None else model, max_length, download_label2dict('emoji'))
+        self.model = Classifier(MODEL_LIST['emoji'] if model is None else model, max_length, download_id2label('emoji'))
         self.emoji = self.predict = self.model.predict  # function alias

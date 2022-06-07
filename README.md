@@ -29,12 +29,42 @@ import tweetnlp
 ## Tweet/Sentence Classification
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu#scrollTo=KAZYjeskBqL4&line=4&uniqifier=1)
 
-The classification module consists of six different tasks (Sentiment Analysis, Irony Detection, Hate Detection, Offensive Detection, Emoji Prediction, and Emotion Analysis).
-In each example, the model is instantiated by `tweetnlp.load("task-name")`, and run the prediction by giving a text or a list of 
-texts.
+The classification module consists of seven different tasks (Topic Classification, Sentiment Analysis, Irony Detection, 
+Hate Detection, Offensive Detection, Emoji Prediction, and Emotion Analysis). In each example, the model is instantiated 
+by `tweetnlp.load("task-name")`, and run the prediction by giving a text or a list of texts.
 
+- ***Topic Classification***: This model classifies given tweet into 19 categories. As default, it returns all relevant topics to the tweet, 
+  so the output could be a list of topics. Single class model can be also loaded by  
+  `tweetnlp.load('topic_classification', single_class=True)`.
+  
+```python
+model = tweetnlp.load('topic_classification')  # Or `model = tweetnlp.TopicClassification()`
+model.sentiment("Jacob Collier is a Grammy-awarded English artist from London.")  # Or `model.predict`
+>>> {'label': ['celebrity_&_pop_culture', 'music'],
+     'probability': {
+         'arts_&_culture': 0.2698121964931488,
+         'business_&_entrepreneurs': 0.013311311602592468,
+         'celebrity_&_pop_culture': 0.9566839933395386,
+         'diaries_&_daily_life': 0.021030571311712265,
+         'family': 0.011442456394433975,
+         'fashion_&_style': 0.06922700256109238,
+         'film_tv_&_video': 0.14880894124507904,
+         'fitness_&_health': 0.019434355199337006,
+         'food_&_dining': 0.008309685625135899,
+         'gaming': 0.006225654389709234,
+         'learning_&_educational': 0.015360666438937187,
+         'music': 0.9405960440635681,
+         'news_&_social_concern': 0.428384929895401,
+         'other_hobbies': 0.0231352336704731,
+         'relationships': 0.014804207719862461,
+         'science_&_technology': 0.008933884091675282,
+         'sports': 0.006143205799162388,
+         'travel_&_adventure': 0.016946149989962578,
+         'youth_&_student_life': 0.008365697227418423}
+     }
+```
 
-- ***Sentiment Analysis***
+- ***Sentiment Analysis***: Binary classification of `positive`/`negative`.
 
 ```python
 model = tweetnlp.load('sentiment')  # Or `model = tweetnlp.Sentiment()` 
@@ -42,7 +72,7 @@ model.sentiment("Yes, including Medicare and social security saving👍")  # Or 
 >>> {'label': 'positive', 'probability': 0.8018065094947815}
 ```
 
-- ***Irony Detection***
+- ***Irony Detection***: Binary classification of whether the tweet is irony or not.
 
 ```python
 model = tweetnlp.load('irony')  # Or `model = tweetnlp.Irony()` 
@@ -50,7 +80,7 @@ model.irony('If you wanna look like a badass, have drama on social media')  # Or
 >>> {'label': 'irony', 'probability': 0.9160911440849304}
 ```
 
-- ***Hate Detection***
+- ***Hate Detection***: Binary classification of whether the tweet is hate or not.
 
 ```python
 model = tweetnlp.load('hate')  # Or `model = tweetnlp.Hate()` 
@@ -58,7 +88,7 @@ model.hate('Whoever just unfollowed me you a bitch')  # Or `model.predict`
 >>> {'label': 'not-hate', 'probability': 0.7263831496238708}
 ```
 
-- ***Offensive Detection***
+- ***Offensive Detection***: Binary classification of whether the tweet is offensive or not.
 
 ```python
 model = tweetnlp.load('offensive')  # Or `model = tweetnlp.Offensive()` 
@@ -66,7 +96,7 @@ model.offensive("All two of them taste like ass. ")  # Or `model.predict`
 >>> {'label': 'offensive', 'probability': 0.8600459098815918}
 ```
 
-- ***Emoji Prediction***
+- ***Emoji Prediction***: Predict appropriate single emoji to the tweet from 20 emojis (❤, 😍, 😂, 💕, 🔥, 😊, 😎, ✨, 💙, 😘, 📷, 🇺🇸, ☀, 💜, 😉, 💯, 😁, 🎄, 📸, 😜).	
 
 ```python
 model = tweetnlp.load('emoji')  # Or `model = tweetnlp.Emoji()` 
@@ -74,7 +104,7 @@ model.emoji('Beautiful sunset last night from the pontoon @TupperLakeNY')  # Or 
 >>> {'label': '😊', 'probability': 0.3179638981819153}
 ```
 
-- ***Emotion Analysis***
+- ***Emotion Analysis***: Predict the emotion of the tweet from four classes: `anger`/`joy`/`optimism`/`sadness`.
 
 ```python
 model = tweetnlp.load('emotion')  # Or `model = tweetnlp.Emotion()` 
