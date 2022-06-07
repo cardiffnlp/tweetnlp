@@ -8,7 +8,8 @@ from numpy import dot
 from numpy.linalg import norm
 from sentence_transformers import SentenceTransformer
 
-DEFAULT_MODEL = "cardiffnlp/twitter-roberta-base-2021-124m"
+# DEFAULT_MODEL = "cardiffnlp/twitter-roberta-base-2021-124m"
+DEFAULT_MODEL = "cambridgeltl/tweet-roberta-base-embeddings-v1"
 
 
 def cosine_similarity(v_a, v_b, eps: float = 1e-5):
