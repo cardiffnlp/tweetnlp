@@ -26,7 +26,7 @@ and get started with
 import tweetnlp
 ```
 
-## Tweet/Sentence Classification
+### Tweet/Sentence Classification
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu#scrollTo=KAZYjeskBqL4&line=4&uniqifier=1)
 
 The classification module consists of seven different tasks (Topic Classification, Sentiment Analysis, Irony Detection, 
@@ -112,7 +112,7 @@ model.emotion('I love swimming for the same reason I love meditating...the feeli
 >>> {'label': 'joy', 'probability': 0.7345258593559265}
 ```
 
-## Information Extraction
+### Information Extraction
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu#scrollTo=WeREiLEjBlrj&line=3&uniqifier=1)
 
 The information extraction module consists of named-entity recognition (NER) model specifically trained for tweets.
@@ -134,7 +134,7 @@ model.ner('Jacob Collier is a Grammy-awarded English artist from London.')  # Or
 }
 ```
 
-## Language Modeling
+### Language Modeling
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu#scrollTo=COOoZHVAFCIG&line=2&uniqifier=1)
 
 Masked language model predicts masked token in the given sentence. This is instantiated by `tweetnlp.load('language_model')`, and run the prediction by giving a text or a list of texts. Please make sure that each text has `<mask>` token, that is the objective of the model to predict.
@@ -144,7 +144,7 @@ model = tweetnlp.load('language_model')  # Or `model = tweetnlp.LanguageModel()`
 model.mask_prediction("How many more <mask> until opening day? 😩")  # Or `model.predict`
 ```
 
-## Tweet/Sentence Embedding
+### Tweet/Sentence Embedding
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu#scrollTo=MUT31bNQYTNz&line=2&uniqifier=1)
 
 Tweet embedding model produces a fixed length embedding for a tweet. The embedding represents the semantics of the tweet, and this can be used a semantic search of tweets by using the similarity in betweein the embeddings. Model is instantiated by `tweet_nlp.load('sentence_embedding')`, and run the prediction by giving a text or a list of texts.
@@ -204,8 +204,29 @@ for m, (n, s) in enumerate(sorted(sims, key=lambda x: x[1], reverse=True)[:3]):
 >>>  - similaty: 1.0036063366758512
 ```
 
-## Reference (TBA)
+## Models
+Here is a table of the default model used in each task. 
+
+| Task | Model |
+|------|-------|
+|Topic Classification     | [antypasd/tweet-topic-21-multi](https://huggingface.co/antypasd/tweet-topic-21-multi)      |
+|Sentiment Analysis       | [cardiffnlp/twitter-roberta-base-sentiment-latest](https://huggingface.co/cardiffnlp/twitter-roberta-base-sentiment-latest)      |
+|Irony Detection          | [cardiffnlp/twitter-roberta-base-irony](https://huggingface.co/cardiffnlp/twitter-roberta-base-irony)      |
+|Hate Detection           | [cardiffnlp/twitter-roberta-base-hate](https://huggingface.co/cardiffnlp/twitter-roberta-base-hate)      |
+|Offensive Detection      | [cardiffnlp/twitter-roberta-base-offensive](https://huggingface.co/cardiffnlp/twitter-roberta-base-offensive)      |
+|Emoji Prediction         | [cardiffnlp/twitter-roberta-base-emoji](https://huggingface.co/cardiffnlp/twitter-roberta-base-emoji)      |
+|Emotion Analysis         | [cardiffnlp/twitter-roberta-base-emotion](https://huggingface.co/cardiffnlp/twitter-roberta-base-emotion)      |
+|Named Entity Recognition | [asahi417/tner-t-roberta-base-dec2021-tweet](https://huggingface.co/asahi417/tner-t-roberta-base-dec2021-tweet)     |
+|Language Modeling        | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m)      |
+|Tweet Embedding          | [cambridgeltl/tweet-roberta-base-embeddings-v1](https://huggingface.co/cambridgeltl/tweet-roberta-base-embeddings-v1)      |
+
+
+To use other model from local/huggingface modelhub, one can simply provide model path/alias at the model loading.
+```python
+tweetnlp.load('task', model='model-path/alias')
+```
+
+<!-- ## Reference (TBA)
 - TweetEval
-- T-NER
 - TimeLM
-- etc
+- etc -->
