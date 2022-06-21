@@ -209,7 +209,7 @@ Here is a table of the default model used in each task.
 
 | Task | Model |
 |------|-------|
-|Topic Classification     | [antypasd/tweet-topic-21-multi](https://huggingface.co/antypasd/tweet-topic-21-multi)      |
+|Topic Classification     | [cardiffnlp/tweet-topic-21-multi](https://huggingface.co/cardiffnlp/tweet-topic-21-multi)      |
 |Sentiment Analysis       | [cardiffnlp/twitter-roberta-base-sentiment-latest](https://huggingface.co/cardiffnlp/twitter-roberta-base-sentiment-latest)      |
 |Irony Detection          | [cardiffnlp/twitter-roberta-base-irony](https://huggingface.co/cardiffnlp/twitter-roberta-base-irony)      |
 |Hate Detection           | [cardiffnlp/twitter-roberta-base-hate](https://huggingface.co/cardiffnlp/twitter-roberta-base-hate)      |
