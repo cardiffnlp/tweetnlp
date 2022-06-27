@@ -72,7 +72,7 @@ model.sentiment("Yes, including Medicare and social security saving👍")  # Or 
 >>> {'label': 'positive', 'probability': 0.8018065094947815}
 ```
 
-- ***Sentiment Analysis (Multilingual) ***: Binary classification of `positive`/`negative`.
+- ***Sentiment Analysis (Multilingual)***: Binary classification of `positive`/`negative`.
 
 ```python
 model = tweetnlp.load('sentiment_multilingual')  # Or `model = tweetnlp.SentimentMultilingual()` 
