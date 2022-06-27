@@ -10,7 +10,7 @@ emoji prediction, and named-entity recognition, powered by state-of-the-art lang
 
 
 Resources:
-- Quick Tour with Colab Notebook: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1KLMaGFLmbXWeM9eWIYgGkRZS0d85RJLu?usp=sharing)
+- Quick Tour with Colab Notebook: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp?usp=sharing)
 - Play with TweetNLP Online Demo: [link](https://tweetnlp.org/demo/)
 
 
@@ -71,6 +71,15 @@ model = tweetnlp.load('sentiment')  # Or `model = tweetnlp.Sentiment()`
 model.sentiment("Yes, including Medicare and social security saving👍")  # Or `model.predict`
 >>> {'label': 'positive', 'probability': 0.8018065094947815}
 ```
+
+- ***Sentiment Analysis (Multilingual) ***: Binary classification of `positive`/`negative`.
+
+```python
+model = tweetnlp.load('sentiment_multilingual')  # Or `model = tweetnlp.SentimentMultilingual()` 
+model.sentiment("天気が良いとやっぱり気持ち良いなあ✨")  # Or `model.predict`
+>>> {'label': 'positive', 'probability': 0.8903419971466064}
+```
+
 
 - ***Irony Detection***: Binary classification of whether the tweet is irony or not.
 
@@ -211,6 +220,7 @@ Here is a table of the default model used in each task.
 |------|-------|
 |Topic Classification     | [cardiffnlp/tweet-topic-21-multi](https://huggingface.co/cardiffnlp/tweet-topic-21-multi)      |
 |Sentiment Analysis       | [cardiffnlp/twitter-roberta-base-sentiment-latest](https://huggingface.co/cardiffnlp/twitter-roberta-base-sentiment-latest)      |
+|Sentiment Analysis (Multilingual)  | [cardiffnlp/twitter-xlm-roberta-base-sentiment](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment) |
 |Irony Detection          | [cardiffnlp/twitter-roberta-base-irony](https://huggingface.co/cardiffnlp/twitter-roberta-base-irony)      |
 |Hate Detection           | [cardiffnlp/twitter-roberta-base-hate](https://huggingface.co/cardiffnlp/twitter-roberta-base-hate)      |
 |Offensive Detection      | [cardiffnlp/twitter-roberta-base-offensive](https://huggingface.co/cardiffnlp/twitter-roberta-base-offensive)      |

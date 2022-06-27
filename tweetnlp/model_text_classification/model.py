@@ -4,12 +4,15 @@ import logging
 import csv
 import json
 import os
+import re
 import urllib.request
 from typing import List, Dict
 
 import torch
+from urlextract import URLExtract
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoConfig
 
+URLEx = URLExtract()
 DEFAULT_CACHE_DIR = f"{os.path.expanduser('~')}/.cache/tweetnlp/classification"
 MODEL_LIST = {
     'emotion': "cardiffnlp/twitter-roberta-base-emotion",
@@ -18,10 +21,11 @@ MODEL_LIST = {
     'irony': "cardiffnlp/twitter-roberta-base-irony",
     'offensive': "cardiffnlp/twitter-roberta-base-offensive",
     'sentiment': "cardiffnlp/twitter-roberta-base-sentiment-latest",
+    'sentiment_multilingual': "cardiffnlp/twitter-xlm-roberta-base-sentiment",
     'topic_single': 'antypasd/tweet-topic-21-single',
     'topic_multi': 'antypasd/tweet-topic-21-multi'
-    # 'stance': "cardiffnlp/twitter-roberta-base-stance-climate"
 }
+
 
 def load_model(model, local_files_only: bool = False):
     config = AutoConfig.from_pretrained(model, local_files_only=local_files_only)
@@ -50,12 +54,15 @@ def download_id2label(task):
 
 
 def preprocess(text):
-    new_text = []
-    for t in text.split(" "):
-        t = '@user' if t.startswith('@') and len(t) > 1 else t
-        t = 'http' if t.startswith('http') else t
-        new_text.append(t)
-    return " ".join(new_text)
+    text = re.sub(r"@[A-Z,0-9]+", "@user", text)
+    urls = URLEx.find_urls(text)
+    for _url in urls:
+        try:
+            text = text.replace(_url, "http")
+        except re.error:
+            logging.warning(f're.error:\t - {text}\n\t - {_url}')
+    return text
+
 
 
 class Classifier:
@@ -76,6 +83,7 @@ class Classifier:
         self.parallel = torch.cuda.device_count() > 1
         if self.parallel:
             self.model = torch.nn.DataParallel(self.model)
+        self.model.to(self.device)
         logging.debug(f'{torch.cuda.device_count()} GPUs are in use')
 
     def predict(self, text: str or List, batch_size: int = None):
@@ -133,6 +141,13 @@ class Sentiment:
 
     def __init__(self, model: str = None, max_length: int = 128):
         self.model = Classifier(MODEL_LIST['sentiment'] if model is None else model, max_length, download_id2label('sentiment'))
+        self.sentiment = self.predict = self.model.predict  # function alias
+
+
+class SentimentMultilingual:
+
+    def __init__(self, model: str = None, max_length: int = 128):
+        self.model = Classifier(MODEL_LIST['sentiment_multilingual'] if model is None else model, max_length, download_id2label('sentiment'))
         self.sentiment = self.predict = self.model.predict  # function alias
 
 

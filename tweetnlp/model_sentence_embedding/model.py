@@ -1,15 +1,19 @@
 """ Sentence embedding """
 # TODO: Add dense search with sentence-transformers
 # TODO: Add preprocessing to handle the twitter username
+import logging
+import re
 from typing import List
+from collections import defaultdict
 
 import torch
 from numpy import dot
 from numpy.linalg import norm
+from urlextract import URLExtract
 from sentence_transformers import SentenceTransformer
 
-# DEFAULT_MODEL = "cardiffnlp/twitter-roberta-base-2021-124m"
 DEFAULT_MODEL = "cambridgeltl/tweet-roberta-base-embeddings-v1"
+URLEx = URLExtract()
 
 
 def cosine_similarity(v_a, v_b, eps: float = 1e-5):
@@ -17,18 +21,27 @@ def cosine_similarity(v_a, v_b, eps: float = 1e-5):
 
 
 def preprocess(text):
-    new_text = []
-    for t in text.split(" "):
-        t = '@user' if t.startswith('@') and len(t) > 1 else t
-        t = 'http' if t.startswith('http') else t
-        new_text.append(t)
-    return " ".join(new_text)
+    text = re.sub(r"@[A-Z,0-9]+", "@user", text)
+    urls = URLEx.find_urls(text)
+    for _url in urls:
+        try:
+            text = text.replace(_url, "http")
+        except re.error:
+            logging.warning(f're.error:\t - {text}\n\t - {_url}')
+    return text
 
 
 class SentenceEmbedding:
 
     def __init__(self, model: str = None, **kwargs):
         self.model = SentenceTransformer(DEFAULT_MODEL if model is None else model)
+        self.device = 'cuda' if torch.cuda.device_count() > 0 else 'cpu'
+        if torch.cuda.device_count() > 1:
+            logging.warning('sentence embedding is not optimized to be used on parallel GPUs')
+        # self.parallel = torch.cuda.device_count() > 1
+        # if self.parallel:
+        #     self.model = torch.nn.DataParallel(self.model)
+        self.model.to(self.device)
         self.embedding = self.predict  # function alias
 
     def predict(self, text: str or List, batch_size: int = None):

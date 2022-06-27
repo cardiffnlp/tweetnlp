@@ -40,6 +40,7 @@ class LanguageModel:
         self.parallel = torch.cuda.device_count() > 1
         if self.parallel:
             self.model = torch.nn.DataParallel(self.model)
+        self.model.to(self.device)
         logging.debug(f'{torch.cuda.device_count()} GPUs are in use')
         self.mask_prediction = self.predict  # function alias
 

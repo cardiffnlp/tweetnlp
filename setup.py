@@ -30,6 +30,7 @@ setup(
         'allennlp',
         # 'scipy',
         'numpy',
+        'urlextract',
         # 'seqeval',
         'transformers',
         'sentence_transformers',
