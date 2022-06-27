@@ -39,7 +39,7 @@ by `tweetnlp.load("task-name")`, and run the prediction by giving a text or a li
   
 ```python
 model = tweetnlp.load('topic_classification')  # Or `model = tweetnlp.TopicClassification()`
-model.sentiment("Jacob Collier is a Grammy-awarded English artist from London.")  # Or `model.predict`
+model.topic("Jacob Collier is a Grammy-awarded English artist from London.")  # Or `model.predict`
 >>> {'label': ['celebrity_&_pop_culture', 'music'],
      'probability': {
          'arts_&_culture': 0.2698121964931488,
