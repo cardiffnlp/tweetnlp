@@ -4,7 +4,6 @@
 import logging
 import re
 from typing import List
-from collections import defaultdict
 
 import torch
 from numpy import dot
