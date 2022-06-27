@@ -236,6 +236,11 @@ To use other model from local/huggingface modelhub, one can simply provide model
 tweetnlp.load('task', model='model-path/alias')
 ```
 
+Or any classification model can be used without specifying the task.
+```python
+tweetnlp.load(model='cardiffnlp/tweet-topic-19-single')
+```
+
 <!-- ## Reference (TBA)
 - TweetEval
 - TimeLM
