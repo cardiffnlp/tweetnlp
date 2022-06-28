@@ -165,7 +165,7 @@ model = tweetnlp.load('sentence_embedding')  # Or `model = tweetnlp.SentenceEmbe
 
 # Get sentence embedding
 tweet = "I will never understand the decision making of the people of Alabama. Their new Senator is a definite downgrade. You have served with honor.  Well done."
-vectors = model.predict(tweet)
+vectors = model.embedding(tweet)
 vectors.shape
 >>> (768,)
 
@@ -185,7 +185,7 @@ tweet_corpus = [
     "The mask cult can’t ever admit masks don’t work because their ideology is based on feeling like a “good person”  Wearing a mask makes them a “good person” &amp; anyone who disagrees w/them isn’t  They can’t tolerate any idea that makes them feel like their self-importance is unearned",
     "@ianmSC Beyond that, they put such huge confidence in masks so early with no strong evidence that they have any meaningful benefit, they don’t want to backtrack or admit they were wrong. They put the cart before the horse, now desperate to find any results that match their hypothesis.",
 ]
-vectors = model.predict(tweet_corpus, batch_size=3)
+vectors = model.embedding(tweet_corpus, batch_size=3)
 vectors.shape
 >>> (12, 768)
 ```
