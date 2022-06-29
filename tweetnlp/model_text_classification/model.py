@@ -22,8 +22,8 @@ MODEL_LIST = {
     'offensive': "cardiffnlp/twitter-roberta-base-offensive",
     'sentiment': "cardiffnlp/twitter-roberta-base-sentiment-latest",
     'sentiment_multilingual': "cardiffnlp/twitter-xlm-roberta-base-sentiment",
-    'topic_single': 'antypasd/tweet-topic-21-single',
-    'topic_multi': 'antypasd/tweet-topic-21-multi'
+    'topic_single': 'cardiffnlp/tweet-topic-21-single',
+    'topic_multi': 'cardiffnlp/tweet-topic-21-multi'
 }
 
 

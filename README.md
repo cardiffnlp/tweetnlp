@@ -89,7 +89,7 @@ model.irony('If you wanna look like a badass, have drama on social media')  # Or
 >>> {'label': 'irony', 'probability': 0.9160911440849304}
 ```
 
-- ***Hate Detection***: Binary classification of whether the tweet is hate or not.
+- ***Hate Speech Detection***: Binary classification of whether the tweet is hate or not.
 
 ```python
 model = tweetnlp.load('hate')  # Or `model = tweetnlp.Hate()` 
@@ -97,7 +97,7 @@ model.hate('Whoever just unfollowed me you a bitch')  # Or `model.predict`
 >>> {'label': 'not-hate', 'probability': 0.7263831496238708}
 ```
 
-- ***Offensive Detection***: Binary classification of whether the tweet is offensive or not.
+- ***Offensive Language Identification***: Binary classification of whether the tweet is offensive or not.
 
 ```python
 model = tweetnlp.load('offensive')  # Or `model = tweetnlp.Offensive()` 
@@ -113,7 +113,7 @@ model.emoji('Beautiful sunset last night from the pontoon @TupperLakeNY')  # Or 
 >>> {'label': '😊', 'probability': 0.3179638981819153}
 ```
 
-- ***Emotion Analysis***: Predict the emotion of the tweet from four classes: `anger`/`joy`/`optimism`/`sadness`.
+- ***Emotion Recognition***: Predict the emotion of the tweet from four classes: `anger`/`joy`/`optimism`/`sadness`.
 
 ```python
 model = tweetnlp.load('emotion')  # Or `model = tweetnlp.Emotion()` 
