@@ -27,11 +27,11 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"  # to turn off warning message
 
 __all__ = 'NER'
 PAD_TOKEN_LABEL_ID = nn.CrossEntropyLoss().ignore_index
+DEFAULT_MODEL = "tner/twitter-roberta-base-dec2021-tweetner"
 
 
 def user_name_handler(_string):
     pass
-
 
 
 def pickle_save(obj, path: str):
@@ -297,7 +297,7 @@ class NER:
                  max_length: int = 128,
                  crf: bool = False,
                  label_to_id: Dict = None):
-        self.model_name = model if model is not None else "cardiffnlp/tner-t-roberta-base-dec2021-tweet"
+        self.model_name = model if model is not None else DEFAULT_MODEL
         self.max_length = max_length
         self.crf_layer = None
         # load model

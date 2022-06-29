@@ -2,13 +2,13 @@ from setuptools import setup, find_packages
 
 with open('README.md', 'r') as f:
     readme = f.read()
-version = '0.0.7'
+version = '0.0.8'
 setup(
     name='tweetnlp',
     packages=find_packages(exclude=["asset", "tests"]),
     version=version,
     license='MIT',
-    description='TBA',
+    description='NLP library for Twitter.',
     url='https://github.com/cardiffnlp/tweetnlp',
     download_url="https://github.com/cardiffnlp/tweetnlp/archive/{}.tar.gz".format(version),
     keywords=['tweet', 'nlp', 'language-model'],
