@@ -226,7 +226,7 @@ Here is a table of the default model used in each task.
 |Offensive Detection      | [cardiffnlp/twitter-roberta-base-offensive](https://huggingface.co/cardiffnlp/twitter-roberta-base-offensive)      |
 |Emoji Prediction         | [cardiffnlp/twitter-roberta-base-emoji](https://huggingface.co/cardiffnlp/twitter-roberta-base-emoji)      |
 |Emotion Analysis         | [cardiffnlp/twitter-roberta-base-emotion](https://huggingface.co/cardiffnlp/twitter-roberta-base-emotion)      |
-|Named Entity Recognition | [asahi417/tner-t-roberta-base-dec2021-tweet](https://huggingface.co/asahi417/tner-t-roberta-base-dec2021-tweet)     |
+|Named Entity Recognition | [tner/twitter-roberta-base-dec2021-tweetner](https://huggingface.co/tner/twitter-roberta-base-dec2021-tweetner)     |
 |Language Modeling        | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m)      |
 |Tweet Embedding          | [cambridgeltl/tweet-roberta-base-embeddings-v1](https://huggingface.co/cambridgeltl/tweet-roberta-base-embeddings-v1)      |
 
