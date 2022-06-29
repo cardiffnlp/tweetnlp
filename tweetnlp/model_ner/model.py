@@ -297,7 +297,7 @@ class NER:
                  max_length: int = 128,
                  crf: bool = False,
                  label_to_id: Dict = None):
-        self.model_name = model if model is not None else "asahi417/tner-t-roberta-base-dec2021-tweet"
+        self.model_name = model if model is not None else "cardiffnlp/tner-t-roberta-base-dec2021-tweet"
         self.max_length = max_length
         self.crf_layer = None
         # load model
