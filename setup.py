@@ -1,7 +1,8 @@
 from setuptools import setup, find_packages
 
-with open('README.md', 'r') as f:
+with open('README.md', 'r', encoding="utf-8") as f:
     readme = f.read()
+
 version = '0.0.8'
 setup(
     name='tweetnlp',
