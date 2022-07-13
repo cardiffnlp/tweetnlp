@@ -249,7 +249,7 @@ tweetnlp.load(model='cardiffnlp/tweet-topic-19-single')
 
 # Reference Paper
 
-If you use TweetNLP in your research, please use the following `bib` entry to cite the [reference paper](https://arxiv.org/pdf/2206.14774.pdf).
+For more details, please read the accompanying [TweetNLP's reference paper](https://arxiv.org/pdf/2206.14774.pdf). If you use TweetNLP in your research, please use the following `bib` entry to cite the [reference paper](https://arxiv.org/pdf/2206.14774.pdf).
 
 ```
 @article{camachocollados2022tweetnlp,
