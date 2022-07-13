@@ -246,3 +246,16 @@ tweetnlp.load(model='cardiffnlp/tweet-topic-19-single')
 - TweetEval
 - TimeLM
 - etc -->
+
+# Reference Paper
+
+If you use TweetNLP in your research, please use the following `bib` entry to cite the [reference paper](https://arxiv.org/pdf/2206.14774.pdf).
+
+```
+@article{camachocollados2022tweetnlp,
+  title={TweetNLP: Cutting-Edge Natural Language Processing for Social Media},
+  author={Camacho-Collados, Jose and Rezaee, Kiamehr and Riahi, Talayeh and Ushio, Asahi and Loureiro, Daniel and Antypas, Dimosthenis and Boisson, Joanne and Espinosa-Anke, Luis and Liu, Fangyu and Mart{\'\i}nez-C{\'a}mara, Eugenio and others},
+  journal={arXiv preprint arXiv:2206.14774},
+  year={2022}
+}
+```
