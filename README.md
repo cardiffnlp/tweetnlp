@@ -11,8 +11,8 @@ emoji prediction, and named-entity recognition, powered by state-of-the-art lang
 
 Resources:
 - Quick Tour with Colab Notebook: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp?usp=sharing)
-- Play with TweetNLP Online Demo: [link](https://tweetnlp.org/demo/)
-- Arxiv paper: [linl](https://arxiv.org/abs/2206.14774)
+- Play with the TweetNLP Online Demo: [link](https://tweetnlp.org/demo/)
+- Arxiv paper: [link](https://arxiv.org/abs/2206.14774)
 
 
 ## Get Started
