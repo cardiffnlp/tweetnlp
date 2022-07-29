@@ -3,25 +3,28 @@
 import json
 import logging
 import pickle
-
-# from tqdm import tqdm
-# import numpy as np
-# from scipy.stats import bootstrap
-
-from allennlp.modules import ConditionalRandomField
-from allennlp.modules.conditional_random_field import allowed_transitions
-# from seqeval.metrics import f1_score, precision_score, recall_score, classification_report
-
 import os
 import re
 from itertools import groupby
 from typing import List, Dict
+from packaging.version import parse
+# from tqdm import tqdm
+
 
 import torch
 from torch import nn
 from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokenizer
+# import numpy as np
+# from scipy.stats import bootstrap
+# from seqeval.metrics import f1_score, precision_score, recall_score, classification_report
 
-# from .dataset_ner import label_to_id, get_dataset
+from allennlp import __version__
+from allennlp.modules import ConditionalRandomField
+if parse("2.10.0") < parse(__version__):
+    from allennlp.modules.conditional_random_field import allowed_transitions
+else:
+    from allennlp.modules.conditional_random_field.conditional_random_field import allowed_transitions
+
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"  # to turn off warning message
 
