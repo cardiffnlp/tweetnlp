@@ -8,11 +8,13 @@ TweetNLP for all the NLP enthusiasts working on Twitter!
 The python library `tweetnlp` provides a collection of useful tools to analyze/understand tweets such as sentiment analysis,
 emoji prediction, and named-entity recognition, powered by state-of-the-art language modeling trained on tweets.
 
+***News (September 2022):*** Our paper presenting TweetNLP, "TweetNLP: Cutting-Edge Natural Language Processing for Social Media", is accepted by EMNLP 2022 system demonstration!! Camera-ready version can be found [here](https://arxiv.org/abs/2206.14774).
+
 
 Resources:
 - Quick Tour with Colab Notebook: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp?usp=sharing)
 - Play with the TweetNLP Online Demo: [link](https://tweetnlp.org/demo/)
-- Arxiv paper: [link](https://arxiv.org/abs/2206.14774)
+- EMNLP 2022 paper: [link](https://arxiv.org/abs/2206.14774)
 
 
 ## Get Started
@@ -252,10 +254,15 @@ tweetnlp.load(model='cardiffnlp/tweet-topic-19-single')
 For more details, please read the accompanying [TweetNLP's reference paper](https://arxiv.org/pdf/2206.14774.pdf). If you use TweetNLP in your research, please use the following `bib` entry to cite the reference paper:
 
 ```
-@article{camachocollados2022tweetnlp,
-  title={TweetNLP: Cutting-Edge Natural Language Processing for Social Media},
-  author={Camacho-Collados, Jose and Rezaee, Kiamehr and Riahi, Talayeh and Ushio, Asahi and Loureiro, Daniel and Antypas, Dimosthenis and Boisson, Joanne and Espinosa-Anke, Luis and Liu, Fangyu and Mart{\'\i}nez-C{\'a}mara, Eugenio and others},
-  journal={arXiv preprint arXiv:2206.14774},
-  year={2022}
+@inproceedings{camacho-collados-etal-2022-tweetnlp,
+    title={{T}weet{NLP}: {C}utting-{E}dge {N}atural {L}anguage {P}rocessing for {S}ocial {M}edia},
+    author={Camacho-Collados, Jose and Rezaee, Kiamehr and Riahi, Talayeh and Ushio, Asahi and Loureiro, Daniel and Antypas, Dimosthenis and Boisson, Joanne and Espinosa-Anke, Luis and Liu, Fangyu and Mart{\'\i}nez-C{\'a}mara, Eugenio and others},
+    author = "Ushio, Asahi  and
+      Camacho-Collados, Jose",
+    booktitle = "Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing: System Demonstrations",
+    month = nov,
+    year = "2022",
+    address = "Abu Dhabi, U.A.E.",
+    publisher = "Association for Computational Linguistics",
 }
 ```
