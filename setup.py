@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 with open('README.md', 'r', encoding="utf-8") as f:
     readme = f.read()
 
-version = '0.1.0'
+version = '0.1.1'
 setup(
     name='tweetnlp',
     packages=find_packages(exclude=["asset", "tests"]),

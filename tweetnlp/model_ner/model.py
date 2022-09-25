@@ -30,7 +30,7 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"  # to turn off warning message
 
 __all__ = 'NER'
 PAD_TOKEN_LABEL_ID = nn.CrossEntropyLoss().ignore_index
-DEFAULT_MODEL = "tner/twitter-roberta-base-dec2021-tweetner-2020-2021-continuous"
+DEFAULT_MODEL = "tner/twitter-roberta-base-dec2021-tweetner7-2020-2021-continuous"
 
 
 def user_name_handler(_string):
