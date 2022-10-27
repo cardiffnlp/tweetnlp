@@ -8,7 +8,7 @@ TweetNLP for all the NLP enthusiasts working on Twitter!
 The python library `tweetnlp` provides a collection of useful tools to analyze/understand tweets such as sentiment analysis,
 emoji prediction, and named-entity recognition, powered by state-of-the-art language modeling trained on tweets.
 
-***News (September 2022):*** Our paper presenting TweetNLP, "TweetNLP: Cutting-Edge Natural Language Processing for Social Media", is accepted by EMNLP 2022 system demonstration!! Camera-ready version can be found [here](https://arxiv.org/abs/2206.14774).
+***News (September 2022):*** Our paper presenting TweetNLP, "TweetNLP: Cutting-Edge Natural Language Processing for Social Media", has been accepted as an EMNLP 2022 system demonstration!! Camera-ready version can be found [here](https://arxiv.org/abs/2206.14774).
 
 
 Resources:
