@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 with open('README.md', 'r', encoding="utf-8") as f:
     readme = f.read()
 
-version = '0.1.2'
+version = '0.1.3'
 setup(
     name='tweetnlp',
     packages=find_packages(exclude=["asset", "tests"]),
@@ -28,7 +28,6 @@ setup(
     include_package_data=True,
     test_suite='tests',
     install_requires=[
-        'allennlp',
         # 'scipy',
         'numpy',
         'urlextract',

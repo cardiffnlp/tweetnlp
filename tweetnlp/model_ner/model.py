@@ -7,7 +7,6 @@ import os
 import re
 from itertools import groupby
 from typing import List, Dict
-from packaging.version import parse
 # from tqdm import tqdm
 
 
@@ -18,12 +17,7 @@ from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokeni
 # from scipy.stats import bootstrap
 # from seqeval.metrics import f1_score, precision_score, recall_score, classification_report
 
-from allennlp import __version__
-from allennlp.modules import ConditionalRandomField
-if parse("2.10.0") < parse(__version__):
-    from allennlp.modules.conditional_random_field import allowed_transitions
-else:
-    from allennlp.modules.conditional_random_field.conditional_random_field import allowed_transitions
+from .allennlp_crf import ConditionalRandomField, allowed_transitions
 
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"  # to turn off warning message
