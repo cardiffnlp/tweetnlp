@@ -22,8 +22,8 @@ MODEL_LIST = {
     'offensive': "cardiffnlp/twitter-roberta-base-offensive",
     'sentiment': "cardiffnlp/twitter-roberta-base-sentiment-latest",
     'sentiment_multilingual': "cardiffnlp/twitter-xlm-roberta-base-sentiment",
-    'topic_single': 'cardiffnlp/tweet-topic-21-single',
-    'topic_multi': 'cardiffnlp/tweet-topic-21-multi'
+    'topic_single': 'cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-single-all',
+    'topic_multi': 'cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-multi-all'
 }
 
 
@@ -64,7 +64,6 @@ def preprocess(text):
     return text
 
 
-
 class Classifier:
 
     def __init__(self, model_name: str, max_length: int, id_to_label: Dict = None, multi_label: bool = False):
@@ -86,42 +85,44 @@ class Classifier:
         self.model.to(self.device)
         logging.debug(f'{torch.cuda.device_count()} GPUs are in use')
 
-    def predict(self, text: str or List, batch_size: int = None):
+    def predict(self, text: str or List, batch_size: int = None, return_probability: bool = False):
         self.model.eval()
-        single_input_flag = False
-        if type(text) is str:
-            text = [text]
-            single_input_flag = True
+        single_input_flag = type(text) is str
+        text = [text] if single_input_flag else text
         text = [preprocess(t) for t in text]
-        if batch_size is None:
-            batch_size = len(text)
+        batch_size = len(text) if batch_size is None else batch_size
         _index = list(range(0, len(text), batch_size)) + [len(text) + 1]
-        predictions = []
         probs = []
         with torch.no_grad():
             for i in range(len(_index) - 1):
-                tmp_text = text[_index[i]: _index[i+1]]
                 encoded_input = self.tokenizer.batch_encode_plus(
-                    tmp_text,
+                    text[_index[i]: _index[i+1]],
                     max_length=self.max_length,
                     return_tensors='pt',
                     padding=True,
                     truncation=True)
                 output = self.model(**{k: v.to(self.device) for k, v in encoded_input.items()})
                 if self.multi_label:
-                    prob = torch.sigmoid(output.logits).cpu().tolist()
-                    predictions += [[n for n, p in enumerate(_pr) if p > 0.5] for _pr in prob]
-                    probs += [{self.id_to_label[str(n)]: p for n, p in enumerate(_pr)} for _pr in prob]
-
+                    probs += torch.sigmoid(output.logits).cpu().tolist()
                 else:
-                    prob = torch.softmax(output.logits, -1).cpu()
-                    probs += prob.max(-1)[0].tolist()
-                    predictions += prob.argmax(-1).tolist()
+                    probs += torch.softmax(output.logits, -1).cpu().tolist()
 
+        if return_probability:
             if self.multi_label:
-                out = [{'label': [self.id_to_label[str(_p)] for _p in p], 'probability': pr} for pr, p in zip(probs, predictions)]
+                out = [{
+                    'label': [self.id_to_label[str(n)] for n, p in enumerate(_pr) if p > 0.5],
+                    'probability': {self.id_to_label[str(n)]: p for n, p in enumerate(_pr)}
+                } for _pr in probs]
             else:
-                out = [{'label': self.id_to_label[str(p)], 'probability': pr} for pr, p in zip(probs, predictions)]
+                out = [{
+                    'label': self.id_to_label[str(p.index(max(p)))],
+                    'probability': {self.id_to_label[str(n)]: _p for n, _p in enumerate(p)}
+                } for p in probs]
+        else:
+            if self.multi_label:
+                out = [{'label': [self.id_to_label[str(n)] for n, p in enumerate(_pr) if p > 0.5]} for _pr in probs]
+            else:
+                out = [{'label': self.id_to_label[str(p.index(max(p)))]} for p in probs]
         if single_input_flag:
             return out[0]
         return out
@@ -129,58 +130,69 @@ class Classifier:
 
 class TopicClassification:
 
-    def __init__(self, model: str = None, max_length: int = 128, single_class: bool = False):
-        if single_class:
-            self.model = Classifier(MODEL_LIST['topic_single'] if model is None else model, max_length)
+    def __init__(self, model: str = None, max_length: int = 128, multi_label: bool = True):
+        if multi_label:
+            model = MODEL_LIST['topic_multi'] if model is None else model
         else:
-            self.model = Classifier(MODEL_LIST['topic_multi'] if model is None else model, max_length, multi_label=True)
-        self.topic = self.predict = self.model.predict  # function alias
+            model = MODEL_LIST['topic_single'] if model is None else model
+        self.model = Classifier(model, max_length, multi_label=multi_label)
+        self.topic = self.predict = self.model.predict
 
 
 class Sentiment:
 
     def __init__(self, model: str = None, max_length: int = 128):
         self.model = Classifier(MODEL_LIST['sentiment'] if model is None else model, max_length, download_id2label('sentiment'))
-        self.sentiment = self.predict = self.model.predict  # function alias
+        self.sentiment = self.predict = self.model.predict
 
 
 class SentimentMultilingual:
 
     def __init__(self, model: str = None, max_length: int = 128):
         self.model = Classifier(MODEL_LIST['sentiment_multilingual'] if model is None else model, max_length, download_id2label('sentiment'))
-        self.sentiment = self.predict = self.model.predict  # function alias
+        self.sentiment = self.predict = self.model.predict
 
 
 class Offensive:
 
     def __init__(self, model: str = None, max_length: int = 128):
         self.model = Classifier(MODEL_LIST['offensive'] if model is None else model, max_length, download_id2label('offensive'))
-        self.offensive = self.predict = self.model.predict  # function alias
+        self.offensive = self.predict = self.model.predict
 
 
 class Irony:
 
     def __init__(self, model: str = None, max_length: int = 128):
         self.model = Classifier(MODEL_LIST['irony'] if model is None else model, max_length, download_id2label('irony'))
-        self.irony = self.predict = self.model.predict  # function alias
+        self.irony = self.predict = self.model.predict
 
 
 class Hate:
 
     def __init__(self, model: str = None, max_length: int = 128):
         self.model = Classifier(MODEL_LIST['hate'] if model is None else model, max_length, download_id2label('hate'))
-        self.hate = self.predict = self.model.predict  # function alias
+        self.hate = self.predict = self.model.predict
 
 
 class Emotion:
 
     def __init__(self, model: str = None, max_length: int = 128):
         self.model = Classifier(MODEL_LIST['emotion'] if model is None else model, max_length, download_id2label('emotion'))
-        self.emotion = self.predict = self.model.predict  # function alias
+        self.emotion = self.predict = self.model.predict
 
 
 class Emoji:
 
     def __init__(self, model: str = None, max_length: int = 128):
         self.model = Classifier(MODEL_LIST['emoji'] if model is None else model, max_length, download_id2label('emoji'))
-        self.emoji = self.predict = self.model.predict  # function alias
+        self.emoji = self.predict = self.model.predict
+
+
+if __name__ == '__main__':
+    _model = TopicClassification(multi_label=True)
+    _model.predict(["this is a sample game", "we sell newspaper", "Beer Beer"])
+    _model.predict(["this is a sample game", "we sell newspaper", "Beer Beer"], return_probability=True)
+
+    _model = TopicClassification(multi_label=False)
+    _model.predict(["this is a sample game", "we sell newspaper", "Beer Beer"])
+    _model.predict(["this is a sample game", "we sell newspaper", "Beer Beer"], return_probability=True)
