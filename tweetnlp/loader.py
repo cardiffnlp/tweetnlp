@@ -1,7 +1,7 @@
 import logging
 
 from .text_classification.model import Sentiment, Offensive, Irony, Hate, Emotion, Emoji,\
-    TopicClassification
+    TopicClassification, StanceAtheism, StanceAbortion, StanceClimate, StanceHillary, StanceFeminist
 from .text_classification.dataset import load_dataset_text_classification
 
 from .ner.model import NER
@@ -15,10 +15,15 @@ TASK_CLASS = {
     'hate': [Hate, load_dataset_text_classification],
     'emotion': [Emotion, load_dataset_text_classification],
     'emoji': [Emoji, load_dataset_text_classification],
+    'stance_abortion': [StanceAbortion, load_dataset_text_classification],
+    'stance_atheism': [StanceAtheism, load_dataset_text_classification],
+    'stance_climate': [StanceClimate, load_dataset_text_classification],
+    'stance_feminist': [StanceFeminist, load_dataset_text_classification],
+    'stance_hillary': [StanceHillary, load_dataset_text_classification],
     'topic_classification': [TopicClassification, load_dataset_text_classification],
     'ner': [NER],
     'language_model': [LanguageModel],
-    'sentence_embedding': [SentenceEmbedding]
+    'sentence_embedding': [SentenceEmbedding],
 }
 
 
