@@ -15,15 +15,29 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification, Auto
 URLEx = URLExtract()
 DEFAULT_CACHE_DIR = f"{os.path.expanduser('~')}/.cache/tweetnlp/classification"
 MODEL_LIST = {
-    'emotion': "cardiffnlp/twitter-roberta-base-emotion",
-    'emoji': "cardiffnlp/twitter-roberta-base-emoji",
-    'hate': "cardiffnlp/twitter-roberta-base-hate",
-    'irony': "cardiffnlp/twitter-roberta-base-irony",
-    'offensive': "cardiffnlp/twitter-roberta-base-offensive",
-    'sentiment': "cardiffnlp/twitter-roberta-base-sentiment-latest",
-    'sentiment_multilingual': "cardiffnlp/twitter-xlm-roberta-base-sentiment",
-    'topic_single': 'cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-single-all',
-    'topic_multi': 'cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-multi-all'
+    'emotion': {
+        "default": "cardiffnlp/twitter-roberta-base-emotion"
+    },
+    'emoji': {
+        "default": "cardiffnlp/twitter-roberta-base-emoji"
+    },
+    'hate': {
+        "default": "cardiffnlp/twitter-roberta-base-hate"
+    },
+    'irony': {
+        "default": "cardiffnlp/twitter-roberta-base-irony"
+    },
+    'offensive': {
+        "default": "cardiffnlp/twitter-roberta-base-offensive"
+    },
+    'sentiment': {
+        "default": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+        "multilingual": "cardiffnlp/twitter-xlm-roberta-base-sentiment",
+    },
+    'topic_classification': {
+        "single_label": 'cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-single-all',
+        "multi_label": 'cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-multi-all'
+    }
 }
 
 
@@ -131,60 +145,63 @@ class Classifier:
 class TopicClassification:
 
     def __init__(self, model: str = None, max_length: int = 128, multi_label: bool = True):
-        if multi_label:
-            model = MODEL_LIST['topic_multi'] if model is None else model
-        else:
-            model = MODEL_LIST['topic_single'] if model is None else model
+        if model is None:
+            model = MODEL_LIST['topic_classification']['multi_label' if multi_label else 'single_label']
         self.model = Classifier(model, max_length, multi_label=multi_label)
         self.topic = self.predict = self.model.predict
 
 
 class Sentiment:
 
-    def __init__(self, model: str = None, max_length: int = 128):
-        self.model = Classifier(MODEL_LIST['sentiment'] if model is None else model, max_length, download_id2label('sentiment'))
-        self.sentiment = self.predict = self.model.predict
-
-
-class SentimentMultilingual:
-
-    def __init__(self, model: str = None, max_length: int = 128):
-        self.model = Classifier(MODEL_LIST['sentiment_multilingual'] if model is None else model, max_length, download_id2label('sentiment'))
+    def __init__(self, model: str = None, max_length: int = 128, multilingual: bool = False):
+        if model is None:
+            model = MODEL_LIST['sentiment']['multilingual' if multilingual else 'default']
+        self.model = Classifier(model, max_length, download_id2label('sentiment'))
         self.sentiment = self.predict = self.model.predict
 
 
 class Offensive:
 
     def __init__(self, model: str = None, max_length: int = 128):
-        self.model = Classifier(MODEL_LIST['offensive'] if model is None else model, max_length, download_id2label('offensive'))
+        if model is None:
+            model = MODEL_LIST['offensive']['default']
+        self.model = Classifier(model, max_length, download_id2label('offensive'))
         self.offensive = self.predict = self.model.predict
 
 
 class Irony:
 
     def __init__(self, model: str = None, max_length: int = 128):
-        self.model = Classifier(MODEL_LIST['irony'] if model is None else model, max_length, download_id2label('irony'))
+        if model is None:
+            model = MODEL_LIST['irony']['default']
+        self.model = Classifier(model, max_length, download_id2label('irony'))
         self.irony = self.predict = self.model.predict
 
 
 class Hate:
 
     def __init__(self, model: str = None, max_length: int = 128):
-        self.model = Classifier(MODEL_LIST['hate'] if model is None else model, max_length, download_id2label('hate'))
+        if model is None:
+            model = MODEL_LIST['hate']['default']
+        self.model = Classifier(model, max_length, download_id2label('hate'))
         self.hate = self.predict = self.model.predict
 
 
 class Emotion:
 
     def __init__(self, model: str = None, max_length: int = 128):
-        self.model = Classifier(MODEL_LIST['emotion'] if model is None else model, max_length, download_id2label('emotion'))
+        if model is None:
+            model = MODEL_LIST['emotion']['default']
+        self.model = Classifier(model, max_length, download_id2label('emotion'))
         self.emotion = self.predict = self.model.predict
 
 
 class Emoji:
 
     def __init__(self, model: str = None, max_length: int = 128):
-        self.model = Classifier(MODEL_LIST['emoji'] if model is None else model, max_length, download_id2label('emoji'))
+        if model is None:
+            model = MODEL_LIST['emoji']['default']
+        self.model = Classifier(model, max_length, download_id2label('emoji'))
         self.emoji = self.predict = self.model.predict
 
 
