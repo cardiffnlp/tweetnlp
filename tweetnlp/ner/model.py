@@ -1,5 +1,3 @@
-# TODO: Add preprocessing to handle the twitter username
-
 import json
 import logging
 import pickle
@@ -17,8 +15,12 @@ from transformers import AutoModelForTokenClassification, AutoConfig, AutoTokeni
 # from scipy.stats import bootstrap
 # from seqeval.metrics import f1_score, precision_score, recall_score, classification_report
 
+from urlextract import URLExtract
+
+
 from .allennlp_crf import ConditionalRandomField, allowed_transitions
 
+URLEx = URLExtract()
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"  # to turn off warning message
 
@@ -339,6 +341,16 @@ class NER:
 
         self.ner = self.predict  # function alias
 
+    @staticmethod
+    def preprocess(tweet):
+        # mask web urls
+        urls = URLEx.find_urls(tweet)
+        for url in urls:
+            tweet = tweet.replace(url, "{{URL}}")
+        # format twitter account
+        tweet = re.sub(r"\b(\s*)(@[\S]+)\b", r'\1{\2@}', tweet)
+        return tweet
+
     def encode_to_loss(self, encode: Dict):
         assert 'labels' in encode
         encode = {k: v.to(self.device) for k, v in encode.items()}
@@ -422,11 +434,14 @@ class NER:
                 batch_size: int = None,
                 cache_file_feature: str = None,
                 cache_file_prediction: str = None,
-                return_loader: bool = False):
+                return_loader: bool = False,
+                skip_preprocess: bool = False):
         single_input_flag = False
         if type(inputs) is str:
             inputs = [inputs]
             single_input_flag = True
+        if not skip_preprocess:
+            inputs = [self.preprocess(i) for i in inputs]
         inputs = [i.split(' ') if type(i) is not list else i for i in inputs]
         dummy_label = False
         if labels is None:

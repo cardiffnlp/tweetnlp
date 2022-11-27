@@ -41,7 +41,7 @@ by `tweetnlp.load("task-name")`, and run the prediction by giving a text or a li
   `tweetnlp.load('topic_classification', single_class=True)`.
   
 ```python
-model = tweetnlp.load('topic_classification')  # Or `model = tweetnlp.TopicClassification()`
+model = tweetnlp.load_model('topic_classification')  # Or `model = tweetnlp.TopicClassification()`
 model.topic("Jacob Collier is a Grammy-awarded English artist from London.")  # Or `model.predict`
 >>> {'label': ['celebrity_&_pop_culture', 'music'],
      'probability': {
@@ -70,7 +70,7 @@ model.topic("Jacob Collier is a Grammy-awarded English artist from London.")  # 
 - ***Sentiment Analysis***: Binary classification of `positive`/`negative`.
 
 ```python
-model = tweetnlp.load('sentiment')  # Or `model = tweetnlp.Sentiment()` 
+model = tweetnlp.load_model('sentiment')  # Or `model = tweetnlp.Sentiment()` 
 model.sentiment("Yes, including Medicare and social security saving👍")  # Or `model.predict`
 >>> {'label': 'positive', 'probability': 0.8018065094947815}
 ```
@@ -78,7 +78,7 @@ model.sentiment("Yes, including Medicare and social security saving👍")  # Or 
 - ***Sentiment Analysis (Multilingual)***: Binary classification of `positive`/`negative`.
 
 ```python
-model = tweetnlp.load('sentiment_multilingual')  # Or `model = tweetnlp.SentimentMultilingual()` 
+model = tweetnlp.load_model('sentiment_multilingual')  # Or `model = tweetnlp.SentimentMultilingual()` 
 model.sentiment("天気が良いとやっぱり気持ち良いなあ✨")  # Or `model.predict`
 >>> {'label': 'positive', 'probability': 0.8903419971466064}
 ```
@@ -87,7 +87,7 @@ model.sentiment("天気が良いとやっぱり気持ち良いなあ✨")  # Or 
 - ***Irony Detection***: Binary classification of whether the tweet is irony or not.
 
 ```python
-model = tweetnlp.load('irony')  # Or `model = tweetnlp.Irony()` 
+model = tweetnlp.load_model('irony')  # Or `model = tweetnlp.Irony()` 
 model.irony('If you wanna look like a badass, have drama on social media')  # Or `model.predict`
 >>> {'label': 'irony', 'probability': 0.9160911440849304}
 ```
@@ -95,7 +95,7 @@ model.irony('If you wanna look like a badass, have drama on social media')  # Or
 - ***Hate Speech Detection***: Binary classification of whether the tweet is hate or not.
 
 ```python
-model = tweetnlp.load('hate')  # Or `model = tweetnlp.Hate()` 
+model = tweetnlp.load_model('hate')  # Or `model = tweetnlp.Hate()` 
 model.hate('Whoever just unfollowed me you a bitch')  # Or `model.predict`
 >>> {'label': 'not-hate', 'probability': 0.7263831496238708}
 ```
@@ -103,7 +103,7 @@ model.hate('Whoever just unfollowed me you a bitch')  # Or `model.predict`
 - ***Offensive Language Identification***: Binary classification of whether the tweet is offensive or not.
 
 ```python
-model = tweetnlp.load('offensive')  # Or `model = tweetnlp.Offensive()` 
+model = tweetnlp.load_model('offensive')  # Or `model = tweetnlp.Offensive()` 
 model.offensive("All two of them taste like ass. ")  # Or `model.predict`
 >>> {'label': 'offensive', 'probability': 0.8600459098815918}
 ```
@@ -111,7 +111,7 @@ model.offensive("All two of them taste like ass. ")  # Or `model.predict`
 - ***Emoji Prediction***: Predict appropriate single emoji to the tweet from 20 emojis (❤, 😍, 😂, 💕, 🔥, 😊, 😎, ✨, 💙, 😘, 📷, 🇺🇸, ☀, 💜, 😉, 💯, 😁, 🎄, 📸, 😜).	
 
 ```python
-model = tweetnlp.load('emoji')  # Or `model = tweetnlp.Emoji()` 
+model = tweetnlp.load_model('emoji')  # Or `model = tweetnlp.Emoji()` 
 model.emoji('Beautiful sunset last night from the pontoon @TupperLakeNY')  # Or `model.predict`
 >>> {'label': '😊', 'probability': 0.3179638981819153}
 ```
@@ -119,7 +119,7 @@ model.emoji('Beautiful sunset last night from the pontoon @TupperLakeNY')  # Or 
 - ***Emotion Recognition***: Predict the emotion of the tweet from four classes: `anger`/`joy`/`optimism`/`sadness`.
 
 ```python
-model = tweetnlp.load('emotion')  # Or `model = tweetnlp.Emotion()` 
+model = tweetnlp.load_model('emotion')  # Or `model = tweetnlp.Emotion()` 
 model.emotion('I love swimming for the same reason I love meditating...the feeling of weightlessness.')  # Or `model.predict`
 >>> {'label': 'joy', 'probability': 0.7345258593559265}
 ```
@@ -128,13 +128,13 @@ model.emotion('I love swimming for the same reason I love meditating...the feeli
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=WeREiLEjBlrj)
 
 The information extraction module consists of named-entity recognition (NER) model specifically trained for tweets.
-The model is instantiated by `tweetnlp.load("ner")`, and run the prediction by giving a text or a list of texts.
+The model is instantiated by `tweetnlp.load_model("ner")`, and run the prediction by giving a text or a list of texts.
 
 
 - ***Named Entity Recognition***
 
 ```python3
-model = tweetnlp.load('ner')  # Or `model = tweetnlp.NER()` 
+model = tweetnlp.load_model('ner')  # Or `model = tweetnlp.NER()` 
 model.ner('Jacob Collier is a Grammy-awarded English artist from London.')  # Or `model.predict`
 >>> {
     'prediction': ['B-person', 'I-person', 'O', 'O', 'O', 'O', 'O', 'O', 'B-location'],
@@ -149,10 +149,10 @@ model.ner('Jacob Collier is a Grammy-awarded English artist from London.')  # Or
 ### Language Modeling
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=COOoZHVAFCIG)
 
-Masked language model predicts masked token in the given sentence. This is instantiated by `tweetnlp.load('language_model')`, and run the prediction by giving a text or a list of texts. Please make sure that each text has `<mask>` token, that is the objective of the model to predict.
+Masked language model predicts masked token in the given sentence. This is instantiated by `tweetnlp.load_model('language_model')`, and run the prediction by giving a text or a list of texts. Please make sure that each text has `<mask>` token, that is the objective of the model to predict.
 
 ```python
-model = tweetnlp.load('language_model')  # Or `model = tweetnlp.LanguageModel()` 
+model = tweetnlp.load_model('language_model')  # Or `model = tweetnlp.LanguageModel()` 
 model.mask_prediction("How many more <mask> until opening day? 😩")  # Or `model.predict`
 ```
 
@@ -164,7 +164,7 @@ Tweet embedding model produces a fixed length embedding for a tweet. The embeddi
 - ***Get Embedding***
 
 ```python
-model = tweetnlp.load('sentence_embedding')  # Or `model = tweetnlp.SentenceEmbedding()` 
+model = tweetnlp.load_model('sentence_embedding')  # Or `model = tweetnlp.SentenceEmbedding()` 
 
 # Get sentence embedding
 tweet = "I will never understand the decision making of the people of Alabama. Their new Senator is a definite downgrade. You have served with honor.  Well done."
@@ -236,18 +236,14 @@ Here is a table of the default model used in each task.
 
 To use other model from local/huggingface modelhub, one can simply provide model path/alias at the model loading.
 ```python
-tweetnlp.load('task', model='model-path/alias')
+tweetnlp.load_model('task', model='model-path/alias')
 ```
 
 Or any classification model can be used without specifying the task.
 ```python
-tweetnlp.load(model='cardiffnlp/tweet-topic-19-single')
+tweetnlp.load_model(model='cardiffnlp/tweet-topic-19-single')
 ```
 
-<!-- ## Reference (TBA)
-- TweetEval
-- TimeLM
-- etc -->
 
 # Reference Paper
 

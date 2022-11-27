@@ -5,6 +5,8 @@ from .text_classification.model import Sentiment, Offensive, Irony, Hate, Emotio
 from .text_classification.dataset import load_dataset_text_classification
 
 from .ner.model import NER
+from .ner.dataset import load_dataset_ner
+
 from .mlm.model import LanguageModel
 from .sentence_embedding.model import SentenceEmbedding
 
@@ -21,7 +23,7 @@ TASK_CLASS = {
     'stance_feminist': [StanceFeminist, load_dataset_text_classification],
     'stance_hillary': [StanceHillary, load_dataset_text_classification],
     'topic_classification': [TopicClassification, load_dataset_text_classification],
-    'ner': [NER],
+    'ner': [NER, load_dataset_ner],
     'language_model': [LanguageModel],
     'sentence_embedding': [SentenceEmbedding],
 }

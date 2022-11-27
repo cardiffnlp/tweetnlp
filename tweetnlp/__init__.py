@@ -7,3 +7,4 @@ from .ner.model import NER
 
 # dataset class
 from .text_classification.dataset import load_dataset_text_classification
+from .ner.dataset import load_dataset_ner

@@ -1,4 +1,3 @@
-
 from datasets import load_dataset
 from datasets.features.features import Sequence, ClassLabel
 
@@ -30,7 +29,8 @@ def load_dataset_text_classification(
         multi_label: bool = False,
         multilingual: bool = False,
         dataset_type: str = None,
-        dataset_name: str = None):
+        dataset_name: str = None,
+        use_auth_token: bool = False):
     if task_type is not None:
         assert task_type in DEFAULT_DATASETS_TEXT_CLASSIFICATION, f"unknown task {task_type}. task type should be in " \
                                                                   f"{DEFAULT_DATASETS_TEXT_CLASSIFICATION.keys()}"
@@ -48,9 +48,9 @@ def load_dataset_text_classification(
     else:
         assert dataset_type, "either of task_type or dataset_type should be specified"
     if dataset_name is not None:
-        dataset = load_dataset(dataset_type, dataset_name)
+        dataset = load_dataset(dataset_type, dataset_name, use_auth_token=use_auth_token)
     else:
-        dataset = load_dataset(dataset_type)
+        dataset = load_dataset(dataset_type, use_auth_token=use_auth_token)
 
     label_info = dataset[list(dataset.keys())[0]].features['label']
     while True:
