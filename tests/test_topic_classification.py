@@ -21,13 +21,13 @@ class Test(unittest.TestCase):
     """ Test """
 
     def test_model(self):
-        model = tweetnlp.load('topic_classification')
+        model = tweetnlp.load_model('topic_classification')
         preds = model.topic(SAMPLE)
         for text, pred in zip(SAMPLE, preds):
             print('MULTI-CLASS', text, pred)
 
     def test_model_single_label(self):
-        model = tweetnlp.load('topic_classification', single_class=True)
+        model = tweetnlp.load_model('topic_classification', multi_label=False)
         preds = model.topic(SAMPLE)
         for text, pred in zip(SAMPLE, preds):
             print('SINGLE-CLASS', text, pred)

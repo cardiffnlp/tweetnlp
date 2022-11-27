@@ -41,13 +41,6 @@ MODEL_LIST = {
 }
 
 
-def load_model(model, local_files_only: bool = False):
-    config = AutoConfig.from_pretrained(model, local_files_only=local_files_only)
-    tokenizer = AutoTokenizer.from_pretrained(model, local_files_only=local_files_only)
-    model = AutoModelForSequenceClassification.from_pretrained(model, config=config, local_files_only=local_files_only)
-    return config, tokenizer, model
-
-
 def download_id2label(task):
     path = f'{DEFAULT_CACHE_DIR}/id2label/{task}'
     if not os.path.exists(path):
@@ -67,24 +60,10 @@ def download_id2label(task):
     return id2label
 
 
-def preprocess(text):
-    text = re.sub(r"@[A-Z,0-9]+", "@user", text)
-    urls = URLEx.find_urls(text)
-    for _url in urls:
-        try:
-            text = text.replace(_url, "http")
-        except re.error:
-            logging.warning(f're.error:\t - {text}\n\t - {_url}')
-    return text
-
-
 class Classifier:
 
     def __init__(self, model_name: str, max_length: int, id_to_label: Dict = None, multi_label: bool = False):
-        try:
-            self.config, self.tokenizer, self.model = load_model(model_name)
-        except Exception:
-            self.config, self.tokenizer, self.model = load_model(model_name, local_files_only=True)
+        self.config, self.tokenizer, self.model = self.load_model(model_name)
         self.max_length = max_length
         self.multi_label = multi_label
         if id_to_label is None:
@@ -99,11 +78,34 @@ class Classifier:
         self.model.to(self.device)
         logging.debug(f'{torch.cuda.device_count()} GPUs are in use')
 
+    @staticmethod
+    def preprocess(text):
+        text = re.sub(r"@[A-Z,0-9]+", "@user", text)
+        urls = URLEx.find_urls(text)
+        for _url in urls:
+            try:
+                text = text.replace(_url, "http")
+            except re.error:
+                logging.warning(f're.error:\t - {text}\n\t - {_url}')
+        return text
+
+    @staticmethod
+    def load_model(model):
+        try:
+            urllib.request.urlopen('http://google.com')
+            no_network = False
+        except Exception:
+            no_network = True
+        config = AutoConfig.from_pretrained(model, local_files_only=no_network)
+        tokenizer = AutoTokenizer.from_pretrained(model, local_files_only=no_network)
+        model = AutoModelForSequenceClassification.from_pretrained(model, config=config, local_files_only=no_network)
+        return config, tokenizer, model
+
     def predict(self, text: str or List, batch_size: int = None, return_probability: bool = False):
         self.model.eval()
         single_input_flag = type(text) is str
         text = [text] if single_input_flag else text
-        text = [preprocess(t) for t in text]
+        text = [self.preprocess(t) for t in text]
         batch_size = len(text) if batch_size is None else batch_size
         _index = list(range(0, len(text), batch_size)) + [len(text) + 1]
         probs = []
@@ -142,67 +144,77 @@ class Classifier:
         return out
 
 
-class TopicClassification:
+class TopicClassification(Classifier):
 
     def __init__(self, model: str = None, max_length: int = 128, multi_label: bool = True):
         if model is None:
             model = MODEL_LIST['topic_classification']['multi_label' if multi_label else 'single_label']
-        self.model = Classifier(model, max_length, multi_label=multi_label)
-        self.topic = self.predict = self.model.predict
+        super().__init__(model, max_length=max_length, multi_label=multi_label)
+        self.topic = self.predict
+
+    @staticmethod
+    def preprocess(tweet):
+        # mask web urls
+        urls = URLEx.find_urls(tweet)
+        for url in urls:
+            tweet = tweet.replace(url, "{{URL}}")
+        # format twitter account
+        tweet = re.sub(r"\b(\s*)(@[\S]+)\b", r'\1{\2@}', tweet)
+        return tweet
 
 
-class Sentiment:
+class Sentiment(Classifier):
 
     def __init__(self, model: str = None, max_length: int = 128, multilingual: bool = False):
         if model is None:
             model = MODEL_LIST['sentiment']['multilingual' if multilingual else 'default']
-        self.model = Classifier(model, max_length, download_id2label('sentiment'))
-        self.sentiment = self.predict = self.model.predict
+        super().__init__(model, max_length=max_length)
+        self.sentiment = self.predict
 
 
-class Offensive:
+class Offensive(Classifier):
 
     def __init__(self, model: str = None, max_length: int = 128):
         if model is None:
             model = MODEL_LIST['offensive']['default']
-        self.model = Classifier(model, max_length, download_id2label('offensive'))
-        self.offensive = self.predict = self.model.predict
+        super().__init__(model, max_length=max_length)
+        self.offensive = self.predict
 
 
-class Irony:
+class Irony(Classifier):
 
     def __init__(self, model: str = None, max_length: int = 128):
         if model is None:
             model = MODEL_LIST['irony']['default']
-        self.model = Classifier(model, max_length, download_id2label('irony'))
-        self.irony = self.predict = self.model.predict
+        super().__init__(model, max_length=max_length)
+        self.irony = self.predict
 
 
-class Hate:
+class Hate(Classifier):
 
     def __init__(self, model: str = None, max_length: int = 128):
         if model is None:
             model = MODEL_LIST['hate']['default']
-        self.model = Classifier(model, max_length, download_id2label('hate'))
-        self.hate = self.predict = self.model.predict
+        super().__init__(model, max_length=max_length)
+        self.hate = self.predict
 
 
-class Emotion:
+class Emotion(Classifier):
 
     def __init__(self, model: str = None, max_length: int = 128):
         if model is None:
             model = MODEL_LIST['emotion']['default']
-        self.model = Classifier(model, max_length, download_id2label('emotion'))
-        self.emotion = self.predict = self.model.predict
+        super().__init__(model, max_length=max_length)
+        self.emotion = self.predict
 
 
-class Emoji:
+class Emoji(Classifier):
 
     def __init__(self, model: str = None, max_length: int = 128):
         if model is None:
             model = MODEL_LIST['emoji']['default']
-        self.model = Classifier(model, max_length, download_id2label('emoji'))
-        self.emoji = self.predict = self.model.predict
+        super().__init__(model, max_length=max_length)
+        self.emoji = self.predict
 
 
 if __name__ == '__main__':
@@ -213,3 +225,5 @@ if __name__ == '__main__':
     _model = TopicClassification(multi_label=False)
     _model.predict(["this is a sample game", "we sell newspaper", "Beer Beer"])
     _model.predict(["this is a sample game", "we sell newspaper", "Beer Beer"], return_probability=True)
+
+

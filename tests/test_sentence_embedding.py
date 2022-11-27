@@ -28,7 +28,7 @@ class Test(unittest.TestCase):
     """ Test """
 
     def test(self):
-        model = tweetnlp.load('sentence_embedding')
+        model = tweetnlp.load_model('sentence_embedding')
         vectors = model.predict(tweet_corpus, batch_size=3)
         print(vectors.shape)
         sims = []

@@ -21,7 +21,7 @@ class Test(unittest.TestCase):
     """ Test """
 
     def test_model(self):
-        model = tweetnlp.load('ner')
+        model = tweetnlp.load_model('ner')
         preds = model.ner(SAMPLE)
         pprint(preds)
 

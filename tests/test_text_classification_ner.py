@@ -28,7 +28,7 @@ class Test(unittest.TestCase):
     def test_model(self):
         for task, sample in SAMPLE.items():
             print(task)
-            model = tweetnlp.load(task)
+            model = tweetnlp.load_model(task)
             print(sample)
             o = model.predict(sample)
             print(o)
