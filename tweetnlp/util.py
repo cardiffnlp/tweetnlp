@@ -53,6 +53,7 @@ def get_label2id(dataset: DatasetDict, label_name: str = 'label'):
 def load_model(model: str,
                task: str = 'sequence_classification',
                use_auth_token: bool = False,
+               return_dict: bool = False,
                config_argument: Dict = None,
                model_argument: Dict = None,
                tokenizer_argument: Dict = None):
@@ -64,7 +65,7 @@ def load_model(model: str,
 
     config_argument = {} if config_argument is None else config_argument
     config_argument.update({"use_auth_token": use_auth_token, "local_files_only": no_network})
-    config = AutoConfig.from_pretrained(model,  **config_argument)
+    config = AutoConfig.from_pretrained(model, **config_argument)
 
     tokenizer_argument = {} if tokenizer_argument is None else tokenizer_argument
     tokenizer_argument.update({"use_auth_token": use_auth_token, "local_files_only": no_network})
@@ -74,11 +75,11 @@ def load_model(model: str,
     model_argument.update({"config": config, "use_auth_token": use_auth_token, "local_files_only": no_network})
     print(model_argument)
     if task == 'sequence_classification':
-        model = AutoModelForSequenceClassification.from_pretrained(model, **model_argument)
+        model = AutoModelForSequenceClassification.from_pretrained(model, return_dict=return_dict, **model_argument)
     elif task == 'token_classification':
-        model = AutoModelForTokenClassification.from_pretrained(model, **model_argument)
+        model = AutoModelForTokenClassification.from_pretrained(model, return_dict=return_dict, **model_argument)
     elif task == 'masked_language_model':
-        model = AutoModelForMaskedLM.from_pretrained(model, **model_argument)
+        model = AutoModelForMaskedLM.from_pretrained(model, return_dict=return_dict, **model_argument)
     else:
         raise ValueError(f'unknown task: {task}')
     return config, tokenizer, model

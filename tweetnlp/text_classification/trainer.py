@@ -12,7 +12,7 @@ import numpy as np
 from huggingface_hub import create_repo
 from datasets import load_metric
 from datasets.dataset_dict import DatasetDict
-from transformers import TrainingArguments, Trainer
+from transformers import TrainingArguments, Trainer, AutoModelForSequenceClassification
 from ray import tune
 
 from .readme_template import get_readme
@@ -144,10 +144,10 @@ class TrainerTextClassification:
             compute_metrics=self.compute_metric_search,
             model_init=lambda x: load_model(
                 self.language_model,
+                return_dict=True,
                 task='sequence_classification',
                 use_auth_token=self.use_auth_token,
                 config_argument=self.model_config,
-                model_argument={"return_dict": True}
             )[2]
         )
         # define search space
