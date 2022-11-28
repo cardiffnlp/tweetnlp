@@ -54,7 +54,7 @@ class TrainerTextClassification:
             self.model_config['problem_type'] = "multi_label_classification"
         self.config, self.tokenizer, self.model = load_model(
             self.language_model,
-            task='sentence_classification',
+            task='sequence_classification',
             use_auth_token=self.use_auth_token,
             config_argument=self.model_config
         )
