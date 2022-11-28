@@ -144,7 +144,7 @@ class TrainerTextClassification:
             compute_metrics=self.compute_metric_search,
             model_init=lambda x: load_model(
                 self.language_model,
-                task='sentence_classification',
+                task='sequence_classification',
                 use_auth_token=self.use_auth_token,
                 config_argument=self.model_config,
                 model_argument={"return_dict": True}
@@ -185,7 +185,7 @@ class TrainerTextClassification:
         logging.info(f"model/config/tokenizer are updated to the fine-tuned model of {self.best_model_path}")
         config_argument = {'problem_type': "multi_label_classification"} if self.multi_label else None
         self.config, self.tokenizer, self.model = load_model(
-            self.best_model_path, task='sentence_classification', config_argument=config_argument
+            self.best_model_path, task='sequence_classification', config_argument=config_argument
         )
         self.language_model = self.best_model_path
 
