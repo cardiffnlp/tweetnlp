@@ -1,5 +1,4 @@
 """ Simple interface for CardiffNLP twitter models. """
-# TODO: fix label2id part
 import logging
 import os
 from typing import List

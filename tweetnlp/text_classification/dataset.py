@@ -48,4 +48,6 @@ def load_dataset_text_classification(
     else:
         assert dataset_type, "either of task_type or dataset_type should be specified"
     dataset = load_dataset(dataset_type, dataset_name, use_auth_token=use_auth_token)
+    dataset.dataset_type = dataset_type
+    dataset.dataset_name = dataset_name
     return dataset, get_label2id(dataset)

@@ -23,6 +23,7 @@ Install TweetNLP via pip on your console.
 ```shell
 pip install tweetnlp
 ```
+## Model & Dataset
 
 ### Tweet Classification
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp?usp=sharing)
@@ -255,7 +256,7 @@ model.mask_prediction("How many more <mask> until opening day? 😩", best_n=2) 
   'How many more hours until opening day? 😩']}
 ```
 
-### Tweet/Sentence Embedding
+### Tweet Embedding
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp?usp=sharing)
 
 Tweet embedding model produces a fixed length embedding for a tweet. The embedding represents the semantics of the tweet, and this can be used a semantic search of tweets by using the similarity in betweein the embeddings. Model is instantiated by `tweet_nlp.load('sentence_embedding')`, and run the prediction by giving a text or a list of texts.
@@ -316,7 +317,7 @@ for m, (n, s) in enumerate(sorted(sims, key=lambda x: x[1], reverse=True)[:3]):
  - similaty: 0.6017154109745276
 ```
 
-## About Model & Dataset
+### Resources & Custom Model Loading 
 
 Here is a table of the default model used in each task. 
 
@@ -340,6 +341,30 @@ To use other model from local/huggingface modelhub, one can simply provide model
 
 ```python
 tweetnlp.load_model('ner', model_name='tner/twitter-roberta-base-2019-90m-tweetner7-continuous')
+```
+
+## Model Fine-tuning
+```python
+import logging
+import tweetnlp
+
+logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
+
+dataset, label_to_id = tweetnlp.load_dataset("hate")
+trainer_class = tweetnlp.load_trainer("hate")
+trainer = trainer_class(
+    language_model='cardiffnlp/twitter-roberta-base-dec2021',
+    dataset=dataset,
+    label_to_id=label_to_id,
+    max_length=128,
+    split_test='test',
+    split_train='train',
+    split_validation='validation',
+    output_dir='model_ckpt/hate'
+)
+trainer.train(eval_step=50, n_trials=5)
+trainer.evaluate()
+trainer.push_to_hub(hf_organization='cardiffnlp', model_alias='twitter-roberta-base-dec2021-hate')
 ```
 
 ## Reference Paper
