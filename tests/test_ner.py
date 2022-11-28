@@ -24,6 +24,8 @@ class Test(unittest.TestCase):
         model = tweetnlp.load_model('ner')
         preds = model.ner(SAMPLE)
         pprint(preds)
+        preds = model.predict(SAMPLE, return_probability=True, return_position=True)
+        pprint(preds)
 
 
 if __name__ == "__main__":
