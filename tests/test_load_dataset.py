@@ -4,7 +4,6 @@ import logging
 
 import tweetnlp
 from tweetnlp.text_classification.dataset import DEFAULT_DATASETS_TEXT_CLASSIFICATION
-from tweetnlp.ner.dataset import DEFAULT_DATASETS_NER
 
 logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', level=logging.DEBUG, datefmt='%Y-%m-%d %H:%M:%S')
 
@@ -26,10 +25,8 @@ class Test(unittest.TestCase):
                 tweetnlp.load_dataset_text_classification(k, multi_label=True)
 
     def test_ner(self):
-        for k in DEFAULT_DATASETS_NER.keys():
-            print(k)
-            tweetnlp.load_dataset(k)
-            tweetnlp.load_dataset_ner(k)
+        tweetnlp.load_dataset('ner')
+        tweetnlp.load_dataset_ner('ner')
 
 
 if __name__ == "__main__":

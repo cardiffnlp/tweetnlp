@@ -24,8 +24,6 @@ Install TweetNLP via pip on your console.
 pip install tweetnlp
 ```
 
-## Models 
-
 ### Tweet Classification
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=KAZYjeskBqL4)
 
@@ -80,7 +78,12 @@ model.topic("Jacob Collier is a Grammy-awarded English artist from London.", ret
   'daily_life': 0.00011083036952186376,
   'sports_&_gaming': 8.668467489769682e-05,
   'science_&_technology': 5.152115045348182e-05}}
+
+# GET DATASET
+dataset_multi_label, label2id_multi_label = tweetnlp.load_dataset('topic_classification')
+dataset_single_label, label2id_single_label = tweetnlp.load_dataset('topic_classification', multi_label=False)
 ```
+
 
 - ***Sentiment Analysis***: Binary classification of `positive`/`negative`. This module supports 8 different languages now 
   (Arabic/English/French/Spanish/German/Portuguese/Hindi/Italian).
@@ -101,45 +104,68 @@ model.sentiment("天気が良いとやっぱり気持ち良いなあ✨")
 >>> {'label': 'positive'}
 model.sentiment("天気が良いとやっぱり気持ち良いなあ✨", return_probability=True)
 >>> {'label': 'positive', 'probability': {'negative': 0.028369612991809845, 'neutral': 0.08128828555345535, 'positive': 0.8903420567512512}}
+
+# GET DATASET (ENGLISH)
+dataset, label2id = tweetnlp.load_dataset('sentiment')
+# GET DATASET (MULTILINGUAL)
+for l in ['arabic', 'english', 'french', 'german', 'hindi', 'italian', 'portuguese', 'spanish']:
+    dataset_multilingual, label2id_multilingual = tweetnlp.load_dataset('sentiment', multilingual=True, task_language=l)
 ```
 
 - ***Irony Detection***: Binary classification of whether the tweet is irony or not.
 
 ```python
 import tweetnlp
+
+# MODEL
 model = tweetnlp.load_model('irony')  # Or `model = tweetnlp.Irony()` 
 model.irony('If you wanna look like a badass, have drama on social media')  # Or `model.predict`
 >>> {'label': 'irony'}
 model.irony('If you wanna look like a badass, have drama on social media', return_probability=True)
 >>> {'label': 'irony', 'probability': {'non_irony': 0.08390884101390839, 'irony': 0.9160911440849304}} 
+
+# GET DATASET
+dataset, label2id = tweetnlp.load_dataset('irony')
 ```
 
 - ***Hate Speech Detection***: Binary classification of whether the tweet is hate or not.
 
 ```python
 import tweetnlp
+
+# MODEL
 model = tweetnlp.load_model('hate')  # Or `model = tweetnlp.Hate()` 
 model.hate('Whoever just unfollowed me you a bitch')  # Or `model.predict`
 >>> {'label': 'not-hate'}
 model.hate('Whoever just unfollowed me you a bitch', return_probability=True)
 >>> {'label': 'non-hate', 'probability': {'non-hate': 0.7263831496238708, 'hate': 0.27361682057380676}}
+
+# GET DATASET
+dataset, label2id = tweetnlp.load_dataset('hate')
 ```
 
 - ***Offensive Language Identification***: Binary classification of whether the tweet is offensive or not.
 
 ```python
 import tweetnlp
+
+# MODEL
 model = tweetnlp.load_model('offensive')  # Or `model = tweetnlp.Offensive()` 
 model.offensive("All two of them taste like ass.")  # Or `model.predict`
 >>> {'label': 'offensive'}
 model.offensive("All two of them taste like ass.", return_probability=True)
 >>> {'label': 'offensive', 'probability': {'non-offensive': 0.16420328617095947, 'offensive': 0.8357967734336853}}
+
+# GET DATASET
+dataset, label2id = tweetnlp.load_dataset('offensive')
 ```
 
 - ***Emoji Prediction***: Predict appropriate single emoji to the tweet from 20 emojis (❤, 😍, 😂, 💕, 🔥, 😊, 😎, ✨, 💙, 😘, 📷, 🇺🇸, ☀, 💜, 😉, 💯, 😁, 🎄, 📸, 😜).	
 
 ```python
 import tweetnlp
+
+# MODEL
 model = tweetnlp.load_model('emoji')  # Or `model = tweetnlp.Emoji()` 
 model.emoji('Beautiful sunset last night from the pontoon @TupperLakeNY')  # Or `model.predict`
 >>> {'label': '😊'}
@@ -165,17 +191,25 @@ model.emoji('Beautiful sunset last night from the pontoon @TupperLakeNY', return
   '🎄': 0.006829539313912392,
   '📸': 0.04188741743564606,
   '😜': 0.011156936176121235}}
+
+# GET DATASET
+dataset, label2id = tweetnlp.load_dataset('emoji')
 ```
 
 - ***Emotion Recognition***: Predict the emotion of the tweet from four classes: `anger`/`joy`/`optimism`/`sadness`.
 
 ```python
 import tweetnlp
+
+# MODEL
 model = tweetnlp.load_model('emotion')  # Or `model = tweetnlp.Emotion()` 
 model.emotion('I love swimming for the same reason I love meditating...the feeling of weightlessness.')  # Or `model.predict`
 >>> {'label': 'joy'}
 model.emotion('I love swimming for the same reason I love meditating...the feeling of weightlessness.', return_probability=True)
 >>> {'label': 'optimism', 'probability': {'joy': 0.01367587223649025, 'optimism': 0.7345258593559265, 'anger': 0.1770714670419693, 'sadness': 0.07472680509090424}}
+
+# GET DATASET
+dataset, label2id = tweetnlp.load_dataset('emotion')
 ```
 
 ### Information Extraction
@@ -277,43 +311,30 @@ for m, (n, s) in enumerate(sorted(sims, key=lambda x: x[1], reverse=True)[:3]):
  - similaty: 0.6017154109745276
 ```
 
-### About Models
+### About Model & Dataset
 
 Here is a table of the default model used in each task. 
 
-| Task | Model |
-|------|-------|
-|Topic Classification (single-label)     | [cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-single-all](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-single-all)      |
-|Topic Classification (multi-label)     | [cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-multi-all](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-multi-all)      |
-|Sentiment Analysis       | [cardiffnlp/twitter-roberta-base-sentiment-latest](https://huggingface.co/cardiffnlp/twitter-roberta-base-sentiment-latest)      |
-|Sentiment Analysis (Multilingual)  | [cardiffnlp/twitter-xlm-roberta-base-sentiment](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment) |
-|Irony Detection          | [cardiffnlp/twitter-roberta-base-irony](https://huggingface.co/cardiffnlp/twitter-roberta-base-irony)      |
-|Hate Detection           | [cardiffnlp/twitter-roberta-base-hate](https://huggingface.co/cardiffnlp/twitter-roberta-base-hate)      |
-|Offensive Detection      | [cardiffnlp/twitter-roberta-base-offensive](https://huggingface.co/cardiffnlp/twitter-roberta-base-offensive)      |
-|Emoji Prediction         | [cardiffnlp/twitter-roberta-base-emoji](https://huggingface.co/cardiffnlp/twitter-roberta-base-emoji)      |
-|Emotion Analysis         | [cardiffnlp/twitter-roberta-base-emotion](https://huggingface.co/cardiffnlp/twitter-roberta-base-emotion)      |
-|Named Entity Recognition | [tner/roberta-large-tweetner7-all](https://huggingface.co/tner/tner/roberta-large-tweetner7-all)     |
-|Language Modeling        | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m)      |
-|Tweet Embedding          | [cambridgeltl/tweet-roberta-base-embeddings-v1](https://huggingface.co/cambridgeltl/tweet-roberta-base-embeddings-v1)      |
+| Task                              | Model                                                                                                                                                   | Dataset |
+|-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
+|Topic Classification (single-label)| [cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-single-all](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-single-all) | [cardiffnlp/tweet_topic_single](https://huggingface.co/datasets/cardiffnlp/tweet_topic_single) |
+|Topic Classification (multi-label) | [cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-multi-all](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-multi-all)   | [cardiffnlp/tweet_topic_multi](https://huggingface.co/datasets/cardiffnlp/tweet_topic_multi) |
+|Named Entity Recognition           | [tner/roberta-large-tweetner7-all](https://huggingface.co/tner/tner/roberta-large-tweetner7-all)                                                        | [tner/tweetner7](https://huggingface.co/datasets/tner/tweetner7) |
+|Sentiment Analysis (Multilingual)  | [cardiffnlp/twitter-xlm-roberta-base-sentiment](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment)                                   | [cardiffnlp/tweet_sentiment_multilingual](https://huggingface.co/datasets/cardiffnlp/tweet_sentiment_multilingual) |
+|Sentiment Analysis                 | [cardiffnlp/twitter-roberta-base-sentiment-latest](https://huggingface.co/cardiffnlp/twitter-roberta-base-sentiment-latest)                             | [tweet_eval](https://huggingface.co/datasets/tweet_eval) |
+|Irony Detection                    | [cardiffnlp/twitter-roberta-base-irony](https://huggingface.co/cardiffnlp/twitter-roberta-base-irony)                                                   | [tweet_eval](https://huggingface.co/datasets/tweet_eval) |
+|Hate Detection                     | [cardiffnlp/twitter-roberta-base-hate](https://huggingface.co/cardiffnlp/twitter-roberta-base-hate)                                                     | [tweet_eval](https://huggingface.co/datasets/tweet_eval) |
+|Offensive Detection                | [cardiffnlp/twitter-roberta-base-offensive](https://huggingface.co/cardiffnlp/twitter-roberta-base-offensive)                                           | [tweet_eval](https://huggingface.co/datasets/tweet_eval) |
+|Emoji Prediction                   | [cardiffnlp/twitter-roberta-base-emoji](https://huggingface.co/cardiffnlp/twitter-roberta-base-emoji)                                                   | [tweet_eval](https://huggingface.co/datasets/tweet_eval) |
+|Emotion Analysis                   | [cardiffnlp/twitter-roberta-base-emotion](https://huggingface.co/cardiffnlp/twitter-roberta-base-emotion)                                               | [tweet_eval](https://huggingface.co/datasets/tweet_eval) |
+|Language Modeling                  | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m)                                           | TBA |
+|Tweet Embedding                    | [cambridgeltl/tweet-roberta-base-embeddings-v1](https://huggingface.co/cambridgeltl/tweet-roberta-base-embeddings-v1)                                   | TBA |
 
 
 To use other model from local/huggingface modelhub, one can simply provide model path/alias at the model loading.
 
 ```python
 tweetnlp.load_model('ner', model='tner/twitter-roberta-base-2019-90m-tweetner7-continuous')
-```
-
-
-## Datasets
-TweetNLP provides a few defaults dataset for following tasks.
-- ***Tweet Classification***
-
-```python
-import tweetnlp
-dataset, label2id = tweetnlp.load_dataset('emoji')
-dataset
->>> 
-
 ```
 
 ## Reference Paper
