@@ -231,7 +231,7 @@ model = tweetnlp.load_model('sentence_embedding')  # Or `model = tweetnlp.Senten
 tweet = "I will never understand the decision making of the people of Alabama. Their new Senator is a definite downgrade. You have served with honor.  Well done."
 vectors = model.embedding(tweet)
 vectors.shape
->>> (1, 768)
+>>> (768,)
 
 # Get sentence embedding (multiple inputs)
 tweet_corpus = [
@@ -266,15 +266,15 @@ for m, (n, s) in enumerate(sorted(sims, key=lambda x: x[1], reverse=True)[:3]):
   print(f' - top {m}: {tweet_corpus[n]}\n - similaty: {s}\n')
 
 >>> anchor tweet: I will never understand the decision making of the people of Alabama. Their new Senator is a definite downgrade. You have served with honor.  Well done.
->>> 
->>>  - top 0: Is this a confirmation from Q that Lin is leaking declassified intelligence to the public? I believe so. If @realDonaldTrump didn’t approve of what @LLinWood is doing he would have let us know a lonnnnnng time ago. I’ve always wondered why Lin’s Twitter handle started with “LLin” https://t.co/0G7zClOmi2
->>>  - similaty: 1.0787510714776494
->>> 
->>>  - top 1: Tomorrow is my last day as Senator from Alabama.  I believe our opportunities are boundless when we find common ground. As we swear in a new Congress &amp; a new President, demand from them that they do just that &amp; build a stronger, more just society.  It’s been an honor to serve you.The mask cult can’t ever admit masks don’t work because their ideology is based on feeling like a “good person”  Wearing a mask makes them a “good person” &amp; anyone who disagrees w/them isn’t  They can’t tolerate any idea that makes them feel like their self-importance is unearned
->>>  - similaty: 1.0151820570776409
->>> 
->>>  - top 2: @ice_qued @realDonaldTrump @LLinWood Yeah 100%
->>>  - similaty: 1.0036063366758512
+
+ - top 0: Tomorrow is my last day as Senator from Alabama.  I believe our opportunities are boundless when we find common ground. As we swear in a new Congress &amp; a new President, demand from them that they do just that &amp; build a stronger, more just society.  It’s been an honor to serve you.The mask cult can’t ever admit masks don’t work because their ideology is based on feeling like a “good person”  Wearing a mask makes them a “good person” &amp; anyone who disagrees w/them isn’t  They can’t tolerate any idea that makes them feel like their self-importance is unearned
+ - similaty: 0.7480925982953287
+
+ - top 1: Trump appointed judge Stephanos Bibas 
+ - similaty: 0.6289173306344258
+
+ - top 2: Free, fair elections are the lifeblood of our democracy. Charges of unfairness are serious. But calling an election unfair does not make it so. Charges require specific allegations and then proof. We have neither here.
+ - similaty: 0.6017154109745276
 ```
 
 ## Models
