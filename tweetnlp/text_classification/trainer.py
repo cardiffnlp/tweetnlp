@@ -188,11 +188,7 @@ class TrainerTextClassification:
         trainer.save_model(self.best_model_path)
         logging.info(f"best model saved at {self.best_model_path}")
         logging.info(f"model/config/tokenizer are updated to the fine-tuned model of {self.best_model_path}")
-        config_argument = {'problem_type': "multi_label_classification"} if self.multi_label else None
-        self.config, self.tokenizer, self.model = load_model(
-            self.best_model_path, task='sequence_classification', config_argument=config_argument
-        )
-        self.language_model = self.best_model_path
+        # self.language_model = self.best_model_path
 
     def evaluate(self, split_test: str = None, output_dir: str = None):
         if output_dir is not None:
@@ -202,7 +198,8 @@ class TrainerTextClassification:
             self.split_test = split_test
         logging.info('model evaluation')
         trainer = Trainer(
-            model=self.language_model,
+            model=self.language_model if self.best_model_path is None else self.best_model_path,
+            args=TrainingArguments(output_dir=self.output_dir, evaluation_strategy="no", seed=self.random_seed),
             eval_dataset=self.tokenized_datasets[self.split_test],
             compute_metrics=self.compute_metric_all
         )
