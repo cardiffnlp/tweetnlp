@@ -120,110 +120,110 @@ class Classifier:
 
 class TopicClassification(Classifier):
 
-    def __init__(self, model: str = None, max_length: int = 128, multi_label: bool = True):
-        if model is None:
-            model = MODEL_LIST['topic_classification']['multi_label' if multi_label else 'single_label']
-        super().__init__(model, max_length=max_length, multi_label=multi_label)
+    def __init__(self, model_name: str = None, max_length: int = 128, multi_label: bool = True):
+        if model_name is None:
+            model_name = MODEL_LIST['topic_classification']['multi_label' if multi_label else 'single_label']
+        super().__init__(model_name, max_length=max_length, multi_label=multi_label)
         self.topic = self.predict
         self.preprocess = get_preprocessor('tweet_topic')
 
 
 class Sentiment(Classifier):
 
-    def __init__(self, model: str = None, max_length: int = 128, multilingual: bool = False):
-        if model is None:
-            model = MODEL_LIST['sentiment']['multilingual' if multilingual else 'default']
-        super().__init__(model, max_length=max_length)
+    def __init__(self, model_name: str = None, max_length: int = 128, multilingual: bool = False):
+        if model_name is None:
+            model_name = MODEL_LIST['sentiment']['multilingual' if multilingual else 'default']
+        super().__init__(model_name, max_length=max_length)
         self.sentiment = self.predict
 
 
 class Offensive(Classifier):
 
-    def __init__(self, model: str = None, max_length: int = 128):
-        if model is None:
-            model = MODEL_LIST['offensive']['default']
-        super().__init__(model, max_length=max_length)
+    def __init__(self, model_name: str = None, max_length: int = 128):
+        if model_name is None:
+            model_name = MODEL_LIST['offensive']['default']
+        super().__init__(model_name, max_length=max_length)
         self.offensive = self.predict
 
 
 class Irony(Classifier):
 
-    def __init__(self, model: str = None, max_length: int = 128):
-        if model is None:
-            model = MODEL_LIST['irony']['default']
-        super().__init__(model, max_length=max_length)
+    def __init__(self, model_name: str = None, max_length: int = 128):
+        if model_name is None:
+            model_name = MODEL_LIST['irony']['default']
+        super().__init__(model_name, max_length=max_length)
         self.irony = self.predict
 
 
 class Hate(Classifier):
 
-    def __init__(self, model: str = None, max_length: int = 128):
-        if model is None:
-            model = MODEL_LIST['hate']['default']
-        super().__init__(model, max_length=max_length)
+    def __init__(self, model_name: str = None, max_length: int = 128):
+        if model_name is None:
+            model_name = MODEL_LIST['hate']['default']
+        super().__init__(model_name, max_length=max_length)
         self.hate = self.predict
 
 
 class Emotion(Classifier):
 
-    def __init__(self, model: str = None, max_length: int = 128):
-        if model is None:
-            model = MODEL_LIST['emotion']['default']
-        super().__init__(model, max_length=max_length)
+    def __init__(self, model_name: str = None, max_length: int = 128):
+        if model_name is None:
+            model_name = MODEL_LIST['emotion']['default']
+        super().__init__(model_name, max_length=max_length)
         self.emotion = self.predict
 
 
 class Emoji(Classifier):
 
-    def __init__(self, model: str = None, max_length: int = 128):
-        if model is None:
-            model = MODEL_LIST['emoji']['default']
-        super().__init__(model, max_length=max_length)
+    def __init__(self, model_name: str = None, max_length: int = 128):
+        if model_name is None:
+            model_name = MODEL_LIST['emoji']['default']
+        super().__init__(model_name, max_length=max_length)
         self.emoji = self.predict
 
 
 class StanceAbortion(Classifier):
 
-    def __init__(self, model: str = None, max_length: int = 128):
-        if model is None:
-            model = MODEL_LIST['stance_abortion']['default']
-        super().__init__(model, max_length=max_length)
+    def __init__(self, model_name: str = None, max_length: int = 128):
+        if model_name is None:
+            model_name = MODEL_LIST['stance_abortion']['default']
+        super().__init__(model_name, max_length=max_length)
         self.stance = self.predict
 
 
 class StanceAtheism(Classifier):
 
-    def __init__(self, model: str = None, max_length: int = 128):
-        if model is None:
-            model = MODEL_LIST['stance_atheism']['default']
-        super().__init__(model, max_length=max_length)
+    def __init__(self, model_name: str = None, max_length: int = 128):
+        if model_name is None:
+            model_name = MODEL_LIST['stance_atheism']['default']
+        super().__init__(model_name, max_length=max_length)
         self.stance = self.predict
 
 
 class StanceClimate(Classifier):
 
-    def __init__(self, model: str = None, max_length: int = 128):
-        if model is None:
-            model = MODEL_LIST['stance_climate']['default']
-        super().__init__(model, max_length=max_length)
+    def __init__(self, model_name: str = None, max_length: int = 128):
+        if model_name is None:
+            model_name = MODEL_LIST['stance_climate']['default']
+        super().__init__(model_name, max_length=max_length)
         self.stance = self.predict
 
 
 class StanceFeminist(Classifier):
 
-    def __init__(self, model: str = None, max_length: int = 128):
-        if model is None:
-            model = MODEL_LIST['stance_feminist']['default']
-        super().__init__(model, max_length=max_length)
+    def __init__(self, model_name: str = None, max_length: int = 128):
+        if model_name is None:
+            model_name = MODEL_LIST['stance_feminist']['default']
+        super().__init__(model_name, max_length=max_length)
         self.stance = self.predict
 
 
 class StanceHillary(Classifier):
 
-    def __init__(self, model: str = None, max_length: int = 128):
-        if model is None:
-            model = MODEL_LIST['stance_hillary']['default']
-        super().__init__(model, max_length=max_length)
+    def __init__(self, model_name: str = None, max_length: int = 128):
+        if model_name is None:
+            model_name = MODEL_LIST['stance_hillary']['default']
+        super().__init__(model_name, max_length=max_length)
         self.stance = self.predict
 
 
