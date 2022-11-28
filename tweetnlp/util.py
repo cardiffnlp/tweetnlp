@@ -62,6 +62,19 @@ def load_model(model: str,
         no_network = False
     except Exception:
         no_network = True
+    model_argument = {} if model_argument is None else model_argument
+    model_argument.update({"use_auth_token": use_auth_token, "local_files_only": no_network})
+
+    if return_dict:
+        if task == 'sequence_classification':
+            model = AutoModelForSequenceClassification.from_pretrained(model, return_dict=return_dict, **model_argument)
+        elif task == 'token_classification':
+            model = AutoModelForTokenClassification.from_pretrained(model, return_dict=return_dict, **model_argument)
+        elif task == 'masked_language_model':
+            model = AutoModelForMaskedLM.from_pretrained(model, return_dict=return_dict, **model_argument)
+        else:
+            raise ValueError(f'unknown task: {task}')
+        return model
 
     config_argument = {} if config_argument is None else config_argument
     config_argument.update({"use_auth_token": use_auth_token, "local_files_only": no_network})
@@ -71,15 +84,13 @@ def load_model(model: str,
     tokenizer_argument.update({"use_auth_token": use_auth_token, "local_files_only": no_network})
     tokenizer = AutoTokenizer.from_pretrained(model, **tokenizer_argument)
 
-    model_argument = {} if model_argument is None else model_argument
-    model_argument.update({"config": config, "use_auth_token": use_auth_token, "local_files_only": no_network})
-    print(model_argument)
+    model_argument.update({"config": config})
     if task == 'sequence_classification':
-        model = AutoModelForSequenceClassification.from_pretrained(model, return_dict=return_dict, **model_argument)
+        model = AutoModelForSequenceClassification.from_pretrained(model, **model_argument)
     elif task == 'token_classification':
-        model = AutoModelForTokenClassification.from_pretrained(model, return_dict=return_dict, **model_argument)
+        model = AutoModelForTokenClassification.from_pretrained(model, **model_argument)
     elif task == 'masked_language_model':
-        model = AutoModelForMaskedLM.from_pretrained(model, return_dict=return_dict, **model_argument)
+        model = AutoModelForMaskedLM.from_pretrained(model, **model_argument)
     else:
         raise ValueError(f'unknown task: {task}')
     return config, tokenizer, model
