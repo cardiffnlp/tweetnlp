@@ -223,6 +223,8 @@ The model is instantiated by `tweetnlp.load_model("ner")`, and run the predictio
 
 ```python3
 import tweetnlp
+
+# MODEL
 model = tweetnlp.load_model('ner')  # Or `model = tweetnlp.NER()` 
 model.ner('Jacob Collier is a Grammy-awarded English artist from London.')  # Or `model.predict`
 >>> [{'type': 'person', 'entity': 'Jacob Collier'}, {'type': 'event', 'entity': ' Grammy'}, {'type': 'location', 'entity': ' London'}]
@@ -233,6 +235,9 @@ model.ner('Jacob Collier is a Grammy-awarded English artist from London.', retur
   {'type': 'event', 'entity': ' Grammy', 'probability': 0.19164378941059113},
   {'type': 'location', 'entity': ' London', 'probability': 0.9607000350952148}
 ]
+
+# GET DATASET
+dataset, label2id = tweetnlp.load_dataset('ner')
 ```
 
 ### Language Modeling
@@ -311,7 +316,7 @@ for m, (n, s) in enumerate(sorted(sims, key=lambda x: x[1], reverse=True)[:3]):
  - similaty: 0.6017154109745276
 ```
 
-### About Model & Dataset
+## About Model & Dataset
 
 Here is a table of the default model used in each task. 
 
