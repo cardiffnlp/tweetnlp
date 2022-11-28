@@ -14,7 +14,8 @@ DEFAULT_MODEL = "tner/roberta-large-tweetner7-all"
 
 class NER:
 
-    def __init__(self, model_name: str = DEFAULT_MODEL, max_length: int = 128):
+    def __init__(self, model_name: str = None, max_length: int = 128):
+        model_name = DEFAULT_MODEL if model_name is None else model_name
         logging.debug(f'loading {model_name}')
         self.config, self.tokenizer, self.model = load_model(model_name, task='token_classification')
         self.max_length = max_length
