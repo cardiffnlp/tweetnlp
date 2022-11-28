@@ -72,6 +72,7 @@ def load_model(model: str,
 
     model_argument = {} if model_argument is None else model_argument
     model_argument.update({"config": config, "use_auth_token": use_auth_token, "local_files_only": no_network})
+    print(model_argument)
     if task == 'sequence_classification':
         model = AutoModelForSequenceClassification.from_pretrained(model, **model_argument)
     elif task == 'token_classification':
