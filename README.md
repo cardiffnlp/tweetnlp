@@ -25,7 +25,7 @@ pip install tweetnlp
 ```
 
 ### Tweet Classification
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=KAZYjeskBqL4)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp?usp=sharing)
 
 The classification module consists of seven different tasks (Topic Classification, Sentiment Analysis, Irony Detection, 
 Hate Detection, Offensive Detection, Emoji Prediction, and Emotion Analysis). In each example, the model is instantiated 
@@ -213,7 +213,7 @@ dataset, label2id = tweetnlp.load_dataset('emotion')
 ```
 
 ### Information Extraction
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=WeREiLEjBlrj)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp?usp=sharing)
 
 The information extraction module consists of named-entity recognition (NER) model specifically trained for tweets.
 The model is instantiated by `tweetnlp.load_model("ner")`, and run the prediction by giving a text or a list of texts.
@@ -241,7 +241,7 @@ dataset, label2id = tweetnlp.load_dataset('ner')
 ```
 
 ### Language Modeling
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=COOoZHVAFCIG)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp?usp=sharing)
 
 Masked language model predicts masked token in the given sentence. This is instantiated by `tweetnlp.load_model('language_model')`, and run the prediction by giving a text or a list of texts. Please make sure that each text has `<mask>` token, that is the objective of the model to predict.
 
@@ -256,7 +256,7 @@ model.mask_prediction("How many more <mask> until opening day? 😩", best_n=2) 
 ```
 
 ### Tweet/Sentence Embedding
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=MUT31bNQYTNz)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp?usp=sharing)
 
 Tweet embedding model produces a fixed length embedding for a tweet. The embedding represents the semantics of the tweet, and this can be used a semantic search of tweets by using the similarity in betweein the embeddings. Model is instantiated by `tweet_nlp.load('sentence_embedding')`, and run the prediction by giving a text or a list of texts.
 
@@ -339,7 +339,7 @@ Here is a table of the default model used in each task.
 To use other model from local/huggingface modelhub, one can simply provide model path/alias at the model loading.
 
 ```python
-tweetnlp.load_model('ner', model='tner/twitter-roberta-base-2019-90m-tweetner7-continuous')
+tweetnlp.load_model('ner', model_name='tner/twitter-roberta-base-2019-90m-tweetner7-continuous')
 ```
 
 ## Reference Paper
