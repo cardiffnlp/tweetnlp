@@ -53,9 +53,14 @@ MODEL_LIST = {
 
 class Classifier:
 
-    def __init__(self, model_name: str, max_length: int, multi_label: bool = False):
+    def __init__(self,
+                 model_name: str,
+                 max_length: int,
+                 multi_label: bool = False,
+                 use_auth_token: bool = False):
         logging.debug(f'loading {model_name}')
-        self.config, self.tokenizer, self.model = load_model(model_name, task='sequence_classification')
+        self.config, self.tokenizer, self.model = load_model(
+            model_name, task='sequence_classification', use_auth_token=use_auth_token)
         self.max_length = max_length
         self.multi_label = multi_label
         self.id_to_label = {str(v): k for k, v in self.config.label2id.items()}
