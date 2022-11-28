@@ -148,7 +148,7 @@ class TrainerTextClassification:
                 task='sequence_classification',
                 use_auth_token=self.use_auth_token,
                 model_argument=self.model_config,
-            )[2]
+            )
         )
         # define search space
         logging.info('define search space')
