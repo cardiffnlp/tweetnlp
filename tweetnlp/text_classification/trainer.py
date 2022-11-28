@@ -175,7 +175,9 @@ class TrainerTextClassification:
             resources_per_trial=resources_per_trial
         )
         # finetuning with the best config
-        logging.info(f"finetuning with the best config: {best_run}")
+        with open(pj(self.output_dir, 'best_run_hyperparameters.json'), 'w') as f:
+            json.dump(best_run.hyperparameters, f)
+        logging.info(f"finetuning with the best config: {best_run} (saved at {pj(self.output_dir, 'best_run_hyperparameters.json')})")
         for n, v in best_run.hyperparameters.items():
             setattr(trainer.args, n, v)
         trainer.train()
