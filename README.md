@@ -26,7 +26,7 @@ pip install tweetnlp
 
 ## Models 
 
-### Tweet/Sentence Classification
+### Tweet Classification
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=KAZYjeskBqL4)
 
 The classification module consists of seven different tasks (Topic Classification, Sentiment Analysis, Irony Detection, 
@@ -277,7 +277,8 @@ for m, (n, s) in enumerate(sorted(sims, key=lambda x: x[1], reverse=True)[:3]):
  - similaty: 0.6017154109745276
 ```
 
-## Models
+### About Models
+
 Here is a table of the default model used in each task. 
 
 | Task | Model |
@@ -297,17 +298,25 @@ Here is a table of the default model used in each task.
 
 
 To use other model from local/huggingface modelhub, one can simply provide model path/alias at the model loading.
-```python
-tweetnlp.load_model('task', model='model-path/alias')
-```
 
-Or any classification model can be used without specifying the task.
 ```python
-tweetnlp.load_model(model='cardiffnlp/tweet-topic-19-single')
+tweetnlp.load_model('ner', model='tner/twitter-roberta-base-2019-90m-tweetner7-continuous')
 ```
 
 
-# Reference Paper
+## Datasets
+TweetNLP provides a few defaults dataset for following tasks.
+- ***Tweet Classification***
+
+```python
+import tweetnlp
+dataset, label2id = tweetnlp.load_dataset('emoji')
+dataset
+>>> 
+
+```
+
+## Reference Paper
 
 For more details, please read the accompanying [TweetNLP's reference paper](https://arxiv.org/pdf/2206.14774.pdf). If you use TweetNLP in your research, please use the following `bib` entry to cite the reference paper:
 

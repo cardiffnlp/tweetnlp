@@ -23,4 +23,4 @@ def load_dataset_ner(
     else:
         assert dataset_type, "either of task_type or dataset_type should be specified"
     dataset = load_dataset(dataset_type, dataset_name, use_auth_token=use_auth_token)
-    return dataset, get_label2id(dataset)
+    return dataset, get_label2id(dataset, label_name='tags')

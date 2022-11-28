@@ -38,8 +38,8 @@ def get_preprocessor(processor_type: str = None):
     return preprocess
 
 
-def get_label2id(dataset: DatasetDict):
-    label_info = dataset[list(dataset.keys())[0]].features['tags']
+def get_label2id(dataset: DatasetDict, label_name: str = 'label'):
+    label_info = dataset[list(dataset.keys())[0]].features[label_name]
     while True:
         if type(label_info) is Sequence:
             label_info = label_info.feature
