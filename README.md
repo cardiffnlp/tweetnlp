@@ -19,109 +19,163 @@ Resources:
 
 ## Get Started
 
-Install TweetNLP with 
+Install TweetNLP via pip on your console. 
 ```shell
 pip install tweetnlp
 ```
-and get started with 
 
-```python3
-import tweetnlp
-```
+## Models 
 
 ### Tweet/Sentence Classification
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=KAZYjeskBqL4)
 
 The classification module consists of seven different tasks (Topic Classification, Sentiment Analysis, Irony Detection, 
 Hate Detection, Offensive Detection, Emoji Prediction, and Emotion Analysis). In each example, the model is instantiated 
-by `tweetnlp.load("task-name")`, and run the prediction by giving a text or a list of texts.
+by `tweetnlp.load_model("task-name")`, and run the prediction by giving a text or a list of texts.
 
 - ***Topic Classification***: This model classifies given tweet into 19 categories. As default, it returns all relevant topics to the tweet, 
-  so the output could be a list of topics. Single class model can be also loaded by  
-  `tweetnlp.load('topic_classification', single_class=True)`.
-  
+  so the output could be a list of topics. Single-label model (return single topic instead) can be also loaded by  
+  `tweetnlp.load_model('topic_classification', multi_label=False)` that classifies a tweet into 6 major topics. Check the [paper](https://arxiv.org/abs/2209.09824) for more detail.
+
 ```python
+import tweetnlp
+
+# MULTI-LABEL MODEL 
 model = tweetnlp.load_model('topic_classification')  # Or `model = tweetnlp.TopicClassification()`
 model.topic("Jacob Collier is a Grammy-awarded English artist from London.")  # Or `model.predict`
+>>> {'label': ['celebrity_&_pop_culture', 'music']}
+# Note: the probability of the multi-label model is the output of sigmoid function on binary prediction whether each topic is positive or negative.
+model.topic("Jacob Collier is a Grammy-awarded English artist from London.", return_probability=True)
 >>> {'label': ['celebrity_&_pop_culture', 'music'],
-     'probability': {
-         'arts_&_culture': 0.2698121964931488,
-         'business_&_entrepreneurs': 0.013311311602592468,
-         'celebrity_&_pop_culture': 0.9566839933395386,
-         'diaries_&_daily_life': 0.021030571311712265,
-         'family': 0.011442456394433975,
-         'fashion_&_style': 0.06922700256109238,
-         'film_tv_&_video': 0.14880894124507904,
-         'fitness_&_health': 0.019434355199337006,
-         'food_&_dining': 0.008309685625135899,
-         'gaming': 0.006225654389709234,
-         'learning_&_educational': 0.015360666438937187,
-         'music': 0.9405960440635681,
-         'news_&_social_concern': 0.428384929895401,
-         'other_hobbies': 0.0231352336704731,
-         'relationships': 0.014804207719862461,
-         'science_&_technology': 0.008933884091675282,
-         'sports': 0.006143205799162388,
-         'travel_&_adventure': 0.016946149989962578,
-         'youth_&_student_life': 0.008365697227418423}
-     }
+ 'probability': {'arts_&_culture': 0.037371691316366196,
+  'business_&_entrepreneurs': 0.010188567452132702,
+  'celebrity_&_pop_culture': 0.92448890209198,
+  'diaries_&_daily_life': 0.03425711765885353,
+  'family': 0.00796138122677803,
+  'fashion_&_style': 0.020642118528485298,
+  'film_tv_&_video': 0.08062587678432465,
+  'fitness_&_health': 0.006343095097690821,
+  'food_&_dining': 0.0042883665300905704,
+  'gaming': 0.004327300935983658,
+  'learning_&_educational': 0.010652057826519012,
+  'music': 0.8291937112808228,
+  'news_&_social_concern': 0.24688217043876648,
+  'other_hobbies': 0.020671198144555092,
+  'relationships': 0.020371075719594955,
+  'science_&_technology': 0.0170074962079525,
+  'sports': 0.014291072264313698,
+  'travel_&_adventure': 0.010423899628221989,
+  'youth_&_student_life': 0.008605164475739002}}
+
+# SINGLE-LABEL MODEL
+model = tweetnlp.load_model('topic_classification', multi_label=False)  # Or `model = tweetnlp.TopicClassification(multi_label=False)`
+model.topic("Jacob Collier is a Grammy-awarded English artist from London.")
+>>> {'label': 'pop_culture'}
+# NOTE: the probability of the sinlge-label model the softmax over the label.
+model.topic("Jacob Collier is a Grammy-awarded English artist from London.", return_probability=True)
+>>> {'label': 'pop_culture',
+ 'probability': {'arts_&_culture': 9.20625461731106e-05,
+  'business_&_entrepreneurs': 6.916998972883448e-05,
+  'pop_culture': 0.9995898604393005,
+  'daily_life': 0.00011083036952186376,
+  'sports_&_gaming': 8.668467489769682e-05,
+  'science_&_technology': 5.152115045348182e-05}}
 ```
 
-- ***Sentiment Analysis***: Binary classification of `positive`/`negative`.
+- ***Sentiment Analysis***: Binary classification of `positive`/`negative`. This module supports 8 different languages now 
+  (Arabic/English/French/Spanish/German/Portuguese/Hindi/Italian).
 
 ```python
+import tweetnlp
+
+# ENGLISH MODEL
 model = tweetnlp.load_model('sentiment')  # Or `model = tweetnlp.Sentiment()` 
 model.sentiment("Yes, including Medicare and social security saving👍")  # Or `model.predict`
->>> {'label': 'positive', 'probability': 0.8018065094947815}
+>>> {'label': 'positive'}
+model.sentiment("Yes, including Medicare and social security saving👍", return_probability=True)
+>>> {'label': 'positive', 'probability': {'negative': 0.004584966693073511, 'neutral': 0.19360853731632233, 'positive': 0.8018065094947815}}
+
+# MULTILINGUAL MODEL
+model = tweetnlp.load_model('sentiment', multilingual=True)  # Or `model = tweetnlp.Sentiment(multilingual=True)` 
+model.sentiment("天気が良いとやっぱり気持ち良いなあ✨")
+>>> {'label': 'positive'}
+model.sentiment("天気が良いとやっぱり気持ち良いなあ✨", return_probability=True)
+>>> {'label': 'positive', 'probability': {'negative': 0.028369612991809845, 'neutral': 0.08128828555345535, 'positive': 0.8903420567512512}}
 ```
-
-- ***Sentiment Analysis (Multilingual)***: Binary classification of `positive`/`negative`.
-
-```python
-model = tweetnlp.load_model('sentiment_multilingual')  # Or `model = tweetnlp.SentimentMultilingual()` 
-model.sentiment("天気が良いとやっぱり気持ち良いなあ✨")  # Or `model.predict`
->>> {'label': 'positive', 'probability': 0.8903419971466064}
-```
-
 
 - ***Irony Detection***: Binary classification of whether the tweet is irony or not.
 
 ```python
+import tweetnlp
 model = tweetnlp.load_model('irony')  # Or `model = tweetnlp.Irony()` 
 model.irony('If you wanna look like a badass, have drama on social media')  # Or `model.predict`
->>> {'label': 'irony', 'probability': 0.9160911440849304}
+>>> {'label': 'irony'}
+model.irony('If you wanna look like a badass, have drama on social media', return_probability=True)
+>>> {'label': 'irony', 'probability': {'non_irony': 0.08390884101390839, 'irony': 0.9160911440849304}} 
 ```
 
 - ***Hate Speech Detection***: Binary classification of whether the tweet is hate or not.
 
 ```python
+import tweetnlp
 model = tweetnlp.load_model('hate')  # Or `model = tweetnlp.Hate()` 
 model.hate('Whoever just unfollowed me you a bitch')  # Or `model.predict`
->>> {'label': 'not-hate', 'probability': 0.7263831496238708}
+>>> {'label': 'not-hate'}
+model.hate('Whoever just unfollowed me you a bitch', return_probability=True)
+>>> {'label': 'non-hate', 'probability': {'non-hate': 0.7263831496238708, 'hate': 0.27361682057380676}}
 ```
 
 - ***Offensive Language Identification***: Binary classification of whether the tweet is offensive or not.
 
 ```python
+import tweetnlp
 model = tweetnlp.load_model('offensive')  # Or `model = tweetnlp.Offensive()` 
-model.offensive("All two of them taste like ass. ")  # Or `model.predict`
->>> {'label': 'offensive', 'probability': 0.8600459098815918}
+model.offensive("All two of them taste like ass.")  # Or `model.predict`
+>>> {'label': 'offensive'}
+model.offensive("All two of them taste like ass.", return_probability=True)
+>>> {'label': 'offensive', 'probability': {'non-offensive': 0.16420328617095947, 'offensive': 0.8357967734336853}}
 ```
 
 - ***Emoji Prediction***: Predict appropriate single emoji to the tweet from 20 emojis (❤, 😍, 😂, 💕, 🔥, 😊, 😎, ✨, 💙, 😘, 📷, 🇺🇸, ☀, 💜, 😉, 💯, 😁, 🎄, 📸, 😜).	
 
 ```python
+import tweetnlp
 model = tweetnlp.load_model('emoji')  # Or `model = tweetnlp.Emoji()` 
 model.emoji('Beautiful sunset last night from the pontoon @TupperLakeNY')  # Or `model.predict`
->>> {'label': '😊', 'probability': 0.3179638981819153}
+>>> {'label': '😊'}
+model.emoji('Beautiful sunset last night from the pontoon @TupperLakeNY', return_probability=True)
+>>> {'label': '📷',
+ 'probability': {'❤': 0.13197319209575653,
+  '😍': 0.11246423423290253,
+  '😂': 0.008415069431066513,
+  '💕': 0.04842926934361458,
+  '🔥': 0.014528146013617516,
+  '😊': 0.1509675830602646,
+  '😎': 0.08625403046607971,
+  '✨': 0.01616635173559189,
+  '💙': 0.07396604865789413,
+  '😘': 0.03033279813826084,
+  '📷': 0.16525287926197052,
+  '🇺🇸': 0.020336611196398735,
+  '☀': 0.00799981877207756,
+  '💜': 0.016111424192786217,
+  '😉': 0.012984540313482285,
+  '💯': 0.012557178735733032,
+  '😁': 0.031386848539114,
+  '🎄': 0.006829539313912392,
+  '📸': 0.04188741743564606,
+  '😜': 0.011156936176121235}}
 ```
 
 - ***Emotion Recognition***: Predict the emotion of the tweet from four classes: `anger`/`joy`/`optimism`/`sadness`.
 
 ```python
+import tweetnlp
 model = tweetnlp.load_model('emotion')  # Or `model = tweetnlp.Emotion()` 
 model.emotion('I love swimming for the same reason I love meditating...the feeling of weightlessness.')  # Or `model.predict`
->>> {'label': 'joy', 'probability': 0.7345258593559265}
+>>> {'label': 'joy'}
+model.emotion('I love swimming for the same reason I love meditating...the feeling of weightlessness.', return_probability=True)
+>>> {'label': 'optimism', 'probability': {'joy': 0.01367587223649025, 'optimism': 0.7345258593559265, 'anger': 0.1770714670419693, 'sadness': 0.07472680509090424}}
 ```
 
 ### Information Extraction
@@ -134,16 +188,17 @@ The model is instantiated by `tweetnlp.load_model("ner")`, and run the predictio
 - ***Named Entity Recognition***
 
 ```python3
+import tweetnlp
 model = tweetnlp.load_model('ner')  # Or `model = tweetnlp.NER()` 
 model.ner('Jacob Collier is a Grammy-awarded English artist from London.')  # Or `model.predict`
->>> {
-    'prediction': ['B-person', 'I-person', 'O', 'O', 'O', 'O', 'O', 'O', 'B-location'],
-    'probability': [0.9606876969337463, 0.9834017753601074, 0.9816871285438538, 0.9896021485328674, 0.44137904047966003, 0.375810831785202, 0.8757674694061279, 0.9786785244941711, 0.9398059248924255],
-    'input': ['Jacob', 'Collier', 'is', 'a', 'Grammy-awarded', 'English', 'artist', 'from', 'London.'],
-    'entity_prediction': [
-        {'type': 'person', 'entity': ['Jacob', 'Collier'], 'position': [0, 1], 'probability': [0.9606876969337463, 0.9834017753601074]},
-        {'type': 'location', 'entity': ['London.'], 'position': [8], 'probability': [0.9398059248924255]}]
-}
+>>> [{'type': 'person', 'entity': 'Jacob Collier'}, {'type': 'event', 'entity': ' Grammy'}, {'type': 'location', 'entity': ' London'}]
+# Note: the probability for the predicted entity is the mean of the probabilities over the sub-tokens representing the entity. 
+model.ner('Jacob Collier is a Grammy-awarded English artist from London.', return_probability=True)  # Or `model.predict`
+>>> [
+  {'type': 'person', 'entity': 'Jacob Collier', 'probability': 0.9905318220456442},
+  {'type': 'event', 'entity': ' Grammy', 'probability': 0.19164378941059113},
+  {'type': 'location', 'entity': ' London', 'probability': 0.9607000350952148}
+]
 ```
 
 ### Language Modeling
@@ -152,6 +207,7 @@ model.ner('Jacob Collier is a Grammy-awarded English artist from London.')  # Or
 Masked language model predicts masked token in the given sentence. This is instantiated by `tweetnlp.load_model('language_model')`, and run the prediction by giving a text or a list of texts. Please make sure that each text has `<mask>` token, that is the objective of the model to predict.
 
 ```python
+import tweetnlp
 model = tweetnlp.load_model('language_model')  # Or `model = tweetnlp.LanguageModel()` 
 model.mask_prediction("How many more <mask> until opening day? 😩")  # Or `model.predict`
 ```
@@ -221,7 +277,8 @@ Here is a table of the default model used in each task.
 
 | Task | Model |
 |------|-------|
-|Topic Classification     | [cardiffnlp/tweet-topic-21-multi](https://huggingface.co/cardiffnlp/tweet-topic-21-multi)      |
+|Topic Classification (single-label)     | [cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-single-all](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-single-all)      |
+|Topic Classification (multi-label)     | [cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-multi-all](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-multi-all)      |
 |Sentiment Analysis       | [cardiffnlp/twitter-roberta-base-sentiment-latest](https://huggingface.co/cardiffnlp/twitter-roberta-base-sentiment-latest)      |
 |Sentiment Analysis (Multilingual)  | [cardiffnlp/twitter-xlm-roberta-base-sentiment](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment) |
 |Irony Detection          | [cardiffnlp/twitter-roberta-base-irony](https://huggingface.co/cardiffnlp/twitter-roberta-base-irony)      |

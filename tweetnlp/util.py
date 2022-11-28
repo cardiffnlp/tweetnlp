@@ -4,7 +4,8 @@ import urllib.request
 from urlextract import URLExtract
 from datasets.features import Sequence, ClassLabel
 from datasets.dataset_dict import DatasetDict
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoModelForTokenClassification, AutoConfig
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoModelForTokenClassification, AutoConfig,\
+    AutoModelForMaskedLM
 
 
 def get_preprocessor(processor_type: str = None):
@@ -54,15 +55,6 @@ def load_model(model: str, task: str = 'sequence_classification', use_auth_token
         no_network = False
     except Exception:
         no_network = True
-    # if label_to_id is not None:
-    #     config = AutoConfig.from_pretrained(
-    #         model,
-    #         use_auth_token=use_auth_token,
-    #         num_labels=len(label_to_id),
-    #         id2label={v: k for k, v in label_to_id.items()},
-    #         label2id=label_to_id,
-    #         local_files_only=no_network)
-    # else:
     config = AutoConfig.from_pretrained(model, use_auth_token=use_auth_token, local_files_only=no_network)
     tokenizer = AutoTokenizer.from_pretrained(model, use_auth_token=use_auth_token, local_files_only=no_network)
     if task == 'sequence_classification':
@@ -73,6 +65,9 @@ def load_model(model: str, task: str = 'sequence_classification', use_auth_token
         model = AutoModelForTokenClassification.from_pretrained(
             model, config=config, use_auth_token=use_auth_token, local_files_only=no_network
         )
+    elif task == 'masked_language_model':
+        model = AutoModelForMaskedLM.from_pretrained(
+            model, config=config, use_auth_token=use_auth_token, local_files_only=no_network)
     else:
         raise ValueError(f'unknown task: {task}')
     return config, tokenizer, model

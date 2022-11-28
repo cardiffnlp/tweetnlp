@@ -1,39 +1,20 @@
 """ Simple interface for CardiffNLP masked language models. """
-# TODO: Add preprocessing to handle the twitter username
 import logging
 import re
 from typing import List
 
 import torch
-from transformers import AutoConfig, AutoTokenizer, AutoModelForMaskedLM
+from ..util import load_model
 
-DEFAULT_MODEL = "cardiffnlp/twitter-roberta-base-2021-124m"
-
-
-def load_model(model, local_files_only: bool = False):
-    config = AutoConfig.from_pretrained(model, local_files_only=local_files_only)
-    tokenizer = AutoTokenizer.from_pretrained(model, local_files_only=local_files_only)
-    model = AutoModelForMaskedLM.from_pretrained(model, config=config, local_files_only=local_files_only)
-    return config, tokenizer, model
-
-
-def preprocess(text):
-    new_text = []
-    for t in text.split(" "):
-        t = '@user' if t.startswith('@') and len(t) > 1 else t
-        t = 'http' if t.startswith('http') else t
-        new_text.append(t)
-    return " ".join(new_text)
+DEFAULT_MLM_MODEL = "cardiffnlp/twitter-roberta-base-2021-124m"
 
 
 class LanguageModel:
 
-    def __init__(self, model: str = None, max_length: int = 128):
-        try:
-            self.config, self.tokenizer, self.model = load_model(DEFAULT_MODEL if model is None else model)
-        except Exception:
-            self.config, self.tokenizer, self.model = load_model(DEFAULT_MODEL if model is None else model,
-                                                                 local_files_only=True)
+    def __init__(self, model_name: str = None, max_length: int = 128, use_auth_token: bool = False):
+        model_name = DEFAULT_MLM_MODEL if model_name is None else model_name
+        self.config, self.tokenizer, self.model = load_model(
+            model_name, task='masked_language_model', use_auth_token=use_auth_token)
         self.max_length = max_length
         # GPU setup
         self.device = 'cuda' if torch.cuda.device_count() > 0 else 'cpu'
@@ -58,11 +39,10 @@ class LanguageModel:
         if type(text) is str:
             text = [text]
             single_input_flag = True
-        for t in text:
-            assert t.count(self.tokenizer.mask_token) == 1, f"one <mask> token should be in the texts: {t}"
-        text = [preprocess(t) for t in text]
-        if batch_size is None:
-            batch_size = len(text)
+        assert all(t.count(self.tokenizer.mask_token) == 1 for t in text),\
+            f"{self.tokenizer.mask_token} token not found: {text}"
+        assert all(type(t) is str for t in text), text
+        batch_size = len(text) if batch_size is None else batch_size
         _index = list(range(0, len(text), batch_size)) + [len(text) + 1]
         predictions = []
         probs = []
