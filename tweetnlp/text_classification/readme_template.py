@@ -1,7 +1,6 @@
 import json
 import os
 import shutil
-from typing import Dict
 from os.path import join as pj
 
 sample = 'Get the all-analog Classic Vinyl Edition of "Takin\' Off" Album from {@herbiehancock@} via {@bluenoterecords@} link below: {{URL}}'
