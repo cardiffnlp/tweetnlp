@@ -24,6 +24,7 @@ class LanguageModel:
         self.model.to(self.device)
         logging.debug(f'{torch.cuda.device_count()} GPUs are in use')
         self.mask_prediction = self.predict  # function alias
+        self.model.eval()
 
     def ids_to_tokens(self, token_ids):
         tokens = self.tokenizer.batch_decode(token_ids, skip_special_tokens=True)
@@ -34,11 +35,9 @@ class LanguageModel:
                 batch_size: int = None,
                 best_n: int = 10,
                 worst_n: int = None):
-        self.model.eval()
-        single_input_flag = False
-        if type(text) is str:
-            text = [text]
-            single_input_flag = True
+
+        single_input_flag = type(text) is str
+        text = [text] if single_input_flag else text
         assert all(t.count(self.tokenizer.mask_token) == 1 for t in text),\
             f"{self.tokenizer.mask_token} token not found: {text}"
         assert all(type(t) is str for t in text), text

@@ -209,7 +209,11 @@ Masked language model predicts masked token in the given sentence. This is insta
 ```python
 import tweetnlp
 model = tweetnlp.load_model('language_model')  # Or `model = tweetnlp.LanguageModel()` 
-model.mask_prediction("How many more <mask> until opening day? 😩")  # Or `model.predict`
+model.mask_prediction("How many more <mask> until opening day? 😩", best_n=2)  # Or `model.predict`
+>>> {'best_tokens': ['days', 'hours'],
+ 'best_scores': [5.498564104033932e-11, 4.906026140893971e-10],
+ 'best_sentences': ['How many more days until opening day? 😩',
+  'How many more hours until opening day? 😩']}
 ```
 
 ### Tweet/Sentence Embedding
