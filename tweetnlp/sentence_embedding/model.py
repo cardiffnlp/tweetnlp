@@ -39,7 +39,10 @@ class SentenceEmbedding:
             text = [self.preprocess(i) for i in text]
         batch_size = len(text) if batch_size is None else batch_size
         with torch.no_grad():
-            return self.model.encode(text, batch_size=batch_size)
+            output = self.model.encode(text, batch_size=batch_size)
+        if single_input_flag:
+            return output[0]
+        return output
 
     def similarity(self, text_a: str, text_b: str):
         with torch.no_grad():
