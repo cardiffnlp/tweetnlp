@@ -25,6 +25,12 @@ setup(
         'License :: OSI Approved :: MIT License',   # Again, pick a license
         'Programming Language :: Python :: 3',      #Specify which pyhton versions that you want to support
     ],
+    extras_require={
+        "finetuning": [
+            "ray[tune]",
+            "huggingface_hub"
+        ]
+    },
     include_package_data=True,
     test_suite='tests',
     install_requires=[

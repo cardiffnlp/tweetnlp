@@ -1,5 +1,5 @@
 from datasets import load_dataset
-from datasets.features.features import Sequence, ClassLabel
+from ..util import get_label2id
 
 DEFAULT_DATASETS_TEXT_CLASSIFICATION = {
     "offensive": {'default': ["tweet_eval", "offensive"]},
@@ -47,23 +47,5 @@ def load_dataset_text_classification(
             dataset_name = task_language
     else:
         assert dataset_type, "either of task_type or dataset_type should be specified"
-    if dataset_name is not None:
-        dataset = load_dataset(dataset_type, dataset_name, use_auth_token=use_auth_token)
-    else:
-        dataset = load_dataset(dataset_type, use_auth_token=use_auth_token)
-
-    label_info = dataset[list(dataset.keys())[0]].features['label']
-    while True:
-        if type(label_info) is Sequence:
-            label_info = label_info.feature
-        else:
-            assert type(label_info) is ClassLabel, f"Error at retrieving label information {label_info}"
-            break
-    label2id = {k: n for n, k in enumerate(label_info.names)}
-    return dataset, label2id
-
-
-if __name__ == '__main__':
-
-    load_dataset_text_classification("offensive")
-    load_dataset_text_classification("topic_classification", multi_label=True)
+    dataset = load_dataset(dataset_type, dataset_name, use_auth_token=use_auth_token)
+    return dataset, get_label2id(dataset)

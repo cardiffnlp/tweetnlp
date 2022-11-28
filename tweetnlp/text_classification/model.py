@@ -1,17 +1,13 @@
 """ Simple interface for CardiffNLP twitter models. """
+# TODO: fix label2id part
 import logging
-import csv
-import json
 import os
-import re
-import urllib.request
-from typing import List, Dict
+from typing import List
 
 import torch
-from urlextract import URLExtract
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoConfig
 
-URLEx = URLExtract()
+from ..util import load_model, get_preprocessor
+
 DEFAULT_CACHE_DIR = f"{os.path.expanduser('~')}/.cache/tweetnlp/classification"
 MODEL_LIST = {
     'emotion': {
@@ -55,35 +51,14 @@ MODEL_LIST = {
 }
 
 
-def download_id2label(task):
-    path = f'{DEFAULT_CACHE_DIR}/id2label/{task}'
-    if not os.path.exists(path):
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        # download label mapping
-        mapping_link = f"https://raw.githubusercontent.com/cardiffnlp/tweeteval/main/datasets/{task}/mapping.txt"
-        with urllib.request.urlopen(mapping_link) as f:
-            html = f.read().decode('utf-8').split("\n")
-            csvreader = csv.reader(html, delimiter='\t')
-        labels = [row[1] for row in csvreader if len(row) > 1]
-        id2label = {str(n): _l for n, _l in enumerate(labels)}
-        with open(path, 'w') as f:
-            json.dump(id2label, f)
-    else:
-        with open(path) as f:
-            id2label = json.load(f)
-    return id2label
-
-
 class Classifier:
 
-    def __init__(self, model_name: str, max_length: int, id_to_label: Dict = None, multi_label: bool = False):
-        self.config, self.tokenizer, self.model = self.load_model(model_name)
+    def __init__(self, model_name: str, max_length: int, multi_label: bool = False):
+        logging.debug(f'loading {model_name}')
+        self.config, self.tokenizer, self.model = load_model(model_name, task='sequence_classification')
         self.max_length = max_length
         self.multi_label = multi_label
-        if id_to_label is None:
-            self.id_to_label = {str(v): k for k, v in self.config.label2id.items()}
-        else:
-            self.id_to_label = id_to_label
+        self.id_to_label = {str(v): k for k, v in self.config.label2id.items()}
         # GPU setup
         self.device = 'cuda' if torch.cuda.device_count() > 0 else 'cpu'
         self.parallel = torch.cuda.device_count() > 1
@@ -92,34 +67,19 @@ class Classifier:
         self.model.to(self.device)
         logging.debug(f'{torch.cuda.device_count()} GPUs are in use')
 
-    @staticmethod
-    def preprocess(text):
-        text = re.sub(r"@[A-Z,0-9]+", "@user", text)
-        urls = URLEx.find_urls(text)
-        for _url in urls:
-            try:
-                text = text.replace(_url, "http")
-            except re.error:
-                logging.warning(f're.error:\t - {text}\n\t - {_url}')
-        return text
-
-    @staticmethod
-    def load_model(model):
-        try:
-            urllib.request.urlopen('http://google.com')
-            no_network = False
-        except Exception:
-            no_network = True
-        config = AutoConfig.from_pretrained(model, local_files_only=no_network)
-        tokenizer = AutoTokenizer.from_pretrained(model, local_files_only=no_network)
-        model = AutoModelForSequenceClassification.from_pretrained(model, config=config, local_files_only=no_network)
-        return config, tokenizer, model
-
-    def predict(self, text: str or List, batch_size: int = None, return_probability: bool = False):
         self.model.eval()
+        self.preprocess = get_preprocessor()
+
+    def predict(self,
+                text: str or List,
+                batch_size: int = None,
+                return_probability: bool = False,
+                skip_preprocess: bool = False):
         single_input_flag = type(text) is str
         text = [text] if single_input_flag else text
-        text = [self.preprocess(t) for t in text]
+        if not skip_preprocess:
+            text = [self.preprocess(t) for t in text]
+        assert all(type(t) is str for t in text), text
         batch_size = len(text) if batch_size is None else batch_size
         _index = list(range(0, len(text), batch_size)) + [len(text) + 1]
         probs = []
@@ -165,16 +125,7 @@ class TopicClassification(Classifier):
             model = MODEL_LIST['topic_classification']['multi_label' if multi_label else 'single_label']
         super().__init__(model, max_length=max_length, multi_label=multi_label)
         self.topic = self.predict
-
-    @staticmethod
-    def preprocess(tweet):
-        # mask web urls
-        urls = URLEx.find_urls(tweet)
-        for url in urls:
-            tweet = tweet.replace(url, "{{URL}}")
-        # format twitter account
-        tweet = re.sub(r"\b(\s*)(@[\S]+)\b", r'\1{\2@}', tweet)
-        return tweet
+        self.preprocess = get_preprocessor('tweet_topic')
 
 
 class Sentiment(Classifier):
