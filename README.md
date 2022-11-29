@@ -16,6 +16,9 @@ Resources:
 - Play with the TweetNLP Online Demo: [link](https://tweetnlp.org/demo/)
 - EMNLP 2022 paper: [link](https://arxiv.org/abs/2206.14774)
 
+Table of Contents:
+- [1. Load Model & Dataset](https://github.com/cardiffnlp/tweetnlp/tree/add_training#model--dataset)
+- [2. Fine-tune Model](https://github.com/cardiffnlp/tweetnlp/tree/add_training#model-fine-tuning)
 
 ## Get Started
 

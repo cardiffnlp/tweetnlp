@@ -240,8 +240,8 @@ class TrainerTextClassification:
         logging.info('uploading to huggingface')
         url = create_repo(model_alias, organization=hf_organization, exist_ok=True)
         args = {"use_auth_token": self.use_auth_token, "repo_url": url, "organization": hf_organization}
-        self.model.push_to_hub(model_alias, **args)
-        self.tokenizer.push_to_hub(model_alias, **args)
+        # self.model.push_to_hub(model_alias, **args)
+        # self.tokenizer.push_to_hub(model_alias, **args)
         readme = get_readme(
             model_name=f"{hf_organization}/{model_alias}",
             metric_file=self.export_file,
