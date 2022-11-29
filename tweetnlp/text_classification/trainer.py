@@ -67,7 +67,7 @@ class TrainerTextClassification:
         # setup metrics
         self.compute_metric_search, self.compute_metric_all = self.get_metrics(multi_label)
         self.best_model_path = pj(self.output_dir, 'best_model')
-        self.best_run_hyperparameters_path = None
+        self.best_run_hyperparameters_path = pj(self.output_dir, 'best_run_hyperparameters.json')
 
         self.split_test = split_test
         self.split_train = split_train
@@ -178,7 +178,6 @@ class TrainerTextClassification:
             resources_per_trial=resources_per_trial
         )
         # finetuning with the best config
-        self.best_run_hyperparameters_path = pj(self.output_dir, 'best_run_hyperparameters.json')
         with open(self.best_run_hyperparameters_path, 'w') as f:
             json.dump(best_run.hyperparameters, f)
         logging.info(f"finetuning with the best config: {best_run} (saved at {self.best_run_hyperparameters_path})")
@@ -256,7 +255,8 @@ class TrainerTextClassification:
         )
         with open(f"{model_alias}/README.md", "w") as f:
             f.write(readme)
-        shutil.copy2(self.best_run_hyperparameters_path, pj(model_alias, 'best_run_hyperparameters.json'))
+        if os.path.exists(self.best_run_hyperparameters_path):
+            shutil.copy2(self.best_run_hyperparameters_path, pj(model_alias, 'best_run_hyperparameters.json'))
         os.system(
             f"cd {model_alias} && git lfs install && git add . && git commit -m 'model update' && git push && cd ../")
         shutil.rmtree(f"{model_alias}")  # clean up the cloned repo
