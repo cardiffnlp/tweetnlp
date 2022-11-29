@@ -45,10 +45,10 @@ def get_readme(model_name: str,
                widget_sample_sentence: str = None,
                widget_type: str = None):
     if widget_type is None and widget_sample_sentence is None:
-        widgets = [[f'- text: {_v}\n  example_title: "Example: {k} {n + 1}" ' for n, _v in enumerate(v)] for k, v in sample.items()]
+        widgets = [[f'- text: {_v}\n  example_title: "{k} {n + 1}" ' for n, _v in enumerate(v)] for k, v in sample.items()]
         widgets_str = '\n'.join(list(chain(*widgets)))
     elif widget_type is not None:
-        widgets_str = f'- text: {sample[widget_type]}\n  example_title: "Example: {widget_type}"'
+        widgets_str = f'- text: {sample[widget_type]}\n  example_title: "{widget_type}"'
     else:
         widgets_str = f'- text: {widget_sample_sentence}\n  example_title: "Example"'
 
