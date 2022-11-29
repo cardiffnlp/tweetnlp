@@ -199,7 +199,7 @@ class TrainerTextClassification:
         logging.info('model evaluation')
         trainer = Trainer(
             model=self.language_model if self.best_model_path is None else self.best_model_path,
-            args=TrainingArguments(output_dir=self.output_dir, evaluation_strategy="no", seed=self.random_seed),
+            args=TrainingArguments(output_dir=self.output_dir, evaluation_strategy="no"),
             eval_dataset=self.tokenized_datasets[self.split_test],
             compute_metrics=self.compute_metric_all
         )
