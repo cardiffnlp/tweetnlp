@@ -57,13 +57,13 @@ model-index:
     metrics:
     - name: F1
       type: f1
-      value: {evaluation_result[f'{split_test}/eval_f1'] if evaluation_result is not None else None}
+      value: {evaluation_result[f'eval_f1'] if evaluation_result is not None else None}
     - name: F1 (macro)
       type: f1_macro
-      value: {evaluation_result[f'{split_test}/eval_f1_macro'] if evaluation_result is not None else None}
+      value: {evaluation_result[f'eval_f1_macro'] if evaluation_result is not None else None}
     - name: Accuracy
       type: accuracy
-      value: {evaluation_result[f'{split_test}/eval_accuracy'] if evaluation_result is not None else None}
+      value: {evaluation_result[f'eval_accuracy'] if evaluation_result is not None else None}
 pipeline_tag: text-classification
 widget:
 - text: {widget_sample_sentence}
@@ -78,9 +78,9 @@ Training split is `{split_train}` and parameters have been tuned on the validati
 
 Following metrics are achieved on the test split `{split_test}` ([link](https://huggingface.co/{model_name}/raw/main/{os.path.basename(metric_file)})).
 
-- F1 (micro): {evaluation_result[f'{split_test}/eval_f1'] if evaluation_result is not None else None}
-- F1 (macro): {evaluation_result[f'{split_test}/eval_f1_macro'] if evaluation_result is not None else None}
-- Accuracy: {evaluation_result[f'{split_test}/eval_accuracy'] if evaluation_result is not None else None}
+- F1 (micro): {evaluation_result[f'eval_f1'] if evaluation_result is not None else None}
+- F1 (macro): {evaluation_result[f'eval_f1_macro'] if evaluation_result is not None else None}
+- Accuracy: {evaluation_result[f'eval_accuracy'] if evaluation_result is not None else None}
 
 ### Usage
 Install tweetnlp via pip.

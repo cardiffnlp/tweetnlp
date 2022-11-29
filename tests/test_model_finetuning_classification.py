@@ -6,7 +6,8 @@ import tweetnlp
 logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
 
 # basic classification tasks
-for task in ["irony", "offensive", "emoji", "emotion", "sentiment", "hate"]:
+# for task in ["irony", "offensive", "emoji", "emotion", "sentiment", "hate"]:
+for task in ["offensive", "emoji", "emotion", "sentiment", "hate"]:
     dataset, label_to_id = tweetnlp.load_dataset(task)
     trainer_class = tweetnlp.load_trainer(task)
     trainer = trainer_class(
