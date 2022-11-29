@@ -60,7 +60,7 @@ def get_readme(model_name: str,
             evaluation_result = json.load(f)
     return f"""---
 datasets:
-- {dataset_name}
+- {dataset_type}
 metrics:
 - f1
 - accuracy
@@ -71,18 +71,18 @@ model-index:
       type: text-classification
       name: Text Classification
     dataset:
-      name: {dataset_name}
-      type: {'default' if dataset_type is None else dataset_type}
+      name: {dataset_type}
+      type: {dataset_type if dataset_name is None else dataset_name}
       split: {split_test} 
     metrics:
-    - name: F1
-      type: f1
+    - name: Micro F1 ({dataset_type}{f"/{dataset_name}" if dataset_name is not None else ""})
+      type: micro_f1_{dataset_type}{f"/{dataset_name}" if dataset_name is not None else ""}
       value: {evaluation_result[f'eval_f1'] if evaluation_result is not None else None}
-    - name: F1 (macro)
-      type: f1_macro
+    - name: Macro F1 ({dataset_type}{f"/{dataset_name}" if dataset_name is not None else ""})
+      type: micro_f1_{dataset_type}{f"/{dataset_name}" if dataset_name is not None else ""}
       value: {evaluation_result[f'eval_f1_macro'] if evaluation_result is not None else None}
-    - name: Accuracy
-      type: accuracy
+    - name: Accuracy ({dataset_type}{f"/{dataset_name}" if dataset_name is not None else ""})
+      type: accuracy_{dataset_type}{f"/{dataset_name}" if dataset_name is not None else ""}
       value: {evaluation_result[f'eval_accuracy'] if evaluation_result is not None else None}
 pipeline_tag: text-classification
 widget:
@@ -91,7 +91,7 @@ widget:
 # {model_name} 
 
 This model is a fine-tuned version of [{language_model}](https://huggingface.co/{language_model}) on the 
-[`{dataset_name}{f" ({dataset_type})" if dataset_type is not None else ""})`](https://huggingface.co/datasets/{dataset_name}) 
+[`{dataset_type}{f" ({dataset_name})" if dataset_name is not None else ""}`](https://huggingface.co/datasets/{dataset_type}) 
 via [`tweetnlp`](https://github.com/cardiffnlp/tweetnlp).
 Training split is `{split_train}` and parameters have been tuned on the validation split `{split_validation}`.
 
