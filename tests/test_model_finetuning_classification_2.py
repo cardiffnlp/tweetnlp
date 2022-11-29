@@ -31,6 +31,7 @@ for task in ["emoji", "emotion", "sentiment", "hate"]:
         search_range_epoch=[1, 6],
         search_list_batch=[4, 8, 16, 32, 64]
     )
+    trainer.save_model()
     trainer.evaluate()
     trainer.push_to_hub(hf_organization='cardiffnlp', model_alias=f'{os.path.basename(language_model)}-{task}')
     shutil.rmtree("ray_result")

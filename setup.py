@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 with open('README.md', 'r', encoding="utf-8") as f:
     readme = f.read()
 
-version = '0.3.0'
+version = '0.3.1'
 setup(
     name='tweetnlp',
     packages=find_packages(exclude=["assets", "tests"]),
@@ -25,12 +25,6 @@ setup(
         'License :: OSI Approved :: MIT License',   # Again, pick a license
         'Programming Language :: Python :: 3',      #Specify which pyhton versions that you want to support
     ],
-    # extras_require={
-    #     "finetuning": [
-    #         "ray[tune]",
-    #         "huggingface_hub"
-    #     ]
-    # },
     include_package_data=True,
     test_suite='tests',
     install_requires=[
