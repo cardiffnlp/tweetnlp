@@ -347,7 +347,10 @@ tweetnlp.load_model('ner', model_name='tner/twitter-roberta-base-2019-90m-tweetn
 ## Model Fine-tuning
 TweetNLP provides an easy interface to fine-tune language models on the dataset supported by [HuggingFace](https://huggingface.co/) for 
 model hosting/fine-tuning with [RAY TUNE](https://docs.ray.io/en/latest/tune/index.html) for parameter search.
-Follwoing example will reproduce the same model as 
+Following example will reproduce the same model as our irony model [cardiffnlp/twitter-roberta-base-dec2021-irony](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-irony).
+
+- Supported Tasks: `sentiment`, `offensive`, `irony`, `hate`, `emotion`, `topic_classification`
+
 ```python
 import logging
 import tweetnlp
@@ -360,22 +363,22 @@ dataset, label_to_id = tweetnlp.load_dataset("irony")
 trainer_class = tweetnlp.load_trainer("irony")
 # setup trainer
 trainer = trainer_class(
-    language_model='cardiffnlp/twitter-roberta-base-dec2021',
+    language_model='cardiffnlp/twitter-roberta-base-dec2021',  # language model to fine-tune
     dataset=dataset,
     label_to_id=label_to_id,
     max_length=128,
     split_test='test',
     split_train='train',
     split_validation='validation',
-    output_dir='model_ckpt/irony'
+    output_dir='model_ckpt/irony' 
 )
 # start model fine-tuning with parameter optimization
 trainer.train(
-  eval_step=50,
-  n_trials=10,
-  search_range_lr=[1e-6, 1e-4],
-  search_range_epoch=[1, 6],
-  search_list_batch=[4, 8, 16, 32, 64]
+  eval_step=50,  # each `eval_step`, models are validated on the validation set 
+  n_trials=10,  # number of trial at parameter optimization
+  search_range_lr=[1e-6, 1e-4],  # define the search space for learning rate (min and max value)
+  search_range_epoch=[1, 6],  # define the search space for epoch (min and max value)
+  search_list_batch=[4, 8, 16, 32, 64]  # define the search space for batch size (list of integer to test) 
 )
 # evaluate model on the test set
 trainer.evaluate()

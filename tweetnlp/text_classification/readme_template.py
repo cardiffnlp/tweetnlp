@@ -3,8 +3,9 @@ import os
 import shutil
 from os.path import join as pj
 
-sample = 'Get the all-analog Classic Vinyl Edition of "Takin\' Off" Album from {@herbiehancock@} via {@bluenoterecords@} link below: {{URL}}'
+sample = 'Get the all-analog Classic Vinyl Edition of "Takin\' Off" Album from {@herbiehancock@} via {@bluenoterecords@} link below {{URL}}'
 bib = """
+```
 @inproceedings{dimosthenis-etal-2022-twitter,
     title = "{T}witter {T}opic {C}lassification",
     author = "Antypas, Dimosthenis  and
@@ -19,6 +20,7 @@ bib = """
     address = "Gyeongju, Republic of Korea",
     publisher = "International Committee on Computational Linguistics"
 }
+```
 """
 
 
@@ -95,8 +97,6 @@ model.predict({widget_sample_sentence})
 ```
 
 ### Reference
-
-```
 {bib}
-```
+
 """
