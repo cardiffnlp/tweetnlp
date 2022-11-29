@@ -28,6 +28,11 @@ pip install tweetnlp
 ```
 ## Model & Dataset
 
+In this section, you will learn how to get the models and datasets with `tweetnlp`.
+The models follow [huggingface model](https://huggingface.co/) and the datasets are in the format of [huggingface datasets](https://huggingface.co/docs/datasets/load_hub).
+Easy introductions of huggingface models and datasets should be found at [huggingface webpage](https://huggingface.co/), so
+please check them if you are new to huggingface.
+
 ### Tweet Classification
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp?usp=sharing)
 
@@ -394,10 +399,20 @@ trainer.evaluate()
   "eval_samples_per_second": 352.084,
   "eval_steps_per_second": 44.01
 }
+# save model locally (saved at `{output_dir}/best_model` as default)
+trainer.save_model()
+# run prediction
+trainer.predict('If you wanna look like a badass, have drama on social media')
+>>> {'label': 'irony'}
 # push your model on huggingface hub
 trainer.push_to_hub(hf_organization='cardiffnlp', model_alias='twitter-roberta-base-dec2021-irony')
-
 ```
+The saved checkpoint can be loaded as a custom model as below.
+```python
+import tweetnlp
+model = tweetnlp.load_model('irony', model_name="model_ckpt/irony/best_model")
+```
+If `split_validation` is not given, trainer will do single run with default parameter without parameter search.
 
 ## Reference Paper
 
