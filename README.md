@@ -28,6 +28,11 @@ pip install tweetnlp
 ```
 ## Model & Dataset
 
+In this section, you will learn how to get the models and datasets with `tweetnlp`.
+The models follow [huggingface model](https://huggingface.co/) and the datasets are in the format of [huggingface datasets](https://huggingface.co/docs/datasets/load_hub).
+Easy introductions of huggingface models and datasets should be found at [huggingface webpage](https://huggingface.co/), so
+please check them if you are new to huggingface.
+
 ### Tweet Classification
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp?usp=sharing)
 
@@ -396,6 +401,10 @@ trainer.evaluate()
 }
 # push your model on huggingface hub
 trainer.push_to_hub(hf_organization='cardiffnlp', model_alias='twitter-roberta-base-dec2021-irony')
+```
+
+Once the model was fine-tuned, the best model should be saved at `{output_dir}/best_model`, so 
+```python
 
 ```
 
