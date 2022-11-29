@@ -25,20 +25,20 @@ setup(
         'License :: OSI Approved :: MIT License',   # Again, pick a license
         'Programming Language :: Python :: 3',      #Specify which pyhton versions that you want to support
     ],
-    extras_require={
-        "finetuning": [
-            "ray[tune]",
-            "huggingface_hub"
-        ]
-    },
+    # extras_require={
+    #     "finetuning": [
+    #         "ray[tune]",
+    #         "huggingface_hub"
+    #     ]
+    # },
     include_package_data=True,
     test_suite='tests',
     install_requires=[
-        # 'scipy',
+        "ray[tune]",
         'numpy',
         'urlextract',
-        # 'seqeval',
-        'transformers',
+        "transformers<=4.21.2",  # push-to-model is not working for latest version
+        "huggingface-hub<=0.9.1",
         'sentence_transformers',
         'torch',
         'datasets'

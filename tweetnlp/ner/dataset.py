@@ -19,4 +19,6 @@ def load_dataset_ner(
     assert task_type == 'ner', task_type
     dataset_type = DEFAULT_DATASET_TYPE_NER if dataset_type is None else dataset_type
     dataset = load_dataset(dataset_type, dataset_name, use_auth_token=use_auth_token)
+    dataset.dataset_type = dataset_type
+    dataset.dataset_name = dataset_name
     return dataset, get_label2id(dataset, label_name='tags')

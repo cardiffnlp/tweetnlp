@@ -16,6 +16,9 @@ Resources:
 - Play with the TweetNLP Online Demo: [link](https://tweetnlp.org/demo/)
 - EMNLP 2022 paper: [link](https://arxiv.org/abs/2206.14774)
 
+Table of Contents:
+1. [***Load Model & Dataset***](https://github.com/cardiffnlp/tweetnlp/tree/add_training#model--dataset)
+2. [***Fine-tune Model***](https://github.com/cardiffnlp/tweetnlp/tree/add_training#model-fine-tuning)
 
 ## Get Started
 
@@ -23,6 +26,7 @@ Install TweetNLP via pip on your console.
 ```shell
 pip install tweetnlp
 ```
+## Model & Dataset
 
 ### Tweet Classification
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp?usp=sharing)
@@ -255,7 +259,7 @@ model.mask_prediction("How many more <mask> until opening day? 😩", best_n=2) 
   'How many more hours until opening day? 😩']}
 ```
 
-### Tweet/Sentence Embedding
+### Tweet Embedding
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp?usp=sharing)
 
 Tweet embedding model produces a fixed length embedding for a tweet. The embedding represents the semantics of the tweet, and this can be used a semantic search of tweets by using the similarity in betweein the embeddings. Model is instantiated by `tweet_nlp.load('sentence_embedding')`, and run the prediction by giving a text or a list of texts.
@@ -316,7 +320,7 @@ for m, (n, s) in enumerate(sorted(sims, key=lambda x: x[1], reverse=True)[:3]):
  - similaty: 0.6017154109745276
 ```
 
-## About Model & Dataset
+### Resources & Custom Model Loading 
 
 Here is a table of the default model used in each task. 
 
@@ -339,7 +343,60 @@ Here is a table of the default model used in each task.
 To use other model from local/huggingface modelhub, one can simply provide model path/alias at the model loading.
 
 ```python
+import tweetnlp
 tweetnlp.load_model('ner', model_name='tner/twitter-roberta-base-2019-90m-tweetner7-continuous')
+```
+
+## Model Fine-tuning
+TweetNLP provides an easy interface to fine-tune language models on the dataset supported by [HuggingFace](https://huggingface.co/) for 
+model hosting/fine-tuning with [RAY TUNE](https://docs.ray.io/en/latest/tune/index.html) for parameter search.
+Following example will reproduce the same model as our irony model [cardiffnlp/twitter-roberta-base-dec2021-irony](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-irony).
+
+- Supported Tasks: `sentiment`, `offensive`, `irony`, `hate`, `emotion`, `topic_classification`
+
+```python
+import logging
+import tweetnlp
+
+logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S')
+
+# load dataset
+dataset, label_to_id = tweetnlp.load_dataset("irony")
+# load trainer class
+trainer_class = tweetnlp.load_trainer("irony")
+# setup trainer
+trainer = trainer_class(
+    language_model='cardiffnlp/twitter-roberta-base-dec2021',  # language model to fine-tune
+    dataset=dataset,
+    label_to_id=label_to_id,
+    max_length=128,
+    split_test='test',
+    split_train='train',
+    split_validation='validation',
+    output_dir='model_ckpt/irony' 
+)
+# start model fine-tuning with parameter optimization
+trainer.train(
+  eval_step=50,  # each `eval_step`, models are validated on the validation set 
+  n_trials=10,  # number of trial at parameter optimization
+  search_range_lr=[1e-6, 1e-4],  # define the search space for learning rate (min and max value)
+  search_range_epoch=[1, 6],  # define the search space for epoch (min and max value)
+  search_list_batch=[4, 8, 16, 32, 64]  # define the search space for batch size (list of integer to test) 
+)
+# evaluate model on the test set
+trainer.evaluate()
+>>> {
+  "eval_loss": 1.3228046894073486,
+  "eval_f1": 0.7959183673469388,
+  "eval_f1_macro": 0.791350632069195,
+  "eval_accuracy": 0.7959183673469388,
+  "eval_runtime": 2.2267,
+  "eval_samples_per_second": 352.084,
+  "eval_steps_per_second": 44.01
+}
+# push your model on huggingface hub
+trainer.push_to_hub(hf_organization='cardiffnlp', model_alias='twitter-roberta-base-dec2021-irony')
+
 ```
 
 ## Reference Paper
