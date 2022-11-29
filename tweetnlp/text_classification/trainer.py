@@ -15,8 +15,10 @@ from datasets.dataset_dict import DatasetDict
 from transformers import TrainingArguments, Trainer
 from ray import tune
 
+from .model import Classifier
 from .readme_template import get_readme
 from ..util import load_model
+
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
@@ -28,8 +30,8 @@ class TrainerTextClassification:
                  dataset: DatasetDict,
                  label_to_id: Dict,
                  max_length: int = 128,
+                 split_train: str = 'train',
                  split_test: str = None,
-                 split_train: str = None,
                  split_validation: str = None,
                  use_auth_token: bool = False,
                  multi_label: bool = False,
@@ -72,6 +74,9 @@ class TrainerTextClassification:
         self.split_test = split_test
         self.split_train = split_train
         self.split_validation = split_validation
+
+        self.trainer = None
+        self.classifier = None
 
     @property
     def export_file(self):
@@ -123,7 +128,8 @@ class TrainerTextClassification:
               search_range_lr: List = None,
               search_range_epoch: List = None,
               search_list_batch: List = None,
-              ray_result_dir: str = 'ray_result'):
+              ray_result_dir: str = 'ray_result',
+              training_arguments: TrainingArguments = None):
         if output_dir is not None:
             self.output_dir = output_dir
         assert self.output_dir is not None, "output_dir should be specified."
@@ -132,62 +138,98 @@ class TrainerTextClassification:
             self.split_train = split_train
         if split_validation is not None:
             self.split_validation = split_validation
+        assert self.split_train in self.dataset.keys(),\
+            f"train split not found: {self.split_train} is not in {self.dataset.keys()}"
         # setup trainer
-        logging.info('setup trainer')
-        trainer = Trainer(
-            model=self.model,
-            args=TrainingArguments(
-                output_dir=self.output_dir,
-                evaluation_strategy="steps",
-                eval_steps=eval_step,
-                seed=random_seed
-            ),
-            train_dataset=self.tokenized_datasets[self.split_train],
-            eval_dataset=self.tokenized_datasets[self.split_validation],
-            compute_metrics=self.compute_metric_search,
-            model_init=lambda x: load_model(
-                self.language_model,
-                return_dict=True,
-                task='sequence_classification',
-                use_auth_token=self.use_auth_token,
-                model_argument=self.model_config,
+        if self.split_validation is None:
+            logging.warning('setup trainer without hyperparameter tuning. (provide `split_validation` for hyperparameter search)')
+            training_arguments = TrainingArguments(
+                    output_dir=self.output_dir,
+                    evaluation_strategy="no",
+                    eval_steps=eval_step,
+                    seed=random_seed
+                ) if training_arguments is None else training_arguments
+            self.trainer = Trainer(
+                model=self.model,
+                args=training_arguments,
+                train_dataset=self.tokenized_datasets[self.split_train],
             )
-        )
-        # define search space
-        logging.info('define search space')
-        search_range_lr = [1e-6, 1e-4] if search_range_lr is None else search_range_lr
-        assert len(search_range_lr) == 2, f"len(search_range_lr) should be 2: {search_range_lr}"
-        search_range_epoch = [1, 6] if search_range_epoch is None else search_range_epoch
-        assert len(search_range_epoch) == 2, f"len(search_range_epoch) should be 2: {search_range_epoch}"
-        search_list_batch = [4, 8, 16, 32, 64] if search_list_batch is None else search_list_batch
-        search_space = {
-            "learning_rate": tune.loguniform(search_range_lr[0], search_range_lr[1]),
-            "num_train_epochs": tune.choice(list(range(search_range_epoch[0], search_range_epoch[1]))),
-            "per_device_train_batch_size": tune.choice(search_list_batch)
-        }
-        resources_per_trial = {'cpu': multiprocessing.cpu_count() if parallel_cpu else 1, "gpu": torch.cuda.device_count()}
-        logging.info(f'run on `{resources_per_trial["cpu"]}` cpus and `{resources_per_trial["gpu"]}` gpus')
-        # run parameter search
-        logging.info("start parameter search")
-        best_run = trainer.hyperparameter_search(
-            hp_space=lambda x: search_space,
-            local_dir=ray_result_dir,
-            direction="maximize",
-            backend="ray",
-            n_trials=n_trials,
-            resources_per_trial=resources_per_trial
-        )
-        # finetuning with the best config
-        with open(self.best_run_hyperparameters_path, 'w') as f:
-            json.dump(best_run.hyperparameters, f)
-        logging.info(f"finetuning with the best config: {best_run} (saved at {self.best_run_hyperparameters_path})")
-        for n, v in best_run.hyperparameters.items():
-            setattr(trainer.args, n, v)
-        trainer.args.evaluation_strategy = 'no'
-        trainer.train()
-        trainer.save_model(self.best_model_path)
+        else:
+            assert self.split_validation in self.dataset.keys(), \
+                f"validation split not found: {self.split_validation} is not in {self.dataset.keys()}"
+            self.trainer = Trainer(
+                model=self.model,
+                args=TrainingArguments(
+                    output_dir=self.output_dir,
+                    evaluation_strategy="steps",
+                    eval_steps=eval_step,
+                    seed=random_seed
+                ),
+                train_dataset=self.tokenized_datasets[self.split_train],
+                eval_dataset=self.tokenized_datasets[self.split_validation],
+                compute_metrics=self.compute_metric_search,
+                model_init=lambda x: load_model(
+                    self.language_model,
+                    return_dict=True,
+                    task='sequence_classification',
+                    use_auth_token=self.use_auth_token,
+                    model_argument=self.model_config,
+                )
+            )
+            # define search space
+            logging.info('define search space')
+            search_range_lr = [1e-6, 1e-4] if search_range_lr is None else search_range_lr
+            assert len(search_range_lr) == 2, f"len(search_range_lr) should be 2: {search_range_lr}"
+            search_range_epoch = [1, 6] if search_range_epoch is None else search_range_epoch
+            assert len(search_range_epoch) == 2, f"len(search_range_epoch) should be 2: {search_range_epoch}"
+            search_list_batch = [4, 8, 16, 32, 64] if search_list_batch is None else search_list_batch
+            search_space = {
+                "learning_rate": tune.loguniform(search_range_lr[0], search_range_lr[1]),
+                "num_train_epochs": tune.choice(list(range(search_range_epoch[0], search_range_epoch[1]))),
+                "per_device_train_batch_size": tune.choice(search_list_batch)
+            }
+            resources_per_trial = {'cpu': multiprocessing.cpu_count() if parallel_cpu else 1, "gpu": torch.cuda.device_count()}
+            logging.info(f'run on `{resources_per_trial["cpu"]}` cpus and `{resources_per_trial["gpu"]}` gpus')
+            # run parameter search
+            logging.info("start parameter search")
+            best_run = self.trainer.hyperparameter_search(
+                hp_space=lambda x: search_space,
+                local_dir=ray_result_dir,
+                direction="maximize",
+                backend="ray",
+                n_trials=n_trials,
+                resources_per_trial=resources_per_trial
+            )
+            # finetuning with the best config
+            with open(self.best_run_hyperparameters_path, 'w') as f:
+                json.dump(best_run.hyperparameters, f)
+            logging.info(f"fine-tuning with the best config: {best_run} (saved at {self.best_run_hyperparameters_path})")
+            for n, v in best_run.hyperparameters.items():
+                setattr(self.trainer.args, n, v)
+            self.trainer.args.evaluation_strategy = 'no'
+        self.trainer.train()
+
+    def predict(self,
+                text: str or List,
+                batch_size: int = None,
+                return_probability: bool = False,
+                skip_preprocess: bool = False):
+        assert self.trainer is not None, "train model before save"
+        if self.classifier is None:
+            self.classifier = Classifier(loaded_model_config_tokenizer={
+                "model": self.model, "tokenizer": self.tokenizer, "config": self.config
+            })
+        return self.classifier.predict(
+            text, batch_size=batch_size, return_probability=return_probability, skip_preprocess=skip_preprocess)
+
+    def save_model(self, model_path: str = None):
+        assert self.trainer is not None, "train model before save"
+        if model_path is not None:
+            self.best_model_path = model_path
+            os.makedirs(model_path, exist_ok=True)
+        self.trainer.save_model(self.best_model_path)
+        self.tokenizer.save_pretrained(self.best_model_path)
         logging.info(f"best model saved at {self.best_model_path}")
-        logging.info(f"model/config/tokenizer are updated to the fine-tuned model of {self.best_model_path}")
 
     def evaluate(self, split_test: str = None, output_dir: str = None):
         if output_dir is not None:
@@ -195,6 +237,8 @@ class TrainerTextClassification:
         assert self.output_dir is not None, "output_dir should be specified."
         if split_test is not None:
             self.split_test = split_test
+        assert self.split_test is not None and self.split_test in self.dataset.keys(), \
+            f"test split not found: {self.split_test} is not in {self.dataset.keys()}"
         logging.info('model evaluation')
         self.model = load_model(
             model=self.language_model if not os.path.exists(self.best_model_path) else self.best_model_path,
