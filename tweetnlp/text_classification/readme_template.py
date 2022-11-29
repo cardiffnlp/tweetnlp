@@ -34,8 +34,8 @@ def get_readme(model_name: str,
     widget_sample_sentence = sample if widget_sample_sentence is None else widget_sample_sentence
     evaluation_result = None
     if os.path.exists(metric_file):
-        shutil.copy2(metric_file, model_name)
-        metric_file = pj(model_name, os.path.basename(metric_file))
+        shutil.copy2(metric_file, os.path.basename(model_name))
+        metric_file = pj(os.path.basename(model_name), os.path.basename(metric_file))
         with open(metric_file) as f:
             evaluation_result = json.load(f)
     return f"""---
@@ -69,7 +69,7 @@ widget:
 - text: {widget_sample_sentence}
   example_title: "Example"
 ---
-# {model_name}
+# {model_name} 
 
 This model is a fine-tuned version of [{language_model}](https://huggingface.co/{language_model}) on the 
 [`{dataset_name}{f" ({dataset_type})" if dataset_type is not None else ""})`](https://huggingface.co/datasets/{dataset_name}) 

@@ -18,6 +18,8 @@ from ray import tune
 from .readme_template import get_readme
 from ..util import load_model
 
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 
 class TrainerTextClassification:
 
