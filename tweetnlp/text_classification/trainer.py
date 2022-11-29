@@ -188,7 +188,6 @@ class TrainerTextClassification:
         trainer.save_model(self.best_model_path)
         logging.info(f"best model saved at {self.best_model_path}")
         logging.info(f"model/config/tokenizer are updated to the fine-tuned model of {self.best_model_path}")
-        # self.language_model = self.best_model_path
 
     def evaluate(self, split_test: str = None, output_dir: str = None):
         if output_dir is not None:
