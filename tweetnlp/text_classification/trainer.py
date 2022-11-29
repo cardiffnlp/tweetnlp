@@ -64,7 +64,7 @@ class TrainerTextClassification:
             batched=True)
         # setup metrics
         self.compute_metric_search, self.compute_metric_all = self.get_metrics(multi_label)
-        self.best_model_path = None
+        self.best_model_path = pj(self.output_dir, 'best_model')
         self.best_run_hyperparameters_path = None
 
         self.split_test = split_test
@@ -184,7 +184,6 @@ class TrainerTextClassification:
             setattr(trainer.args, n, v)
         trainer.args.evaluation_strategy = 'no'
         trainer.train()
-        self.best_model_path = pj(self.output_dir, 'best_model')
         trainer.save_model(self.best_model_path)
         logging.info(f"best model saved at {self.best_model_path}")
         logging.info(f"model/config/tokenizer are updated to the fine-tuned model of {self.best_model_path}")
@@ -197,8 +196,15 @@ class TrainerTextClassification:
         if split_test is not None:
             self.split_test = split_test
         logging.info('model evaluation')
+        self.model = load_model(
+            model=self.language_model if not os.path.exists(self.best_model_path) else self.best_model_path,
+            model_only=True,
+            task='sequence_classification',
+            use_auth_token=self.use_auth_token,
+            model_argument=self.model_config
+        )
         trainer = Trainer(
-            model=self.language_model if self.best_model_path is None else self.best_model_path,
+            model=self.model,
             args=TrainingArguments(output_dir=self.output_dir, evaluation_strategy="no"),
             eval_dataset=self.tokenized_datasets[self.split_test],
             compute_metrics=self.compute_metric_all

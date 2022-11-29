@@ -56,7 +56,8 @@ def load_model(model: str,
                return_dict: bool = False,
                config_argument: Dict = None,
                model_argument: Dict = None,
-               tokenizer_argument: Dict = None):
+               tokenizer_argument: Dict = None,
+               model_only: bool = False):
     try:
         urllib.request.urlopen('http://google.com')
         no_network = False
@@ -65,7 +66,7 @@ def load_model(model: str,
     model_argument = {} if model_argument is None else model_argument
     model_argument.update({"use_auth_token": use_auth_token, "local_files_only": no_network})
 
-    if return_dict:
+    if return_dict or model_only:
         if task == 'sequence_classification':
             model = AutoModelForSequenceClassification.from_pretrained(model, return_dict=return_dict, **model_argument)
         elif task == 'token_classification':
@@ -75,7 +76,6 @@ def load_model(model: str,
         else:
             raise ValueError(f'unknown task: {task}')
         return model
-
     config_argument = {} if config_argument is None else config_argument
     config_argument.update({"use_auth_token": use_auth_token, "local_files_only": no_network})
     config = AutoConfig.from_pretrained(model, **config_argument)
