@@ -5,7 +5,7 @@ from os.path import join as pj
 from itertools import chain
 
 sample = {
-    "topic_classification": ['Get the all-analog Classic Vinyl Edition of "Takin\' Off" Album from {@herbiehancock@} via {@bluenoterecords@} link below {{URL}}'],
+    "topic_classification": ['Get the all-analog Classic Vinyl Edition of "Takin Off" Album from {@herbiehancock@} via {@bluenoterecords@} link below {{URL}}'],
     'sentiment': ["Yes, including Medicare and social security saving👍"],
     'offensive': ["All two of them taste like ass."],
     'irony': ['If you wanna look like a badass, have drama on social media'],
