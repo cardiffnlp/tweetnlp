@@ -3,7 +3,16 @@ import os
 import shutil
 from os.path import join as pj
 
-sample = 'Get the all-analog Classic Vinyl Edition of "Takin\' Off" Album from {@herbiehancock@} via {@bluenoterecords@} link below {{URL}}'
+sample = {
+    "topic_classification": ['Get the all-analog Classic Vinyl Edition of "Takin\' Off" Album from {@herbiehancock@} via {@bluenoterecords@} link below {{URL}}'],
+    'sentiment': ["Yes, including Medicare and social security saving👍", "天気が良いとやっぱり気持ち良いなあ✨"],
+    'offensive': ["All two of them taste like ass."],
+    'irony': ['If you wanna look like a badass, have drama on social media'],
+    'hate': ['Whoever just unfollowed me you a bitch'],
+    'emotion': ['I love swimming for the same reason I love meditating...the feeling of weightlessness.'],
+    'emoji': ['Beautiful sunset last night from the pontoon @TupperLakeNY']
+}
+
 bib = """
 ```
 @inproceedings{dimosthenis-etal-2022-twitter,
@@ -92,8 +101,8 @@ pip install tweetnlp
 Load the model in python.
 ```python
 import tweetnlp
-model = tweetnlp.Classifier({model_name}, max_length=128)
-model.predict({widget_sample_sentence})
+model = tweetnlp.Classifier("{model_name}", max_length=128)
+model.predict("{widget_sample_sentence}")
 ```
 
 ### Reference

@@ -259,4 +259,4 @@ class TrainerTextClassification:
             shutil.copy2(self.best_run_hyperparameters_path, pj(model_alias, 'best_run_hyperparameters.json'))
         os.system(
             f"cd {model_alias} && git lfs install && git add . && git commit -m 'model update' && git push && cd ../")
-        shutil.rmtree(f"{model_alias}")  # clean up the cloned repo
+        # shutil.rmtree(f"{model_alias}")  # clean up the cloned repo
