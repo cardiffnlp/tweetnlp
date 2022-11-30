@@ -14,7 +14,7 @@ sample = [
     "Beautiful sunset last night from the pontoon @ Tupper Lake, New York",
     'Jacob Collier is a Grammy-awarded English artist from London.'
 ]
-lms = ['roberta-base', 'cardiffnlp/twitter-roberta-base-dec2021', 'cardiffnlp/twitter-roberta-base-2021-124m']
+lms = ['cardiffnlp/twitter-roberta-base-dec2021', 'cardiffnlp/twitter-roberta-base-2021-124m', 'roberta-base']
 
 ##############################
 # basic classification tasks #
