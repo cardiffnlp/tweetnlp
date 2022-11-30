@@ -74,7 +74,6 @@ class TrainerTextClassification:
         self.split_test = split_test
         self.split_train = split_train
         self.split_validation = split_validation
-
         self.trainer = None
         self.classifier = None
 
@@ -129,6 +128,8 @@ class TrainerTextClassification:
               search_range_epoch: List = None,
               search_list_batch: List = None,
               ray_result_dir: str = 'ray_result',
+              down_sample_size_train: int = None,
+              down_sample_size_validation: int = None,
               training_arguments: TrainingArguments = None):
         if output_dir is not None:
             self.output_dir = output_dir
@@ -141,6 +142,15 @@ class TrainerTextClassification:
         assert self.split_train in self.dataset.keys(),\
             f"train split not found: {self.split_train} is not in {self.dataset.keys()}"
         # setup trainer
+        full_train_dataset = self.tokenized_datasets[self.split_train]
+        if down_sample_size_train is not None:
+            tmp = self.tokenized_datasets[self.split_train]
+            assert down_sample_size_train < len(tmp), f"{down_sample_size_train} should be less than {len(tmp)}"
+            tmp = tmp.shuffle(random_seed)
+            search_train_dataset = tmp.select(list(range(down_sample_size_train)))
+        else:
+            search_train_dataset = full_train_dataset
+
         if self.split_validation is None:
             logging.warning('setup trainer without hyperparameter tuning. (provide `split_validation` for hyperparameter search)')
             training_arguments = TrainingArguments(
@@ -152,11 +162,18 @@ class TrainerTextClassification:
             self.trainer = Trainer(
                 model=self.model,
                 args=training_arguments,
-                train_dataset=self.tokenized_datasets[self.split_train],
+                train_dataset=full_train_dataset
             )
         else:
             assert self.split_validation in self.dataset.keys(), \
                 f"validation split not found: {self.split_validation} is not in {self.dataset.keys()}"
+            if down_sample_size_validation is not None:
+                tmp = self.tokenized_datasets[self.split_validation]
+                assert down_sample_size_validation < len(
+                    tmp), f"{down_sample_size_validation} should be less than {len(tmp)}"
+                tmp = tmp.shuffle(random_seed)
+                self.tokenized_datasets[self.split_validation] = tmp.select(list(range(down_sample_size_validation)))
+
             self.trainer = Trainer(
                 model=self.model,
                 args=TrainingArguments(
@@ -165,7 +182,7 @@ class TrainerTextClassification:
                     eval_steps=eval_step,
                     seed=random_seed
                 ),
-                train_dataset=self.tokenized_datasets[self.split_train],
+                train_dataset=search_train_dataset,
                 eval_dataset=self.tokenized_datasets[self.split_validation],
                 compute_metrics=self.compute_metric_search,
                 model_init=lambda x: load_model(
@@ -206,15 +223,18 @@ class TrainerTextClassification:
             logging.info(f"fine-tuning with the best config: {best_run} (saved at {self.best_run_hyperparameters_path})")
             for n, v in best_run.hyperparameters.items():
                 setattr(self.trainer.args, n, v)
-            self.trainer.args.evaluation_strategy = 'no'
+            setattr(self.trainer, "train_dataset", full_train_dataset)
+            setattr(self.trainer.args, "evaluation_strategy", 'no')
         self.trainer.train()
+        logging.info('training finished')
 
     def predict(self,
                 text: str or List,
                 batch_size: int = None,
                 return_probability: bool = False,
                 skip_preprocess: bool = False):
-        assert self.trainer is not None, "train model before save"
+        if self.trainer is None:
+            logging.warning("model is not trained.")
         if self.classifier is None:
             self.classifier = Classifier(loaded_model_config_tokenizer={
                 "model": self.model, "tokenizer": self.tokenizer, "config": self.config
@@ -223,7 +243,8 @@ class TrainerTextClassification:
             text, batch_size=batch_size, return_probability=return_probability, skip_preprocess=skip_preprocess)
 
     def save_model(self, model_path: str = None):
-        assert self.trainer is not None, "train model before save"
+        if self.trainer is None:
+            logging.warning("model is not trained.")
         if model_path is not None:
             self.best_model_path = model_path
             os.makedirs(model_path, exist_ok=True)
@@ -232,6 +253,8 @@ class TrainerTextClassification:
         logging.info(f"best model saved at {self.best_model_path}")
 
     def evaluate(self, split_test: str = None, output_dir: str = None):
+        if self.trainer is None:
+            logging.warning("model is not trained.")
         if output_dir is not None:
             self.output_dir = output_dir
         assert self.output_dir is not None, "output_dir should be specified."
@@ -268,6 +291,8 @@ class TrainerTextClassification:
                     dataset_name: str = None,
                     dataset_type: str = None,
                     output_dir: str = None):
+        if self.trainer is None:
+            logging.warning("model is not trained.")
         if dataset_name is not None:
             self.dataset_name = dataset_name
         if dataset_type is not None:

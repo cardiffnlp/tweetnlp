@@ -29,6 +29,7 @@ setup(
     test_suite='tests',
     install_requires=[
         "ray[tune]",
+        "ray",
         'numpy',
         'urlextract',
         "transformers<=4.21.2",  # push-to-model is not working for latest version

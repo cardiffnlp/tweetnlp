@@ -117,7 +117,7 @@ model.sentiment("天気が良いとやっぱり気持ち良いなあ✨", return
 # GET DATASET (ENGLISH)
 dataset, label2id = tweetnlp.load_dataset('sentiment')
 # GET DATASET (MULTILINGUAL)
-for l in ['arabic', 'english', 'french', 'german', 'hindi', 'italian', 'portuguese', 'spanish']:
+for l in ['all', 'arabic', 'english', 'french', 'german', 'hindi', 'italian', 'portuguese', 'spanish']:
     dataset_multilingual, label2id_multilingual = tweetnlp.load_dataset('sentiment', multilingual=True, task_language=l)
 ```
 
