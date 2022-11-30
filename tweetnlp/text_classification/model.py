@@ -64,6 +64,7 @@ class Classifier:
             self.tokenizer = loaded_model_config_tokenizer['tokenizer']
             self.model = loaded_model_config_tokenizer['model']
         else:
+            assert model_name is not None, "model_name is required"
             logging.debug(f'loading {model_name}')
             self.config, self.tokenizer, self.model = load_model(
                 model_name, task='sequence_classification', use_auth_token=use_auth_token)
