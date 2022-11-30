@@ -127,7 +127,7 @@ class TrainerTextClassification:
               search_range_lr: List = None,
               search_range_epoch: List = None,
               search_list_batch: List = None,
-              ray_result_dir: str = 'ray_result',
+              ray_result_dir: str = 'ray_results',
               down_sample_size_train: int = None,
               down_sample_size_validation: int = None,
               training_arguments: TrainingArguments = None):
