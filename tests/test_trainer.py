@@ -26,39 +26,9 @@ LM = 'distilbert-base-uncased'
 class Test(unittest.TestCase):
     """ Test """
 
-    # def test_model_ner(self):
-    #     model = tweetnlp.load_model('ner')
-    #     outs = model.predict(SAMPLE_NER)
-    #     assert len(outs) == len(SAMPLE_NER), f"{len(outs)} != {len(SAMPLE_NER)}"
-    #     for out in outs:
-    #         assert all(len(list(i.keys())) == 2 and 'type' in i.keys() for i in out), out
-    #         assert all(len(list(i.keys())) == 2 and 'entity' in i.keys() for i in out), out
-    #
-    #     outs = model.predict(SAMPLE_NER, batch_size=2)
-    #     assert len(outs) == len(SAMPLE_NER), f"{len(outs)} != {len(SAMPLE_NER)}"
-    #     for out in outs:
-    #         assert all(len(list(i.keys())) == 2 and 'type' in i.keys() for i in out), out
-    #         assert all(len(list(i.keys())) == 2 and 'entity' in i.keys() for i in out), out
-    #
-    #     outs = model.predict(SAMPLE_NER, return_probability=True)
-    #     assert len(outs) == len(SAMPLE_NER), f"{len(outs)} != {len(SAMPLE_NER)}"
-    #     for out in outs:
-    #         assert all(len(list(i.keys())) == 3 and 'type' in i.keys() for i in out), out
-    #         assert all(len(list(i.keys())) == 3 and 'entity' in i.keys() for i in out), out
-    #         assert all(len(list(i.keys())) == 3 and 'probability' in i.keys() for i in out), out
-    #
-    #     out = model.predict(SAMPLE_NER[0])
-    #     assert all(len(list(i.keys())) == 2 and 'type' in i.keys() for i in out), out
-    #     assert all(len(list(i.keys())) == 2 and 'entity' in i.keys() for i in out), out
-    #
-    #     out = model.predict(SAMPLE_NER[0], return_probability=True)
-    #     assert all(len(list(i.keys())) == 3 and 'type' in i.keys() for i in out), out
-    #     assert all(len(list(i.keys())) == 3 and 'entity' in i.keys() for i in out), out
-    #     assert all(len(list(i.keys())) == 3 and 'probability' in i.keys() for i in out), out
-
     def test_model_classification(self):
         for task, sample in SAMPLE_CLASSIFICATION.items():
-            dataset, label_to_id = tweetnlp.load_dataset(task, multilingual=True, task_language="all")
+            dataset, label_to_id = tweetnlp.load_dataset(task)
             trainer_instance = tweetnlp.load_trainer(task)
             trainer = trainer_instance(
                 language_model=LM,

@@ -24,9 +24,12 @@ for language_model in ['cardiffnlp/twitter-roberta-base-dec2021', 'cardiffnlp/tw
         trainer.train(
             eval_step=50,
             n_trials=10,
+            ray_result_dir=,
             search_range_lr=[1e-6, 1e-4],
             search_range_epoch=[1, 6],
-            search_list_batch=[4, 8, 16, 32, 64]
+            search_list_batch=[4, 8, 16, 32, 64],
+            down_sample_size_train=5000,
+            down_sample_size_validation=2000
         )
         trainer.save_model()
         trainer.evaluate()

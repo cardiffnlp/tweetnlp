@@ -143,14 +143,12 @@ class TrainerTextClassification:
             f"train split not found: {self.split_train} is not in {self.dataset.keys()}"
         # setup trainer
         full_train_dataset = self.tokenized_datasets[self.split_train]
-        if down_sample_size_train is not None:
+        search_train_dataset = full_train_dataset
+        if down_sample_size_train is not None and down_sample_size_train < len(
+                self.tokenized_datasets[self.split_train]):
             tmp = self.tokenized_datasets[self.split_train]
-            assert down_sample_size_train < len(tmp), f"{down_sample_size_train} should be less than {len(tmp)}"
             tmp = tmp.shuffle(random_seed)
             search_train_dataset = tmp.select(list(range(down_sample_size_train)))
-        else:
-            search_train_dataset = full_train_dataset
-
         if self.split_validation is None:
             logging.warning('setup trainer without hyperparameter tuning. (provide `split_validation` for hyperparameter search)')
             training_arguments = TrainingArguments(
@@ -167,10 +165,9 @@ class TrainerTextClassification:
         else:
             assert self.split_validation in self.dataset.keys(), \
                 f"validation split not found: {self.split_validation} is not in {self.dataset.keys()}"
-            if down_sample_size_validation is not None:
+            if down_sample_size_validation is not None and down_sample_size_validation < len(
+                    self.tokenized_datasets[self.split_validation]):
                 tmp = self.tokenized_datasets[self.split_validation]
-                assert down_sample_size_validation < len(
-                    tmp), f"{down_sample_size_validation} should be less than {len(tmp)}"
                 tmp = tmp.shuffle(random_seed)
                 self.tokenized_datasets[self.split_validation] = tmp.select(list(range(down_sample_size_validation)))
 
