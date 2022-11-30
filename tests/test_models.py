@@ -32,32 +32,33 @@ class Test(unittest.TestCase):
 
     def test_model_ner(self):
         model = tweetnlp.load_model('ner')
-        out = model.predict(SAMPLE_NER)
-        assert len(out) == len(SAMPLE_NER), f"{len(out)} != {len(SAMPLE_NER)}"
+        outs = model.predict(SAMPLE_NER)
+        assert len(outs) == len(SAMPLE_NER), f"{len(outs)} != {len(SAMPLE_NER)}"
+        for out in outs:
+            assert all(len(list(i.keys())) == 2 and 'type' in i.keys() for i in out), out
+            assert all(len(list(i.keys())) == 2 and 'entity' in i.keys() for i in out), out
+
+        outs = model.predict(SAMPLE_NER, batch_size=2)
+        assert len(outs) == len(SAMPLE_NER), f"{len(outs)} != {len(SAMPLE_NER)}"
+        for out in outs:
+            assert all(len(list(i.keys())) == 2 and 'type' in i.keys() for i in out), out
+            assert all(len(list(i.keys())) == 2 and 'entity' in i.keys() for i in out), out
+
+        outs = model.predict(SAMPLE_NER, return_probability=True)
+        assert len(outs) == len(SAMPLE_NER), f"{len(outs)} != {len(SAMPLE_NER)}"
+        for out in outs:
+            assert all(len(list(i.keys())) == 3 and 'type' in i.keys() for i in out), out
+            assert all(len(list(i.keys())) == 3 and 'entity' in i.keys() for i in out), out
+            assert all(len(list(i.keys())) == 3 and 'probability' in i.keys() for i in out), out
+
+        out = model.predict(SAMPLE_NER[0])
         assert all(len(list(i.keys())) == 2 and 'type' in i.keys() for i in out), out
         assert all(len(list(i.keys())) == 2 and 'entity' in i.keys() for i in out), out
 
-        out = model.predict(SAMPLE_NER, batch_size=2)
-        assert len(out) == len(SAMPLE_NER), f"{len(out)} != {len(SAMPLE_NER)}"
-        assert all(len(list(i.keys())) == 2 and 'type' in i.keys() for i in out), out
-        assert all(len(list(i.keys())) == 2 and 'entity' in i.keys() for i in out), out
-
-        out = model.predict(SAMPLE_NER, return_probability=True)
-        assert len(out) == len(SAMPLE_NER), f"{len(out)} != {len(SAMPLE_NER)}"
+        out = model.predict(SAMPLE_NER[0], return_probability=True)
         assert all(len(list(i.keys())) == 3 and 'type' in i.keys() for i in out), out
         assert all(len(list(i.keys())) == 3 and 'entity' in i.keys() for i in out), out
         assert all(len(list(i.keys())) == 3 and 'probability' in i.keys() for i in out), out
-
-        out = model.predict(SAMPLE_NER[0])
-        assert type(out) is dict, out
-        assert len(list(out.keys())) == 2 and 'type' in out.keys(), out
-        assert len(list(out.keys())) == 2 and 'entity' in out.keys(), out
-
-        out = model.predict(SAMPLE_NER[0], return_probability=True)
-        assert type(out) is dict, out
-        assert len(list(out.keys())) == 3 and 'type' in out.keys(), out
-        assert len(list(out.keys())) == 3 and 'entity' in out.keys(), out
-        assert len(list(out.keys())) == 3 and 'probability' in out.keys(), out
 
     def test_model_mlm(self):
         model = tweetnlp.load_model('language_model')

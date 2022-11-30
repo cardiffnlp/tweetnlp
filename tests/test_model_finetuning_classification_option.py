@@ -10,7 +10,7 @@ logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', level=logg
 # multilingual sentiment #
 ##########################
 task = "sentiment"
-for language_model in ["cardiffnlp/twitter-xlm-roberta-base-sentiment", 'bert-base-multilingual-cased', "xlm-roberta-base"]:
+for language_model in ["cardiffnlp/twitter-xlm-roberta-base", 'bert-base-multilingual-cased', "xlm-roberta-base"]:
     model_alias = f'{os.path.basename(language_model)}-{task}-multilingual'
     dataset, label_to_id = tweetnlp.load_dataset(task, multilingual=True, task_language="all")
     trainer_class = tweetnlp.load_trainer(task)
