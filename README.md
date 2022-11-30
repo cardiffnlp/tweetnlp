@@ -221,14 +221,11 @@ model.emotion('I love swimming for the same reason I love meditating...the feeli
 dataset, label2id = tweetnlp.load_dataset('emotion')
 ```
 
-### Information Extraction
+### Named Entity Recognition
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp?usp=sharing)
 
-The information extraction module consists of named-entity recognition (NER) model specifically trained for tweets.
+Named-entity recognition (NER) model finds entities and classify the entity types in a tweet.
 The model is instantiated by `tweetnlp.load_model("ner")`, and run the prediction by giving a text or a list of texts.
-
-
-- ***Named Entity Recognition***
 
 ```python3
 import tweetnlp

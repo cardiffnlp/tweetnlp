@@ -2,8 +2,6 @@ import logging
 from typing import List
 from statistics import mean
 import torch
-# from tweetnlp.ner.allennlp_crf import ConditionalRandomField, allowed_transitions
-# from tweetnlp.util import load_model, get_preprocessor
 
 from .allennlp_crf import ConditionalRandomField, allowed_transitions
 from ..util import load_model, get_preprocessor
