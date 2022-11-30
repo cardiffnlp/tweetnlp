@@ -43,7 +43,6 @@ for s, p in zip(sample, output):
 
 # clean up logs
 shutil.rmtree(f'model_ckpt/test')
-shutil.rmtree(f"ray_result/test")
 shutil.rmtree("test")
 
 
