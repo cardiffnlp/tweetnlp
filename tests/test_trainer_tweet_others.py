@@ -40,7 +40,7 @@ for language_model in lms:
         eval_step=1000,
         n_trials=10,
         ray_result_dir=f"ray_result/{model_alias}",
-        parallel_cpu=True,
+        # parallel_cpu=True,
         search_range_lr=[1e-6, 1e-4],
         search_range_epoch=[1, 6],
         search_list_batch=[4, 8, 16, 32],
