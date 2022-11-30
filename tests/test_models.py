@@ -98,9 +98,13 @@ class Test(unittest.TestCase):
                     tweetnlp.load_model(task, multi_label=True),
                     tweetnlp.load_model(task, multi_label=False)
                 ]
+            elif task == 'sentiment':
+                models = [
+                    tweetnlp.load_model(task, multilingual=True),
+                    tweetnlp.load_model(task, multilingual=False)
+                ]
             else:
                 models = [tweetnlp.load_model(task)]
-
             for model in models:
                 # batch prediction
                 out = model.predict(sample)
