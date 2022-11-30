@@ -118,6 +118,10 @@ class Test(unittest.TestCase):
                 out = model.predict(sample[0])
                 assert type(out) is dict, out
                 assert len(list(out.keys())) == 1 and 'label' in out.keys(), out
+                out = model.predict(sample[0], return_probability=True)
+                assert type(out) is dict, out
+                assert len(list(out.keys())) == 2 and 'label' in out.keys() and "probability" in out.keys(), out
+
                 # prediction with probability
                 out = model.predict(sample, return_probability=True)
                 assert len(out) == len(sample), f"{len(out)} != {len(sample)}"
@@ -130,7 +134,24 @@ class Test(unittest.TestCase):
                 assert all(len(i.keys()) == 2 for i in out), out
                 assert all('probability' in i for i in out), out
                 assert all('label' in i for i in out), out
-                out = model.predict(sample[0], return_probability=True)
+
+                # with trainer
+                dataset, label_to_id = tweetnlp.load_dataset(task)
+                trainer_instance = tweetnlp.load_trainer(task)
+                trainer = trainer_instance(
+                    language_model='distilbert-base-uncased',
+                    dataset=dataset,
+                    label_to_id=label_to_id,
+                    max_length=128,
+                    split_test='test',
+                    split_train='train',
+                    split_validation='validation',
+                    output_dir='tmp'
+                )
+                out = trainer.predict(sample[0])
+                assert type(out) is dict, out
+                assert len(list(out.keys())) == 1 and 'label' in out.keys(), out
+                out = trainer.predict(sample[0], return_probability=True)
                 assert type(out) is dict, out
                 assert len(list(out.keys())) == 2 and 'label' in out.keys() and "probability" in out.keys(), out
 
