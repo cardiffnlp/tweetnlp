@@ -224,6 +224,7 @@ class TrainerTextClassification:
             setattr(self.trainer.args, "evaluation_strategy", 'no')
         self.trainer.train()
         logging.info('training finished')
+        self.model = self.trainer.model
 
     def predict(self,
                 text: str or List,
@@ -240,8 +241,7 @@ class TrainerTextClassification:
             text, batch_size=batch_size, return_probability=return_probability, skip_preprocess=skip_preprocess)
 
     def save_model(self, model_path: str = None):
-        if self.trainer is None:
-            logging.warning("model is not trained.")
+        assert self.trainer is not None, "model is not trained."
         if model_path is not None:
             self.best_model_path = model_path
             os.makedirs(model_path, exist_ok=True)
@@ -324,4 +324,3 @@ class TrainerTextClassification:
             shutil.copy2(self.best_run_hyperparameters_path, pj(model_alias, 'best_run_hyperparameters.json'))
         os.system(
             f"cd {model_alias} && git lfs install && git add . && git commit -m 'model update' && git push && cd ../")
-        # shutil.rmtree(f"{model_alias}")  # clean up the cloned repo

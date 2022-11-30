@@ -53,16 +53,12 @@ def get_readme(model_name: str,
         widgets_str = f'- text: {widget_sample_sentence}\n  example_title: "Example"'
 
     metric_file_model = pj(os.path.basename(model_name), os.path.basename(metric_file))
-    if not os.path.exists(metric_file_model):
-        if os.path.exists(metric_file):
-            shutil.copy2(metric_file, os.path.basename(model_name))
-        else:
-            metric_file_model = None
-    if metric_file_model is not None:
+    evaluation_result = None
+    if os.path.exists(metric_file):
+        shutil.copy2(metric_file, os.path.basename(model_name))
+    if os.path.exists(metric_file_model):
         with open(metric_file_model) as f:
             evaluation_result = json.load(f)
-    else:
-        evaluation_result = None
     return f"""---
 datasets:
 - {dataset_type}
