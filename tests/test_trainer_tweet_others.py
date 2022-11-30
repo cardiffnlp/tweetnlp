@@ -38,10 +38,11 @@ for language_model in lms:
     )
     trainer.train(
         eval_step=1000,
-        n_trials=5,
+        n_trials=10,
         ray_result_dir=f"ray_result/{model_alias}",
+        parallel_cpu=True,
         search_range_lr=[1e-6, 1e-4],
-        search_range_epoch=[1, 5],
+        search_range_epoch=[1, 6],
         search_list_batch=[4, 8, 16, 32],
         down_sample_size_train=5000,
         down_sample_size_validation=2000
@@ -88,10 +89,11 @@ for language_model in lms:
         )
         trainer.train(
             eval_step=1000,
-            n_trials=5,
+            n_trials=10,
             ray_result_dir=f"ray_result/{model_alias}",
+            parallel_cpu=True,
             search_range_lr=[1e-6, 1e-4],
-            search_range_epoch=[1, 5],
+            search_range_epoch=[1, 6],
             search_list_batch=[4, 8, 16, 32],
             down_sample_size_train=5000,
             down_sample_size_validation=2000

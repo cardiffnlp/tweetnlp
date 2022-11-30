@@ -260,13 +260,13 @@ class TrainerTextClassification:
         assert self.split_test is not None and self.split_test in self.dataset.keys(), \
             f"test split not found: {self.split_test} is not in {self.dataset.keys()}"
         logging.info('model evaluation')
-        self.model = load_model(
-            model=self.language_model if not os.path.exists(self.best_model_path) else self.best_model_path,
-            model_only=True,
-            task='sequence_classification',
-            use_auth_token=self.use_auth_token,
-            model_argument=self.model_config
-        )
+        # self.model = load_model(
+        #     model=self.language_model if not os.path.exists(self.best_model_path) else self.best_model_path,
+        #     model_only=True,
+        #     task='sequence_classification',
+        #     use_auth_token=self.use_auth_token,
+        #     model_argument=self.model_config
+        # )
         trainer = Trainer(
             model=self.model,
             args=TrainingArguments(output_dir=self.output_dir, evaluation_strategy="no"),
