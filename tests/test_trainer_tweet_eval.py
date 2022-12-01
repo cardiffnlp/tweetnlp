@@ -42,7 +42,7 @@ lms = ['cardiffnlp/twitter-roberta-base-dec2021', 'cardiffnlp/twitter-roberta-ba
 #         trainer.train(
 #             eval_step=500,
 #             n_trials=10,
-#             ray_result_dir=f"ray_result/{model_alias}",
+#             ray_result_dir=f"ray_results/{model_alias}",
 #             search_range_lr=[1e-6, 1e-4],
 #             search_range_epoch=[1, 6],
 #             search_list_batch=[8, 16, 32],
@@ -65,7 +65,7 @@ lms = ['cardiffnlp/twitter-roberta-base-dec2021', 'cardiffnlp/twitter-roberta-ba
 #
 #         # clean up logs
 #         shutil.rmtree(f'model_ckpt/{model_alias}')
-#         shutil.rmtree(f"ray_result/{model_alias}")
+#         shutil.rmtree(f"ray_results/{model_alias}")
 #         shutil.rmtree(model_alias)
 
 

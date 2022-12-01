@@ -100,7 +100,6 @@ class TrainerTextClassification:
         def compute_metric_search(eval_pred):
             logits, labels = eval_pred
             if self.multi_label:
-                print(logits)
                 predictions = np.array([[int(sigmoid(j) > 0.5) for j in i] for i in logits])
             else:
                 predictions = np.argmax(logits, axis=-1)

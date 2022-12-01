@@ -42,7 +42,7 @@ for language_model in lms:
     trainer.train(
         eval_step=500,
         n_trials=10,
-        ray_result_dir=f"ray_result/{model_alias}",
+        ray_result_dir=f"ray_results/{model_alias}",
         search_range_lr=[1e-6, 1e-4],
         search_range_epoch=[1, 6],
         search_list_batch=[8, 16, 32],
@@ -65,7 +65,7 @@ for language_model in lms:
 
     # clean up logs
     shutil.rmtree(f'model_ckpt/{model_alias}')
-    shutil.rmtree(f"ray_result/{model_alias}")
+    shutil.rmtree(f"ray_results/{model_alias}")
     shutil.rmtree(model_alias)
 
 ########################
@@ -88,12 +88,13 @@ for language_model in lms:
             split_test='test_2021',
             split_train='train_all',
             split_validation='validation_2021',
-            output_dir=f'model_ckpt/{model_alias}'
+            output_dir=f'model_ckpt/{model_alias}',
+            multi_label=multi_label
         )
         trainer.train(
             eval_step=500,
             n_trials=10,
-            ray_result_dir=f"ray_result/{model_alias}",
+            ray_result_dir=f"ray_results/{model_alias}",
             search_range_lr=[1e-6, 1e-4],
             search_range_epoch=[1, 6],
             search_list_batch=[8, 16, 32],
@@ -116,7 +117,7 @@ for language_model in lms:
 
         # clean up logs
         shutil.rmtree(f'model_ckpt/{model_alias}')
-        shutil.rmtree(f"ray_result/{model_alias}")
+        shutil.rmtree(f"ray_results/{model_alias}")
         shutil.rmtree(model_alias)
 
 
