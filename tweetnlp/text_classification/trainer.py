@@ -53,7 +53,11 @@ class TrainerTextClassification:
         self.use_auth_token = use_auth_token
         self.multi_label = multi_label
         self.output_dir = output_dir
-        self.model_config = {'label2id': label_to_id, 'id2label': {v: k for k, v in label_to_id.items()}}
+        self.model_config = {
+            'label2id': label_to_id,
+            'id2label': {v: k for k, v in label_to_id.items()},
+            "num_labels": len(label_to_id)
+        }
         if self.multi_label:
             self.model_config['problem_type'] = "multi_label_classification"
         self.config, self.tokenizer, self.model = load_model(
@@ -67,7 +71,7 @@ class TrainerTextClassification:
             lambda x: self.tokenizer(x["text"], padding="max_length", truncation=True, max_length=max_length),
             batched=True)
         # setup metrics
-        self.compute_metric_search, self.compute_metric_all = self.get_metrics(multi_label)
+        self.compute_metric_search, self.compute_metric_all = self.get_metrics()
         self.best_model_path = pj(self.output_dir, 'best_model')
         self.best_run_hyperparameters_path = pj(self.output_dir, 'best_run_hyperparameters.json')
 
@@ -82,9 +86,8 @@ class TrainerTextClassification:
         assert self.output_dir is not None, "output_dir is not defined"
         return f"{self.output_dir}/metric.json"
 
-    @staticmethod
-    def get_metrics(multi_label: bool = False):
-        if multi_label:
+    def get_metrics(self):
+        if self.multi_label:
             metric_accuracy = load_metric("accuracy", "multilabel")
             metric_f1 = load_metric("f1", "multilabel")
         else:
@@ -96,7 +99,8 @@ class TrainerTextClassification:
 
         def compute_metric_search(eval_pred):
             logits, labels = eval_pred
-            if multi_label:
+            if self.multi_label:
+                print(logits)
                 predictions = np.array([[int(sigmoid(j) > 0.5) for j in i] for i in logits])
             else:
                 predictions = np.argmax(logits, axis=-1)
@@ -104,7 +108,7 @@ class TrainerTextClassification:
 
         def compute_metric_all(eval_pred):
             logits, labels = eval_pred
-            if multi_label:
+            if self.multi_label:
                 predictions = np.array([[int(sigmoid(j) > 0.5) for j in i] for i in logits])
             else:
                 predictions = np.argmax(logits, axis=-1)

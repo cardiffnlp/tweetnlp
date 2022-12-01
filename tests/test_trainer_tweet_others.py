@@ -1,6 +1,9 @@
 import os
 import logging
+import json
+import requests
 import shutil
+import pandas as pd
 import tweetnlp
 from pprint import pprint
 
@@ -70,7 +73,8 @@ for language_model in lms:
 ########################
 lms = ['cardiffnlp/twitter-roberta-base-dec2021', 'cardiffnlp/twitter-roberta-base-2021-124m', 'roberta-base']
 for language_model in lms:
-    for multi_label in [True, False]:
+    for multi_label in [True]:
+    # for multi_label in [True, False]:
         model_alias = f"{os.path.basename(language_model)}-topic-{'multi' if multi_label else 'single'}"
         dataset, label_to_id = tweetnlp.load_dataset("topic_classification", multi_label=multi_label)
         trainer_class = tweetnlp.load_trainer("topic_classification")
@@ -114,3 +118,63 @@ for language_model in lms:
         shutil.rmtree(f'model_ckpt/{model_alias}')
         shutil.rmtree(f"ray_result/{model_alias}")
         shutil.rmtree(model_alias)
+
+
+# Summarize result
+tmp_dir = 'metric_files'
+os.makedirs(tmp_dir, exist_ok=True)
+
+
+def download(filename: str, url: str):
+    try:
+        with open(filename) as f:
+            json.load(f)
+    except Exception:
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        with open(filename, "wb") as f:
+            r = requests.get(url)
+            f.write(r.content)
+    try:
+        with open(filename) as f:
+            return json.load(f)
+    except Exception:
+        os.remove(filename)
+        return None
+
+summary = []
+models = []
+for language_model in ["cardiffnlp/twitter-xlm-roberta-base", 'bert-base-multilingual-cased', "xlm-roberta-base"]:
+    model_alias = f"{os.path.basename(language_model)}-sentiment-multilingual"
+    metric = download(
+        f"{tmp_dir}/{model_alias}.json",
+        f"https://huggingface.co/cardiffnlp/{model_alias}/raw/main/metric.json"
+    )
+    if metric is None:
+        continue
+    metric.update({
+        "link": f"[cardiffnlp/{model_alias}](https://huggingface.co/cardiffnlp/{model_alias})",
+        "language_model": language_model, "task": 'sentiment (multilingual)'
+    })
+    summary.append(metric)
+
+for language_model in ['cardiffnlp/twitter-roberta-base-dec2021', 'cardiffnlp/twitter-roberta-base-2021-124m', 'roberta-base']:
+    for multi_label in [True]:
+    # for multi_label in [True, False]:
+        model_alias = f"{os.path.basename(language_model)}-topic-{'multi' if multi_label else 'single'}"
+        metric = download(
+            f"{tmp_dir}/{model_alias}.json",
+            f"https://huggingface.co/cardiffnlp/{model_alias}/raw/main/metric.json"
+        )
+        if metric is None:
+            continue
+        metric.update({
+            "link": f"[cardiffnlp/{model_alias}](https://huggingface.co/cardiffnlp/{model_alias})",
+            "language_model": language_model,
+            "task": f"topic_classification ({'multi' if multi_label else 'single'})"
+        })
+        summary.append(metric)
+
+df = pd.DataFrame(summary)[['task', 'language_model', 'eval_f1', 'eval_f1_macro', 'eval_accuracy', 'link']]
+df = df.sort_values(by=['task', 'language_model'])
+print(df.to_markdown(index=False))
+df.to_csv('test_trainer_tweet_others.csv', index=False)
