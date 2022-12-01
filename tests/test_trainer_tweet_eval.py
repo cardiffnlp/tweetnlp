@@ -106,6 +106,6 @@ for language_model in lms:
         })
         summary.append(metric)
 df = pd.DataFrame(summary)[['task', 'language_model', 'eval_f1', 'eval_f1_macro', 'eval_accuracy', 'link']]
-df = df.sort_values(by=['task', 'language_model'])
+df = df.sort_values(by=['task', 'language_model']).round(2)
 print(df.to_markdown(index=False))
 df.to_csv('test_trainer_tweet_eval.csv', index=False)

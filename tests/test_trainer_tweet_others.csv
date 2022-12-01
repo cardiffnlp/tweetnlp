@@ -1,0 +1,7 @@
+task,language_model,eval_f1,eval_f1_macro,eval_accuracy,link
+sentiment (multilingual),bert-base-multilingual-cased,0.62,0.62,0.62,[cardiffnlp/bert-base-multilingual-cased-sentiment-multilingual](https://huggingface.co/cardiffnlp/bert-base-multilingual-cased-sentiment-multilingual)
+sentiment (multilingual),cardiffnlp/twitter-xlm-roberta-base,0.69,0.69,0.69,[cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual)
+sentiment (multilingual),xlm-roberta-base,0.67,0.66,0.67,[cardiffnlp/xlm-roberta-base-sentiment-multilingual](https://huggingface.co/cardiffnlp/xlm-roberta-base-sentiment-multilingual)
+topic_classification (single),cardiffnlp/twitter-roberta-base-2021-124m,0.9,0.8,0.9,[cardiffnlp/twitter-roberta-base-2021-124m-topic-single](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-topic-single)
+topic_classification (single),cardiffnlp/twitter-roberta-base-dec2021,0.9,0.79,0.9,[cardiffnlp/twitter-roberta-base-dec2021-topic-single](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-topic-single)
+topic_classification (single),roberta-base,0.88,0.74,0.88,[cardiffnlp/roberta-base-topic-single](https://huggingface.co/cardiffnlp/roberta-base-topic-single)
