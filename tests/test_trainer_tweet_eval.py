@@ -102,7 +102,9 @@ for language_model in lms:
         if metric is None:
             continue
         metric.update({
-            "link": f"[cardiffnlp/{model_alias}](https://huggingface.co/cardiffnlp/{model_alias})", "language_model": language_model, "task": task
+            "link": f"[cardiffnlp/{model_alias}](https://huggingface.co/cardiffnlp/{model_alias})",
+            "language_model": f"[{language_model}](https://huggingface.co/{language_model})",
+            "task": task
         })
         summary.append(metric)
 df = pd.DataFrame(summary)[['task', 'language_model', 'eval_f1', 'eval_f1_macro', 'eval_accuracy', 'link']]

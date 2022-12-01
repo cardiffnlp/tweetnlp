@@ -154,7 +154,8 @@ for language_model in ["cardiffnlp/twitter-xlm-roberta-base", 'bert-base-multili
         continue
     metric.update({
         "link": f"[cardiffnlp/{model_alias}](https://huggingface.co/cardiffnlp/{model_alias})",
-        "language_model": language_model, "task": 'sentiment (multilingual)'
+        "language_model": f"[{language_model}](https://huggingface.co/{language_model})",
+        "task": 'sentiment (multilingual)'
     })
     summary.append(metric)
 
@@ -169,7 +170,7 @@ for language_model in ['cardiffnlp/twitter-roberta-base-dec2021', 'cardiffnlp/tw
             continue
         metric.update({
             "link": f"[cardiffnlp/{model_alias}](https://huggingface.co/cardiffnlp/{model_alias})",
-            "language_model": language_model,
+            "language_model": f"[{language_model}](https://huggingface.co/{language_model})",
             "task": f"topic_classification ({'multi' if multi_label else 'single'})"
         })
         summary.append(metric)

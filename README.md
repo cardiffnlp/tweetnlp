@@ -353,13 +353,37 @@ tweetnlp.load_model('ner', model_name='tner/twitter-roberta-base-2019-90m-tweetn
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=2plrPTqk7OHp)
 
 TweetNLP provides an easy interface to fine-tune language models on the dataset supported by [HuggingFace](https://huggingface.co/) for 
-model hosting/fine-tuning with [RAY TUNE](https://docs.ray.io/en/latest/tune/index.html) for parameter search.
-
+model hosting/fine-tuning with [RAY TUNE](https://docs.ray.io/en/latest/tune/index.html) for parameter search. 
 
 - Supported Tasks: `sentiment`, `offensive`, `irony`, `hate`, `emotion`, `topic_classification`
 
+The result of quick experiments with the `tweetnlp`'s trainer can be found in the following table, that is as competitive as the baseline in each task.
+See [the leaderboard page](https://github.com/cardiffnlp/tweetnlp/blob/main/FINETUNING_RESULT.md) to know more about the result.
+
+| task      | language_model                                                                                                |   eval_f1 |   eval_f1_macro |   eval_accuracy | link                                                                                                                              |
+|:----------|:--------------------------------------------------------------------------------------------------------------|----------:|----------------:|----------------:|:----------------------------------------------------------------------------------------------------------------------------------|
+| emoji     | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m) |      0.46 |            0.35 |            0.46 | [cardiffnlp/twitter-roberta-base-2021-124m-emoji](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-emoji)         |
+| emoji     | [roberta-base](https://huggingface.co/roberta-base)                                                           |      0.46 |            0.34 |            0.46 | [cardiffnlp/roberta-base-emoji](https://huggingface.co/cardiffnlp/roberta-base-emoji)                                             |
+| emotion   | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m) |      0.83 |            0.79 |            0.83 | [cardiffnlp/twitter-roberta-base-2021-124m-emotion](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-emotion)     |
+| emotion   | [roberta-base](https://huggingface.co/roberta-base)                                                           |      0.82 |            0.79 |            0.82 | [cardiffnlp/roberta-base-emotion](https://huggingface.co/cardiffnlp/roberta-base-emotion)                                         |
+| hate      | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m) |      0.56 |            0.53 |            0.56 | [cardiffnlp/twitter-roberta-base-2021-124m-hate](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-hate)           |
+| hate      | [roberta-base](https://huggingface.co/roberta-base)                                                           |      0.51 |            0.46 |            0.51 | [cardiffnlp/roberta-base-hate](https://huggingface.co/cardiffnlp/roberta-base-hate)                                               |
+| irony     | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m) |      0.79 |            0.78 |            0.79 | [cardiffnlp/twitter-roberta-base-2021-124m-irony](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-irony)         |
+| irony     | [roberta-base](https://huggingface.co/roberta-base)                                                           |      0.7  |            0.69 |            0.7  | [cardiffnlp/roberta-base-irony](https://huggingface.co/cardiffnlp/roberta-base-irony)                                             |
+| offensive | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m) |      0.86 |            0.82 |            0.86 | [cardiffnlp/twitter-roberta-base-2021-124m-offensive](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-offensive) |
+| offensive | [roberta-base](https://huggingface.co/roberta-base)                                                           |      0.84 |            0.8  |            0.84 | [cardiffnlp/roberta-base-offensive](https://huggingface.co/cardiffnlp/roberta-base-offensive)                                     |
+| sentiment | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m) |      0.71 |            0.72 |            0.71 | [cardiffnlp/twitter-roberta-base-2021-124m-sentiment](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-sentiment) |
+| sentiment | [roberta-base](https://huggingface.co/roberta-base)                                                           |      0.71 |            0.71 |            0.71 | [cardiffnlp/roberta-base-sentiment](https://huggingface.co/cardiffnlp/roberta-base-sentiment)                                     |
+| topic_classification (single) | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m) |      0.9  |  0.8  |            0.9  | [cardiffnlp/twitter-roberta-base-2021-124m-topic-single](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-topic-single)                 |                                                                                                                               
+| topic_classification (single) | [roberta-base](https://huggingface.co/roberta-base)                                                           |      0.88 |            0.74 |            0.88 | [cardiffnlp/roberta-base-topic-single](https://huggingface.co/cardiffnlp/roberta-base-topic-single)                                                     |
+| topic_classification (multi)  | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m) |      0.75 |            0.56 |            0.54 | [cardiffnlp/twitter-roberta-base-2021-124m-topic-multi](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-topic-multi)                   |
+| topic_classification (multi)  | [roberta-base](https://huggingface.co/roberta-base)                                                           |      0.75 |            0.6  |            0.53 | [cardiffnlp/roberta-base-topic-multi](https://huggingface.co/cardiffnlp/roberta-base-topic-multi)                                                       |
+| sentiment (multilingual)      | [cardiffnlp/twitter-xlm-roberta-base](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base)             |      0.69 |  0.69 |            0.69 | [cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual)         |                                                                                                                               
+| sentiment (multilingual)      | [xlm-roberta-base](https://huggingface.co/xlm-roberta-base)                                                   |      0.67 |  0.66 |            0.67 | [cardiffnlp/xlm-roberta-base-sentiment-multilingual](https://huggingface.co/cardiffnlp/xlm-roberta-base-sentiment-multilingual)                         |                                                                                                                               
+
+
 ### Example 
-Following example will reproduce the same model as our irony model [cardiffnlp/twitter-roberta-base-dec2021-irony](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-irony).
+Following example will reproduce the same model as our irony model [cardiffnlp/twitter-roberta-base-2021-124m-irony](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-irony).
 
 ```python
 import logging
@@ -373,7 +397,7 @@ dataset, label_to_id = tweetnlp.load_dataset("irony")
 trainer_class = tweetnlp.load_trainer("irony")
 # setup trainer
 trainer = trainer_class(
-    language_model='cardiffnlp/twitter-roberta-base-dec2021',  # language model to fine-tune
+    language_model='cardiffnlp/twitter-roberta-base-2021-124m',  # language model to fine-tune
     dataset=dataset,
     label_to_id=label_to_id,
     max_length=128,
@@ -407,7 +431,7 @@ trainer.save_model()
 trainer.predict('If you wanna look like a badass, have drama on social media')
 >>> {'label': 'irony'}
 # push your model on huggingface hub
-trainer.push_to_hub(hf_organization='cardiffnlp', model_alias='twitter-roberta-base-dec2021-irony')
+trainer.push_to_hub(hf_organization='cardiffnlp', model_alias='twitter-roberta-base-2021-124m-irony')
 ```
 The saved checkpoint can be loaded as a custom model as below.
 ```python
@@ -415,37 +439,6 @@ import tweetnlp
 model = tweetnlp.load_model('irony', model_name="model_ckpt/irony/best_model")
 ```
 If `split_validation` is not given, trainer will do single run with default parameter without parameter search.
-
-### Leaderboard
-Following table is a list of models with metrics fine-tuned via `tweetnlp` trainer.
-All the models can be reproduced with `tweetnlp` trainer (see [here]() for tweet_eval tasks and [here]() for others).
-
-| task      | language_model                            |   eval_f1 |   eval_f1_macro |   eval_accuracy | link                                                                                                                              |
-|:----------|:------------------------------------------|----------:|----------------:|----------------:|:----------------------------------------------------------------------------------------------------------------------------------|
-| emoji     | cardiffnlp/twitter-roberta-base-2021-124m |      0.46 |            0.35 |            0.46 | [cardiffnlp/twitter-roberta-base-2021-124m-emoji](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-emoji)         |
-| emoji     | cardiffnlp/twitter-roberta-base-dec2021   |      0.46 |            0.34 |            0.46 | [cardiffnlp/twitter-roberta-base-dec2021-emoji](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-emoji)             |
-| emoji     | roberta-base                              |      0.46 |            0.34 |            0.46 | [cardiffnlp/roberta-base-emoji](https://huggingface.co/cardiffnlp/roberta-base-emoji)                                             |
-| emotion   | cardiffnlp/twitter-roberta-base-2021-124m |      0.83 |            0.79 |            0.83 | [cardiffnlp/twitter-roberta-base-2021-124m-emotion](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-emotion)     |
-| emotion   | cardiffnlp/twitter-roberta-base-dec2021   |      0.85 |            0.82 |            0.85 | [cardiffnlp/twitter-roberta-base-dec2021-emotion](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-emotion)         |
-| emotion   | roberta-base                              |      0.82 |            0.79 |            0.82 | [cardiffnlp/roberta-base-emotion](https://huggingface.co/cardiffnlp/roberta-base-emotion)                                         |
-| hate      | cardiffnlp/twitter-roberta-base-2021-124m |      0.56 |            0.53 |            0.56 | [cardiffnlp/twitter-roberta-base-2021-124m-hate](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-hate)           |
-| hate      | cardiffnlp/twitter-roberta-base-dec2021   |      0.57 |            0.54 |            0.57 | [cardiffnlp/twitter-roberta-base-dec2021-hate](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-hate)               |
-| hate      | roberta-base                              |      0.51 |            0.46 |            0.51 | [cardiffnlp/roberta-base-hate](https://huggingface.co/cardiffnlp/roberta-base-hate)                                               |
-| irony     | cardiffnlp/twitter-roberta-base-2021-124m |      0.79 |            0.78 |            0.79 | [cardiffnlp/twitter-roberta-base-2021-124m-irony](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-irony)         |
-| irony     | cardiffnlp/twitter-roberta-base-dec2021   |      0.78 |            0.78 |            0.78 | [cardiffnlp/twitter-roberta-base-dec2021-irony](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-irony)             |
-| irony     | roberta-base                              |      0.7  |            0.69 |            0.7  | [cardiffnlp/roberta-base-irony](https://huggingface.co/cardiffnlp/roberta-base-irony)                                             |
-| offensive | cardiffnlp/twitter-roberta-base-2021-124m |      0.86 |            0.82 |            0.86 | [cardiffnlp/twitter-roberta-base-2021-124m-offensive](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-offensive) |
-| offensive | cardiffnlp/twitter-roberta-base-dec2021   |      0.86 |            0.83 |            0.86 | [cardiffnlp/twitter-roberta-base-dec2021-offensive](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-offensive)     |
-| offensive | roberta-base                              |      0.84 |            0.8  |            0.84 | [cardiffnlp/roberta-base-offensive](https://huggingface.co/cardiffnlp/roberta-base-offensive)                                     |
-| sentiment | cardiffnlp/twitter-roberta-base-2021-124m |      0.71 |            0.72 |            0.71 | [cardiffnlp/twitter-roberta-base-2021-124m-sentiment](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-sentiment) |
-| sentiment | cardiffnlp/twitter-roberta-base-dec2021   |      0.71 |            0.71 |            0.71 | [cardiffnlp/twitter-roberta-base-dec2021-sentiment](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-sentiment)     |
-| sentiment | roberta-base                              |      0.71 |            0.71 |            0.71 | [cardiffnlp/roberta-base-sentiment](https://huggingface.co/cardiffnlp/roberta-base-sentiment)                                     |
-| topic_classification (single) | cardiffnlp/twitter-roberta-base-2021-124m |      0.9  |            0.8  |            0.9  | [cardiffnlp/twitter-roberta-base-2021-124m-topic-single](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-topic-single)                 |
-| topic_classification (single) | cardiffnlp/twitter-roberta-base-dec2021   |      0.9  |            0.79 |            0.9  | [cardiffnlp/twitter-roberta-base-dec2021-topic-single](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-topic-single)                     |
-| topic_classification (single) | roberta-base                              |      0.88 |            0.74 |            0.88 | [cardiffnlp/roberta-base-topic-single](https://huggingface.co/cardiffnlp/roberta-base-topic-single)
-| sentiment (multilingual) | bert-base-multilingual-cased        |      0.62 |            0.62 |            0.62 | [cardiffnlp/bert-base-multilingual-cased-sentiment-multilingual](https://huggingface.co/cardiffnlp/bert-base-multilingual-cased-sentiment-multilingual) |
-| sentiment (multilingual) | cardiffnlp/twitter-xlm-roberta-base |      0.69 |            0.69 |            0.69 | [cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual)         |
-| sentiment (multilingual) | xlm-roberta-base                    |      0.67 |            0.66 |            0.67 | [cardiffnlp/xlm-roberta-base-sentiment-multilingual](https://huggingface.co/cardiffnlp/xlm-roberta-base-sentiment-multilingual)                         |
 
 ## Reference Paper
 
