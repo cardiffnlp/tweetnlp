@@ -22,51 +22,51 @@ lms = ['cardiffnlp/twitter-roberta-base-dec2021', 'cardiffnlp/twitter-roberta-ba
 ##############################
 # basic classification tasks #
 ##############################
-# for language_model in lms:
-#     for task in ["irony", "offensive", "emoji", "emotion", "sentiment", "hate"]:
-#         model_alias = f"{os.path.basename(language_model)}-{task}"
-#         dataset, label_to_id = tweetnlp.load_dataset(task)
-#         trainer_class = tweetnlp.load_trainer(task)
-#
-#         # setup trainer
-#         trainer = trainer_class(
-#             language_model=language_model,
-#             dataset=dataset,
-#             label_to_id=label_to_id,
-#             max_length=128,
-#             split_test='test',
-#             split_train='train',
-#             split_validation='validation',
-#             output_dir=f'model_ckpt/{model_alias}'
-#         )
-#         trainer.train(
-#             eval_step=500,
-#             n_trials=10,
-#             ray_result_dir=f"ray_results/{model_alias}",
-#             search_range_lr=[1e-6, 1e-4],
-#             search_range_epoch=[1, 6],
-#             search_list_batch=[8, 16, 32],
-#             down_sample_size_train=5000,
-#             down_sample_size_validation=2000
-#         )
-#         trainer.save_model()
-#         trainer.evaluate()
-#         trainer.push_to_hub(
-#             hf_organization='cardiffnlp',
-#             model_alias=f'{model_alias}'
-#         )
-#
-#         # sample prediction
-#         output = trainer.predict(sample)
-#         pprint(f"Sample Prediction: {language_model} ({task})")
-#         for s, p in zip(sample, output):
-#             pprint(s)
-#             pprint(p)
-#
-#         # clean up logs
-#         shutil.rmtree(f'model_ckpt/{model_alias}')
-#         shutil.rmtree(f"ray_results/{model_alias}")
-#         shutil.rmtree(model_alias)
+for language_model in lms:
+    for task in ["irony", "offensive", "emoji", "emotion", "sentiment", "hate"]:
+        model_alias = f"{os.path.basename(language_model)}-{task}"
+        dataset, label_to_id = tweetnlp.load_dataset(task)
+        trainer_class = tweetnlp.load_trainer(task)
+
+        # setup trainer
+        trainer = trainer_class(
+            language_model=language_model,
+            dataset=dataset,
+            label_to_id=label_to_id,
+            max_length=128,
+            split_test='test',
+            split_train='train',
+            split_validation='validation',
+            output_dir=f'model_ckpt/{model_alias}'
+        )
+        trainer.train(
+            eval_step=500,
+            n_trials=10,
+            ray_result_dir=f"ray_results/{model_alias}",
+            search_range_lr=[1e-6, 1e-4],
+            search_range_epoch=[1, 6],
+            search_list_batch=[8, 16, 32],
+            down_sample_size_train=5000,
+            down_sample_size_validation=2000
+        )
+        trainer.save_model()
+        trainer.evaluate()
+        trainer.push_to_hub(
+            hf_organization='cardiffnlp',
+            model_alias=f'{model_alias}'
+        )
+
+        # sample prediction
+        output = trainer.predict(sample)
+        pprint(f"Sample Prediction: {language_model} ({task})")
+        for s, p in zip(sample, output):
+            pprint(s)
+            pprint(p)
+
+        # clean up logs
+        shutil.rmtree(f'model_ckpt/{model_alias}')
+        shutil.rmtree(f"ray_results/{model_alias}")
+        shutil.rmtree(model_alias)
 
 
 # Summarize result
