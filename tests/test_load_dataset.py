@@ -28,6 +28,10 @@ class Test(unittest.TestCase):
         tweetnlp.load_dataset('ner')
         tweetnlp.load_dataset_ner('ner')
 
+    def test_qa_qag(self):
+        tweetnlp.load_dataset('question_answering')
+        tweetnlp.load_dataset_ner('question_answer_generation')
+
 
 if __name__ == "__main__":
     unittest.main()

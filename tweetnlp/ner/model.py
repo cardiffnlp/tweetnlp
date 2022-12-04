@@ -149,9 +149,3 @@ class NER:
                 raise ValueError(f'unknown tag: {_l}')
         _, _, _, _, out = update_collection(tmp_entity, tmp_entity_type, tmp_prob, tmp_pos, out)
         return out
-
-
-if __name__ == '__main__':
-    _test = ['Jacob Collier is a Grammy-awarded English artist from London.'] * 2
-    _model = NER()
-    _o = _model.predict(_test)

@@ -6,8 +6,16 @@ from .text_classification.trainer import TrainerTextClassification
 from .ner.model import NER
 from .ner.dataset import load_dataset_ner
 
+from .question_answering.model import QuestionAnswering
+from .question_answering.dataset import load_dataset_question_answering
+
+from .question_answer_generation.model import QuestionAnswerGeneration
+from .question_answer_generation.dataset import load_dataset_question_answer_generation
+
+
 from .mlm.model import LanguageModel
 from .sentence_embedding.model import SentenceEmbedding
+
 
 TASK_CLASS = {
     'sentiment': [Sentiment, load_dataset_text_classification, TrainerTextClassification],
@@ -25,6 +33,8 @@ TASK_CLASS = {
     'ner': [NER, load_dataset_ner, None],
     'language_model': [LanguageModel, None, None],
     'sentence_embedding': [SentenceEmbedding, None, None],
+    'question_answering': [QuestionAnswering, load_dataset_question_answering, None],
+    'question_answer_generation': [QuestionAnswerGeneration, load_dataset_question_answer_generation(), None]
 }
 
 

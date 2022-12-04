@@ -264,14 +264,3 @@ class StanceHillary(Classifier):
         super().__init__(model_name, max_length=max_length, use_auth_token=use_auth_token)
         self.stance = self.predict
 
-
-if __name__ == '__main__':
-    _model = TopicClassification(multi_label=True)
-    _model.predict(["this is a sample game", "we sell newspaper", "Beer Beer"])
-    _model.predict(["this is a sample game", "we sell newspaper", "Beer Beer"], return_probability=True)
-
-    _model = TopicClassification(multi_label=False)
-    _model.predict(["this is a sample game", "we sell newspaper", "Beer Beer"])
-    _model.predict(["this is a sample game", "we sell newspaper", "Beer Beer"], return_probability=True)
-
-
