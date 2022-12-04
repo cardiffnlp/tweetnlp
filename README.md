@@ -36,13 +36,10 @@ please check them if you are new to huggingface.
 ### Tweet Classification
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=KAZYjeskBqL4)
 
-The classification module consists of seven different tasks (Topic Classification, Sentiment Analysis, Irony Detection, 
-Hate Detection, Offensive Detection, Emoji Prediction, and Emotion Analysis). In each example, the model is instantiated 
-by `tweetnlp.load_model("task-name")`, and run the prediction by giving a text or a list of texts.
+The classification module consists of six different tasks (Topic Classification, Sentiment Analysis, Irony Detection, Hate Speech Detection, Offensive Language Detection, Emoji Prediction, and Emotion Analysis).
+In each example, the model is instantiated by `tweetnlp.load("task-name")`, and run the prediction by passing a text or a list of texts as argument to the corresponding function.
 
-- ***Topic Classification***: This model classifies given tweet into 19 categories. As default, it returns all relevant topics to the tweet, 
-  so the output could be a list of topics. Single-label model (return single topic instead) can be also loaded by  
-  `tweetnlp.load_model('topic_classification', multi_label=False)` that classifies a tweet into 6 major topics. Check the [paper](https://arxiv.org/abs/2209.09824) for more detail.
+- ***Topic Classification***: The aim of this task is, given a tweet to assign topics related to its content. The task is formed as a supervised multi-label classification problem where each tweet is assigned one or more topics from a total of 19 available topics. The topics were carefully curated based on Twitter trends with the aim to be broad and general and consist of classes such as: arts and culture, music, or sports. Our internally-annotated dataset contains over 10K manually-labeled tweets (check the paper [here](https://arxiv.org/abs/2209.09824), or the [huggingface dataset page](https://huggingface.co/datasets/cardiffnlp/tweet_topic_single)).
 
 ```python
 import tweetnlp
@@ -94,8 +91,7 @@ dataset_single_label, label2id_single_label = tweetnlp.load_dataset('topic_class
 ```
 
 
-- ***Sentiment Analysis***: Binary classification of `positive`/`negative`. This module supports 8 different languages now 
-  (Arabic/English/French/Spanish/German/Portuguese/Hindi/Italian).
+- ***Sentiment Analysis***: The sentiment analysis task integrated in TweetNLP is a simplified version where the goal is to predict the sentiment of a tweet with one of the three following labels: positive, neutral or negative. The base dataset for English is the unified TweetEval version of the Semeval-2017 dataset from the task on Sentiment Analysis in Twitter (check the paper [here](https://arxiv.org/pdf/2010.12421.pdf)).
 
 ```python
 import tweetnlp
@@ -121,7 +117,7 @@ for l in ['all', 'arabic', 'english', 'french', 'german', 'hindi', 'italian', 'p
     dataset_multilingual, label2id_multilingual = tweetnlp.load_dataset('sentiment', multilingual=True, task_language=l)
 ```
 
-- ***Irony Detection***: Binary classification of whether the tweet is irony or not.
+- ***Irony Detection***: This is a binary classification task where given a tweet, the goal is to detect whether it is ironic or not. It is based on the Irony Detection dataset from the SemEval 2018 task (check the paper [here](https://arxiv.org/pdf/2010.12421.pdf)).
 
 ```python
 import tweetnlp
@@ -137,7 +133,7 @@ model.irony('If you wanna look like a badass, have drama on social media', retur
 dataset, label2id = tweetnlp.load_dataset('irony')
 ```
 
-- ***Hate Speech Detection***: Binary classification of whether the tweet is hate or not.
+- ***Hate Speech Detection***: The hate speech dataset consists of detecting whether a tweet is hateful towards women or immigrants. It is based on the Detection of Hate Speech task at SemEval 2019 (check the paper [here](https://arxiv.org/pdf/2010.12421.pdf)).
 
 ```python
 import tweetnlp
@@ -153,7 +149,7 @@ model.hate('Whoever just unfollowed me you a bitch', return_probability=True)
 dataset, label2id = tweetnlp.load_dataset('hate')
 ```
 
-- ***Offensive Language Identification***: Binary classification of whether the tweet is offensive or not.
+- ***Offensive Language Identification***: This task consists in identifying whether some form of offensive language is present in a tweet. For our benchmark we rely on the SemEval2019 OffensEval dataset (check the paper [here](https://arxiv.org/pdf/2010.12421.pdf)).
 
 ```python
 import tweetnlp
@@ -169,7 +165,7 @@ model.offensive("All two of them taste like ass.", return_probability=True)
 dataset, label2id = tweetnlp.load_dataset('offensive')
 ```
 
-- ***Emoji Prediction***: Predict appropriate single emoji to the tweet from 20 emojis (❤, 😍, 😂, 💕, 🔥, 😊, 😎, ✨, 💙, 😘, 📷, 🇺🇸, ☀, 💜, 😉, 💯, 😁, 🎄, 📸, 😜).	
+- ***Emoji Prediction***: The goal of emoji prediction is to predict the final emoji on a given tweet. The dataset used to fine-tune our models is the TweetEval adaptation from the SemEval 2018 task on Emoji Prediction (check the paper [here](https://arxiv.org/pdf/2010.12421.pdf)), including 20 emoji as labels (❤, 😍, 😂, 💕, 🔥, 😊, 😎, ✨, 💙, 😘, 📷, 🇺🇸, ☀, 💜, 😉, 💯, 😁, 🎄, 📸, 😜).	
 
 ```python
 import tweetnlp
@@ -205,7 +201,7 @@ model.emoji('Beautiful sunset last night from the pontoon @TupperLakeNY', return
 dataset, label2id = tweetnlp.load_dataset('emoji')
 ```
 
-- ***Emotion Recognition***: Predict the emotion of the tweet from four classes: `anger`/`joy`/`optimism`/`sadness`.
+- ***Emotion Recognition***: Given a tweet, this task consists of associating it with its most appropriate emotion. As a reference dataset we use the SemEval 2018 task on Affect in Tweets, simplified to only four emotions used in TweetEval: anger, joy, sadness and optimism (check the paper [here](https://arxiv.org/pdf/2010.12421.pdf)).
 
 ```python
 import tweetnlp
@@ -224,8 +220,7 @@ dataset, label2id = tweetnlp.load_dataset('emotion')
 ### Named Entity Recognition
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=WeREiLEjBlrj)
 
-Named-entity recognition (NER) model finds entities and classify the entity types in a tweet.
-The model is instantiated by `tweetnlp.load_model("ner")`, and run the prediction by giving a text or a list of texts.
+This module consists of a named-entity recognition (NER) model specifically trained for tweets. The model is instantiated by `tweetnlp.load("ner")`, and runs the prediction by giving a text or a list of texts as argument to the `ner` function (check the paper [here](https://arxiv.org/abs/2210.03797), or the [huggingface dataset page](https://huggingface.co/datasets/tner/tweetner7)). 
 
 ```python3
 import tweetnlp
@@ -246,10 +241,58 @@ model.ner('Jacob Collier is a Grammy-awarded English artist from London.', retur
 dataset, label2id = tweetnlp.load_dataset('ner')
 ```
 
+### Question Answering
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=reZDePaBmYhA&line=4&uniqifier=1)
+
+This module consists of a question answering model specifically trained for tweets.
+The model is instantiated by `tweetnlp.load("question_answering")`, 
+and runs the prediction by giving a question or a list of questions along with a context or a list of contexts
+as argument to the `question_answering` function (check the paper [here](https://arxiv.org/abs/2210.03992), or the [huggingface dataset page](https://huggingface.co/datasets/lmqg/qg_tweetqa)). 
+
+```python3
+import tweetnlp
+
+# MODEL
+model = tweetnlp.load_model('question_answering')  # Or `model = tweetnlp.QuestionAnswering()` 
+model.question_answering(
+  question='who created the post as we know it today?',
+  context="'So much of The Post is Ben,' Mrs. Graham said in 1994, three years after Bradlee retired as editor. 'He created it as we know it today.'— Ed O'Keefe (@edatpost) October 21, 2014"
+)  # Or `model.predict`
+>>> {'generated_text': 'nebraska'}
+
+# GET DATASET
+dataset = tweetnlp.load_dataset('question_answering')
+```
+
+### Question Answer Generation
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=uqd7sBHhnwym&line=6&uniqifier=1)
+
+This module consists of a question & answer pair generation specifically trained for tweets.
+The model is instantiated by `tweetnlp.load("question_answer_generation")`, 
+and runs the prediction by giving a context or a list of contexts
+as argument to the `question_answer_generation` function (check the paper [here](https://arxiv.org/abs/2210.03992), or the [huggingface dataset page](https://huggingface.co/datasets/lmqg/qag_tweetqa)). 
+
+```python3
+import tweetnlp
+
+# MODEL
+model = tweetnlp.load_model('question_answer_generation')  # Or `model = tweetnlp.QuestionAnswerGeneration()` 
+model.question_answer_generation(
+  text="'So much of The Post is Ben,' Mrs. Graham said in 1994, three years after Bradlee retired as editor. 'He created it as we know it today.'— Ed O'Keefe (@edatpost) October 21, 2014"
+)  # Or `model.predict`
+>>> [
+    {'question': 'who created the post?', 'answer': 'ben'},
+    {'question': 'what did ben do in 1994?', 'answer': 'he retired as editor'}
+]
+
+# GET DATASET
+dataset = tweetnlp.load_dataset('question_answer_generation')
+```
+
 ### Language Modeling
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=COOoZHVAFCIG&line=1&uniqifier=1)
 
-Masked language model predicts masked token in the given sentence. This is instantiated by `tweetnlp.load_model('language_model')`, and run the prediction by giving a text or a list of texts. Please make sure that each text has `<mask>` token, that is the objective of the model to predict.
+The masked language model predicts the masked token in the given sentence. This is instantiated by `tweetnlp.load('language_model')`, and runs the prediction by giving a text or a list of texts as argument to the `mask_prediction` function. Please make sure that each text has a `<mask>` token, since that is eventually the following by the objective of the model to predict.
 
 ```python
 import tweetnlp
@@ -264,7 +307,7 @@ model.mask_prediction("How many more <mask> until opening day? 😩", best_n=2) 
 ### Tweet Embedding
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=MUT31bNQYTNz)
 
-Tweet embedding model produces a fixed length embedding for a tweet. The embedding represents the semantics of the tweet, and this can be used a semantic search of tweets by using the similarity in betweein the embeddings. Model is instantiated by `tweet_nlp.load('sentence_embedding')`, and run the prediction by giving a text or a list of texts.
+The tweet embedding model produces a fixed length embedding for a tweet. The embedding represents the semantics by meaning of the tweet, and this can be used for semantic search of tweets by using the similarity between the embeddings. Model is instantiated by `tweet_nlp.load('sentence_embedding')`, and run the prediction by passing a text or a list of texts as argument to the `embedding` function.
 
 - ***Get Embedding***
 
@@ -330,7 +373,6 @@ Here is a table of the default model used in each task.
 |-----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
 |Topic Classification (single-label)| [cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-single-all](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-single-all) | [cardiffnlp/tweet_topic_single](https://huggingface.co/datasets/cardiffnlp/tweet_topic_single) |
 |Topic Classification (multi-label) | [cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-multi-all](https://huggingface.co/cardiffnlp/twitter-roberta-base-dec2021-tweet-topic-multi-all)   | [cardiffnlp/tweet_topic_multi](https://huggingface.co/datasets/cardiffnlp/tweet_topic_multi) |
-|Named Entity Recognition           | [tner/roberta-large-tweetner7-all](https://huggingface.co/tner/tner/roberta-large-tweetner7-all)                                                        | [tner/tweetner7](https://huggingface.co/datasets/tner/tweetner7) |
 |Sentiment Analysis (Multilingual)  | [cardiffnlp/twitter-xlm-roberta-base-sentiment](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment)                                   | [cardiffnlp/tweet_sentiment_multilingual](https://huggingface.co/datasets/cardiffnlp/tweet_sentiment_multilingual) |
 |Sentiment Analysis                 | [cardiffnlp/twitter-roberta-base-sentiment-latest](https://huggingface.co/cardiffnlp/twitter-roberta-base-sentiment-latest)                             | [tweet_eval](https://huggingface.co/datasets/tweet_eval) |
 |Irony Detection                    | [cardiffnlp/twitter-roberta-base-irony](https://huggingface.co/cardiffnlp/twitter-roberta-base-irony)                                                   | [tweet_eval](https://huggingface.co/datasets/tweet_eval) |
@@ -338,11 +380,18 @@ Here is a table of the default model used in each task.
 |Offensive Detection                | [cardiffnlp/twitter-roberta-base-offensive](https://huggingface.co/cardiffnlp/twitter-roberta-base-offensive)                                           | [tweet_eval](https://huggingface.co/datasets/tweet_eval) |
 |Emoji Prediction                   | [cardiffnlp/twitter-roberta-base-emoji](https://huggingface.co/cardiffnlp/twitter-roberta-base-emoji)                                                   | [tweet_eval](https://huggingface.co/datasets/tweet_eval) |
 |Emotion Analysis                   | [cardiffnlp/twitter-roberta-base-emotion](https://huggingface.co/cardiffnlp/twitter-roberta-base-emotion)                                               | [tweet_eval](https://huggingface.co/datasets/tweet_eval) |
+|Named Entity Recognition           | [tner/roberta-large-tweetner7-all](https://huggingface.co/tner/tner/roberta-large-tweetner7-all)                                                        | [tner/tweetner7](https://huggingface.co/datasets/tner/tweetner7) |
+|Question Answering                 | [lmqg/t5-small-tweetqa-qa](https://huggingface.co/lmqg/t5-small-tweetqa-qa)                                                                             | [lmqg/qg_tweetqa](https://huggingface.co/datasets/lmqg/qg_tweetqa) |
+|Question Answer Generation         | [lmqg/t5-base-tweetqa-qag](https://huggingface.co/lmqg/t5-base-tweetqa-qag)                                                                             | [lmqg/qag_tweetqa](https://huggingface.co/datasets/lmqg/qag_tweetqa) |
 |Language Modeling                  | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m)                                           | TBA |
 |Tweet Embedding                    | [cambridgeltl/tweet-roberta-base-embeddings-v1](https://huggingface.co/cambridgeltl/tweet-roberta-base-embeddings-v1)                                   | TBA |
 
 
-To use other model from local/huggingface modelhub, one can simply provide model path/alias at the model loading.
+To use an other model from local/huggingface modelhub, one can simply provide the model path/alias to the `load` function.
+
+`tweetnlp.load('task', model='model-path/alias')`
+
+Or any classification model can be used without specifying the task.
 
 ```python
 import tweetnlp
@@ -352,8 +401,7 @@ tweetnlp.load_model('ner', model_name='tner/twitter-roberta-base-2019-90m-tweetn
 ## Model Fine-tuning
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=2plrPTqk7OHp)
 
-TweetNLP provides an easy interface to fine-tune language models on the dataset supported by [HuggingFace](https://huggingface.co/) for 
-model hosting/fine-tuning with [RAY TUNE](https://docs.ray.io/en/latest/tune/index.html) for parameter search. 
+TweetNLP provides an easy interface to fine-tune language models on the datasets supported by HuggingFace for model hosting/fine-tuning with [RAY TUNE](https://docs.ray.io/en/latest/tune/index.html) for parameter search.
 
 - Supported Tasks: `sentiment`, `offensive`, `irony`, `hate`, `emotion`, `topic_classification`
 

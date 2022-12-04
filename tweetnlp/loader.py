@@ -34,7 +34,7 @@ TASK_CLASS = {
     'language_model': [LanguageModel, None, None],
     'sentence_embedding': [SentenceEmbedding, None, None],
     'question_answering': [QuestionAnswering, load_dataset_question_answering, None],
-    'question_answer_generation': [QuestionAnswerGeneration, load_dataset_question_answer_generation(), None]
+    'question_answer_generation': [QuestionAnswerGeneration, load_dataset_question_answer_generation, None]
 }
 
 
