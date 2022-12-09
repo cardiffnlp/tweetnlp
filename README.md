@@ -258,7 +258,7 @@ model.question_answering(
   question='who created the post as we know it today?',
   context="'So much of The Post is Ben,' Mrs. Graham said in 1994, three years after Bradlee retired as editor. 'He created it as we know it today.'— Ed O'Keefe (@edatpost) October 21, 2014"
 )  # Or `model.predict`
->>> {'generated_text': 'nebraska'}
+>>> {'generated_text': 'ben'}
 
 # GET DATASET
 dataset = tweetnlp.load_dataset('question_answering')
