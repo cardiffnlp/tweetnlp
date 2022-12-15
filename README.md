@@ -405,33 +405,24 @@ TweetNLP provides an easy interface to fine-tune language models on the datasets
 
 - Supported Tasks: `sentiment`, `offensive`, `irony`, `hate`, `emotion`, `topic_classification`
 
-The result of quick experiments with the `tweetnlp`'s trainer can be found in the following table, that is as competitive as the baseline in each task.
-See [the leaderboard page](https://github.com/cardiffnlp/tweetnlp/blob/main/FINETUNING_RESULT.md) to know more about the result.
+The results of experiments with `tweetnlp`'s trainer can be found in the following table. Results are competitive and can be used as baselines for each task.
+See [the leaderboard page](https://github.com/cardiffnlp/tweetnlp/blob/main/FINETUNING_RESULT.md) to know more about the results.
 
 | task      | language_model                                                                                                |   eval_f1 |   eval_f1_macro |   eval_accuracy | link                                                                                                                              |
 |:----------|:--------------------------------------------------------------------------------------------------------------|----------:|----------------:|----------------:|:----------------------------------------------------------------------------------------------------------------------------------|
 | emoji     | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m) |      0.46 |            0.35 |            0.46 | [cardiffnlp/twitter-roberta-base-2021-124m-emoji](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-emoji)         |
-| emoji     | [roberta-base](https://huggingface.co/roberta-base)                                                           |      0.46 |            0.34 |            0.46 | [cardiffnlp/roberta-base-emoji](https://huggingface.co/cardiffnlp/roberta-base-emoji)                                             |
 | emotion   | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m) |      0.83 |            0.79 |            0.83 | [cardiffnlp/twitter-roberta-base-2021-124m-emotion](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-emotion)     |
-| emotion   | [roberta-base](https://huggingface.co/roberta-base)                                                           |      0.82 |            0.79 |            0.82 | [cardiffnlp/roberta-base-emotion](https://huggingface.co/cardiffnlp/roberta-base-emotion)                                         |
 | hate      | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m) |      0.56 |            0.53 |            0.56 | [cardiffnlp/twitter-roberta-base-2021-124m-hate](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-hate)           |
-| hate      | [roberta-base](https://huggingface.co/roberta-base)                                                           |      0.51 |            0.46 |            0.51 | [cardiffnlp/roberta-base-hate](https://huggingface.co/cardiffnlp/roberta-base-hate)                                               |
 | irony     | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m) |      0.79 |            0.78 |            0.79 | [cardiffnlp/twitter-roberta-base-2021-124m-irony](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-irony)         |
-| irony     | [roberta-base](https://huggingface.co/roberta-base)                                                           |      0.7  |            0.69 |            0.7  | [cardiffnlp/roberta-base-irony](https://huggingface.co/cardiffnlp/roberta-base-irony)                                             |
 | offensive | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m) |      0.86 |            0.82 |            0.86 | [cardiffnlp/twitter-roberta-base-2021-124m-offensive](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-offensive) |
-| offensive | [roberta-base](https://huggingface.co/roberta-base)                                                           |      0.84 |            0.8  |            0.84 | [cardiffnlp/roberta-base-offensive](https://huggingface.co/cardiffnlp/roberta-base-offensive)                                     |
 | sentiment | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m) |      0.71 |            0.72 |            0.71 | [cardiffnlp/twitter-roberta-base-2021-124m-sentiment](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-sentiment) |
-| sentiment | [roberta-base](https://huggingface.co/roberta-base)                                                           |      0.71 |            0.71 |            0.71 | [cardiffnlp/roberta-base-sentiment](https://huggingface.co/cardiffnlp/roberta-base-sentiment)                                     |
 | topic_classification (single) | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m) |      0.9  |  0.8  |            0.9  | [cardiffnlp/twitter-roberta-base-2021-124m-topic-single](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-topic-single)                 |                                                                                                                               
-| topic_classification (single) | [roberta-base](https://huggingface.co/roberta-base)                                                           |      0.88 |            0.74 |            0.88 | [cardiffnlp/roberta-base-topic-single](https://huggingface.co/cardiffnlp/roberta-base-topic-single)                                                     |
 | topic_classification (multi)  | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m) |      0.75 |            0.56 |            0.54 | [cardiffnlp/twitter-roberta-base-2021-124m-topic-multi](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-topic-multi)                   |
-| topic_classification (multi)  | [roberta-base](https://huggingface.co/roberta-base)                                                           |      0.75 |            0.6  |            0.53 | [cardiffnlp/roberta-base-topic-multi](https://huggingface.co/cardiffnlp/roberta-base-topic-multi)                                                       |
 | sentiment (multilingual)      | [cardiffnlp/twitter-xlm-roberta-base](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base)             |      0.69 |  0.69 |            0.69 | [cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual)         |                                                                                                                               
-| sentiment (multilingual)      | [xlm-roberta-base](https://huggingface.co/xlm-roberta-base)                                                   |      0.67 |  0.66 |            0.67 | [cardiffnlp/xlm-roberta-base-sentiment-multilingual](https://huggingface.co/cardiffnlp/xlm-roberta-base-sentiment-multilingual)                         |                                                                                                                               
 
 
 ### Example 
-Following example will reproduce the same model as our irony model [cardiffnlp/twitter-roberta-base-2021-124m-irony](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-irony).
+The following example will reproduce our irony model [cardiffnlp/twitter-roberta-base-2021-124m-irony](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m-irony).
 
 ```python
 import logging
@@ -486,7 +477,7 @@ The saved checkpoint can be loaded as a custom model as below.
 import tweetnlp
 model = tweetnlp.load_model('irony', model_name="model_ckpt/irony/best_model")
 ```
-If `split_validation` is not given, trainer will do single run with default parameter without parameter search.
+If `split_validation` is not given, trainer will do a single run with default parameters without parameter search.
 
 ## Reference Paper
 
