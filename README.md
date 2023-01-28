@@ -37,7 +37,7 @@ please check them if you are new to huggingface.
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=KAZYjeskBqL4)
 
 The classification module consists of six different tasks (Topic Classification, Sentiment Analysis, Irony Detection, Hate Speech Detection, Offensive Language Detection, Emoji Prediction, and Emotion Analysis).
-In each example, the model is instantiated by `tweetnlp.load("task-name")`, and run the prediction by passing a text or a list of texts as argument to the corresponding function.
+In each example, the model is instantiated by `tweetnlp.load_model("task-name")`, and run the prediction by passing a text or a list of texts as argument to the corresponding function.
 
 - ***Topic Classification***: The aim of this task is, given a tweet to assign topics related to its content. The task is formed as a supervised multi-label classification problem where each tweet is assigned one or more topics from a total of 19 available topics. The topics were carefully curated based on Twitter trends with the aim to be broad and general and consist of classes such as: arts and culture, music, or sports. Our internally-annotated dataset contains over 10K manually-labeled tweets (check the paper [here](https://arxiv.org/abs/2209.09824), or the [huggingface dataset page](https://huggingface.co/datasets/cardiffnlp/tweet_topic_single)).
 
@@ -220,7 +220,7 @@ dataset, label2id = tweetnlp.load_dataset('emotion')
 ### Named Entity Recognition
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=WeREiLEjBlrj)
 
-This module consists of a named-entity recognition (NER) model specifically trained for tweets. The model is instantiated by `tweetnlp.load("ner")`, and runs the prediction by giving a text or a list of texts as argument to the `ner` function (check the paper [here](https://arxiv.org/abs/2210.03797), or the [huggingface dataset page](https://huggingface.co/datasets/tner/tweetner7)). 
+This module consists of a named-entity recognition (NER) model specifically trained for tweets. The model is instantiated by `tweetnlp.load_model("ner")`, and runs the prediction by giving a text or a list of texts as argument to the `ner` function (check the paper [here](https://arxiv.org/abs/2210.03797), or the [huggingface dataset page](https://huggingface.co/datasets/tner/tweetner7)). 
 
 ```python3
 import tweetnlp
@@ -245,7 +245,7 @@ dataset, label2id = tweetnlp.load_dataset('ner')
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=reZDePaBmYhA&line=4&uniqifier=1)
 
 This module consists of a question answering model specifically trained for tweets.
-The model is instantiated by `tweetnlp.load("question_answering")`, 
+The model is instantiated by `tweetnlp.load_model("question_answering")`, 
 and runs the prediction by giving a question or a list of questions along with a context or a list of contexts
 as argument to the `question_answering` function (check the paper [here](https://arxiv.org/abs/2210.03992), or the [huggingface dataset page](https://huggingface.co/datasets/lmqg/qg_tweetqa)). 
 
@@ -268,7 +268,7 @@ dataset = tweetnlp.load_dataset('question_answering')
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=uqd7sBHhnwym&line=6&uniqifier=1)
 
 This module consists of a question & answer pair generation specifically trained for tweets.
-The model is instantiated by `tweetnlp.load("question_answer_generation")`, 
+The model is instantiated by `tweetnlp.load_model("question_answer_generation")`, 
 and runs the prediction by giving a context or a list of contexts
 as argument to the `question_answer_generation` function (check the paper [here](https://arxiv.org/abs/2210.03992), or the [huggingface dataset page](https://huggingface.co/datasets/lmqg/qag_tweetqa)). 
 
@@ -292,7 +292,7 @@ dataset = tweetnlp.load_dataset('question_answer_generation')
 ### Language Modeling
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=COOoZHVAFCIG&line=1&uniqifier=1)
 
-The masked language model predicts the masked token in the given sentence. This is instantiated by `tweetnlp.load('language_model')`, and runs the prediction by giving a text or a list of texts as argument to the `mask_prediction` function. Please make sure that each text has a `<mask>` token, since that is eventually the following by the objective of the model to predict.
+The masked language model predicts the masked token in the given sentence. This is instantiated by `tweetnlp.load_model('language_model')`, and runs the prediction by giving a text or a list of texts as argument to the `mask_prediction` function. Please make sure that each text has a `<mask>` token, since that is eventually the following by the objective of the model to predict.
 
 ```python
 import tweetnlp
@@ -307,7 +307,7 @@ model.mask_prediction("How many more <mask> until opening day? 😩", best_n=2) 
 ### Tweet Embedding
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=MUT31bNQYTNz)
 
-The tweet embedding model produces a fixed length embedding for a tweet. The embedding represents the semantics by meaning of the tweet, and this can be used for semantic search of tweets by using the similarity between the embeddings. Model is instantiated by `tweet_nlp.load('sentence_embedding')`, and run the prediction by passing a text or a list of texts as argument to the `embedding` function.
+The tweet embedding model produces a fixed length embedding for a tweet. The embedding represents the semantics by meaning of the tweet, and this can be used for semantic search of tweets by using the similarity between the embeddings. Model is instantiated by `tweet_nlp.load_model('sentence_embedding')`, and run the prediction by passing a text or a list of texts as argument to the `embedding` function.
 
 - ***Get Embedding***
 
@@ -387,11 +387,8 @@ Here is a table of the default model used in each task.
 |Tweet Embedding                    | [cambridgeltl/tweet-roberta-base-embeddings-v1](https://huggingface.co/cambridgeltl/tweet-roberta-base-embeddings-v1)                                   | TBA |
 
 
-To use an other model from local/huggingface modelhub, one can simply provide the model path/alias to the `load` function.
-
-`tweetnlp.load('task', model='model-path/alias')`
-
-Or any classification model can be used without specifying the task.
+To use an other model from local/huggingface modelhub, one can simply provide the model path/alias to the `load_model` function.
+Below is an example to load a model for NER.
 
 ```python
 import tweetnlp
