@@ -16,7 +16,7 @@ MODEL_LIST = {
         "default": "cardiffnlp/twitter-roberta-base-emoji"
     },
     'hate': {
-        "default": "cardiffnlp/twitter-roberta-base-hate"
+        "default": "cardiffnlp/twitter-roberta-base-hate-latest"
     },
     'irony': {
         "default": "cardiffnlp/twitter-roberta-base-irony"
