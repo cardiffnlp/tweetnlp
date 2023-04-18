@@ -10,7 +10,8 @@ from ..util import load_model, get_preprocessor
 DEFAULT_CACHE_DIR = f"{os.path.expanduser('~')}/.cache/tweetnlp/classification"
 MODEL_LIST = {
     'emotion': {
-        "default": "cardiffnlp/twitter-roberta-base-emotion"
+        "single_label": "cardiffnlp/twitter-roberta-base-emotion",
+        "multi_label": "cardiffnlp/twitter-roberta-base-emotion-multilabel-latest"
     },
     'emoji': {
         "default": "cardiffnlp/twitter-roberta-base-emoji"
@@ -198,9 +199,10 @@ class Emotion(Classifier):
     def __init__(self,
                  model_name: str = None,
                  max_length: int = 128,
+                 multi_label: bool = True,
                  use_auth_token: bool = False):
         if model_name is None:
-            model_name = MODEL_LIST['emotion']['default']
+            model_name = MODEL_LIST['emotion']['multi_label' if multi_label else 'single_label']
         super().__init__(model_name, max_length=max_length, use_auth_token=use_auth_token)
         self.emotion = self.predict
 

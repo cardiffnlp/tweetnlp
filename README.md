@@ -206,16 +206,39 @@ dataset, label2id = tweetnlp.load_dataset('emoji')
 ```python
 import tweetnlp
 
-# MODEL
+# MULTI-LABEL MODEL 
 model = tweetnlp.load_model('emotion')  # Or `model = tweetnlp.Emotion()` 
 model.emotion('I love swimming for the same reason I love meditating...the feeling of weightlessness.')  # Or `model.predict`
 >>> {'label': 'joy'}
+# Note: the probability of the multi-label model is the output of sigmoid function on binary prediction whether each topic is positive or negative.
+model.emotion('I love swimming for the same reason I love meditating...the feeling of weightlessness.', return_probability=True)
+>>> {'label': 'joy',
+ 'probability': {'anger': 0.00025800734874792397,
+  'anticipation': 0.0005329723935574293,
+  'disgust': 0.00026112011983059347,
+  'fear': 0.00027552215033210814,
+  'joy': 0.7721399068832397,
+  'love': 0.1806265264749527,
+  'optimism': 0.04208092764019966,
+  'pessimism': 0.00025325192837044597,
+  'sadness': 0.0006160663324408233,
+  'surprise': 0.0005619609728455544,
+  'trust': 0.002393839880824089}}
+
+# SINGLE-LABEL MODEL
+model = tweetnlp.load_model('emotion')  # Or `model = tweetnlp.Emotion()` 
+model.emotion('I love swimming for the same reason I love meditating...the feeling of weightlessness.')  # Or `model.predict`
+>>> {'label': 'joy'}
+# NOTE: the probability of the sinlge-label model the softmax over the label.
 model.emotion('I love swimming for the same reason I love meditating...the feeling of weightlessness.', return_probability=True)
 >>> {'label': 'optimism', 'probability': {'joy': 0.01367587223649025, 'optimism': 0.7345258593559265, 'anger': 0.1770714670419693, 'sadness': 0.07472680509090424}}
 
 # GET DATASET
 dataset, label2id = tweetnlp.load_dataset('emotion')
 ```
+
+WARNING: The single-label and multi-label emotion model have diiferent label set (single-label has four classes of 'joy'/'optimism'/'anger'/'sadness', 
+while multi-label has eleven classes of 'joy'/'optimism'/'anger'/'sadness'/'love'/'trust'/'fear'/'surprise'/'anticipation'/'disgust'/'pessimism').
 
 ### Named Entity Recognition
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp#scrollTo=WeREiLEjBlrj)
@@ -379,8 +402,9 @@ Here is a table of the default model used in each task.
 |Hate Detection                     | [cardiffnlp/twitter-roberta-base-hate-latest](https://huggingface.co/cardiffnlp/twitter-roberta-base-hate-latest)                                       | [tweet_eval](https://huggingface.co/datasets/tweet_eval) |
 |Offensive Detection                | [cardiffnlp/twitter-roberta-base-offensive](https://huggingface.co/cardiffnlp/twitter-roberta-base-offensive)                                           | [tweet_eval](https://huggingface.co/datasets/tweet_eval) |
 |Emoji Prediction                   | [cardiffnlp/twitter-roberta-base-emoji](https://huggingface.co/cardiffnlp/twitter-roberta-base-emoji)                                                   | [tweet_eval](https://huggingface.co/datasets/tweet_eval) |
-|Emotion Analysis                   | [cardiffnlp/twitter-roberta-base-emotion](https://huggingface.co/cardiffnlp/twitter-roberta-base-emotion)                                               | [tweet_eval](https://huggingface.co/datasets/tweet_eval) |
-|Named Entity Recognition           | [tner/roberta-large-tweetner7-all](https://huggingface.co/tner/roberta-large-tweetner7-all)                                                        | [tner/tweetner7](https://huggingface.co/datasets/tner/tweetner7) |
+|Emotion Analysis (single-label)    | [cardiffnlp/twitter-roberta-base-emotion](https://huggingface.co/cardiffnlp/twitter-roberta-base-emotion)                                               | [tweet_eval](https://huggingface.co/datasets/tweet_eval) |
+|Emotion Analysis (multi-label)     | [cardiffnlp/twitter-roberta-base-emotion-multilabel-latest](https://huggingface.co/cardiffnlp/twitter-roberta-base-emotion-multilabel-latest)           | TBA |
+|Named Entity Recognition           | [tner/roberta-large-tweetner7-all](https://huggingface.co/tner/roberta-large-tweetner7-all)                                                             | [tner/tweetner7](https://huggingface.co/datasets/tner/tweetner7) |
 |Question Answering                 | [lmqg/t5-small-tweetqa-qa](https://huggingface.co/lmqg/t5-small-tweetqa-qa)                                                                             | [lmqg/qg_tweetqa](https://huggingface.co/datasets/lmqg/qg_tweetqa) |
 |Question Answer Generation         | [lmqg/t5-base-tweetqa-qag](https://huggingface.co/lmqg/t5-base-tweetqa-qag)                                                                             | [lmqg/qag_tweetqa](https://huggingface.co/datasets/lmqg/qag_tweetqa) |
 |Language Modeling                  | [cardiffnlp/twitter-roberta-base-2021-124m](https://huggingface.co/cardiffnlp/twitter-roberta-base-2021-124m)                                           | TBA |
