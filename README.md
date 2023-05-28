@@ -4,11 +4,11 @@
 [![PyPI status](https://img.shields.io/pypi/status/tweetnlp.svg)](https://pypi.python.org/pypi/tweetnlp/)
 
 # TweetNLP
-TweetNLP for all the NLP enthusiasts working on Twitter! 
+TweetNLP for all the NLP enthusiasts working on Twitter and social media in general! 
 The python library `tweetnlp` provides a collection of useful tools to analyze/understand tweets such as sentiment analysis,
-emoji prediction, and named-entity recognition, powered by state-of-the-art language modeling trained on tweets.
+emoji prediction, and named-entity recognition, powered by state-of-the-art language modeling specialized on social media.
 
-***News (September 2022):*** Our paper presenting TweetNLP, "TweetNLP: Cutting-Edge Natural Language Processing for Social Media", has been accepted as an EMNLP 2022 system demonstration!! Camera-ready version can be found [here](https://arxiv.org/abs/2206.14774).
+***News (December 2022):*** We presented a TweetNLP demo paper ("TweetNLP: Cutting-Edge Natural Language Processing for Social Media"), at EMNLP 2022. The final version can be found [here](https://aclanthology.org/2022.emnlp-demos.5/).
 
 
 Resources:
