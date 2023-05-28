@@ -133,7 +133,7 @@ model.irony('If you wanna look like a badass, have drama on social media', retur
 dataset, label2id = tweetnlp.load_dataset('irony')
 ```
 
-- ***Hate Speech Detection***: The hate speech dataset consists of detecting whether a tweet is hateful towards women or immigrants. It is based on the Detection of Hate Speech task at SemEval 2019 (check the paper [here](https://arxiv.org/pdf/2010.12421.pdf)).
+- ***Hate Speech Detection***: The hate speech dataset consists of detecting whether a tweet is hateful towards women or immigrants. It is based on a suite of unified hate speech detection datasets.
 
 ```python
 import tweetnlp
@@ -201,7 +201,7 @@ model.emoji('Beautiful sunset last night from the pontoon @TupperLakeNY', return
 dataset, label2id = tweetnlp.load_dataset('emoji')
 ```
 
-- ***Emotion Recognition***: Given a tweet, this task consists of associating it with its most appropriate emotion. As a reference dataset we use the SemEval 2018 task on Affect in Tweets, simplified to only four emotions used in TweetEval: anger, joy, sadness and optimism (check the paper [here](https://arxiv.org/pdf/2010.12421.pdf)).
+- ***Emotion Recognition***: Given a tweet, this task consists of associating it with its most appropriate emotion. As a reference dataset we use the SemEval 2018 task on Affect in Tweets (check the paper [here](https://arxiv.org/pdf/2010.12421.pdf)). The latest multi-label model includes eleven emotion types.
 
 ```python
 import tweetnlp
@@ -508,8 +508,6 @@ For more details, please read the accompanying [TweetNLP's reference paper](http
 @inproceedings{camacho-collados-etal-2022-tweetnlp,
     title={{T}weet{NLP}: {C}utting-{E}dge {N}atural {L}anguage {P}rocessing for {S}ocial {M}edia},
     author={Camacho-Collados, Jose and Rezaee, Kiamehr and Riahi, Talayeh and Ushio, Asahi and Loureiro, Daniel and Antypas, Dimosthenis and Boisson, Joanne and Espinosa-Anke, Luis and Liu, Fangyu and Mart{\'\i}nez-C{\'a}mara, Eugenio and others},
-    author = "Ushio, Asahi  and
-      Camacho-Collados, Jose",
     booktitle = "Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing: System Demonstrations",
     month = nov,
     year = "2022",
