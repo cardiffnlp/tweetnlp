@@ -16,8 +16,14 @@ class LanguageModel:
         self.config, self.tokenizer, self.model = load_model(
             model_name, task='masked_language_model', use_auth_token=use_auth_token)
         self.max_length = max_length
-        # GPU setup
-        self.device = 'cuda' if torch.cuda.device_count() > 0 else 'cpu'
+        # GPU setup (https://github.com/cardiffnlp/tweetnlp/issues/15)
+        if torch.cuda.is_available() and torch.cuda.device_count() > 0:
+            self.device = torch.device('cuda')
+        elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available() and torch.backends.mps.is_built():
+            self.device = torch.device("mps")
+        else:
+            self.device = torch.device('cpu')
+
         self.parallel = torch.cuda.device_count() > 1
         if self.parallel:
             self.model = torch.nn.DataParallel(self.model)

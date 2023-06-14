@@ -34,8 +34,14 @@ class NER:
                 {k: torch.FloatTensor(v) for k, v in self.model.config.crf_state_dict.items()}
             )
 
-        # GPU setup
-        self.device = 'cuda' if torch.cuda.device_count() > 0 else 'cpu'
+        # GPU setup (https://github.com/cardiffnlp/tweetnlp/issues/15)
+        if torch.cuda.is_available() and torch.cuda.device_count() > 0:
+            self.device = torch.device('cuda')
+        elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available() and torch.backends.mps.is_built():
+            self.device = torch.device("mps")
+        else:
+            self.device = torch.device('cpu')
+
         self.parallel = torch.cuda.device_count() > 1
         if self.parallel:
             self.model = torch.nn.DataParallel(self.model)
