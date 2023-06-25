@@ -15,6 +15,10 @@ Resources:
 - Quick Tour with Colab Notebook: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/104MtF9MXkDFimlJLr4SFBX0HjidLTfvp?usp=sharing)
 - Play with the TweetNLP Online Demo: [link](https://tweetnlp.org/demo/)
 - EMNLP 2022 paper: [link](https://arxiv.org/abs/2206.14774)
+- 2nd Cardiff NLP Summer Workshop Tutorial: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1whic817jQzdHl4wKI8ZzeLGtmT9Gmv1m?usp=sharing)
+- 2nd Cardiff NLP Summer Workshop Tutorial (solutions): [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1WVqt54dkZIBInzZTXZADNj7vCTnMXimx?usp=sharing)
+
+
 
 Table of Contents:
 1. [***Load Model & Dataset***](https://github.com/cardiffnlp/tweetnlp/tree/add_training#model--dataset)
