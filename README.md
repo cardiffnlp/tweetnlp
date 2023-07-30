@@ -137,7 +137,7 @@ model.irony('If you wanna look like a badass, have drama on social media', retur
 dataset, label2id = tweetnlp.load_dataset('irony')
 ```
 
-- ***Hate Speech Detection***: The hate speech dataset consists of detecting whether a tweet is hateful towards women or immigrants. It is based on a suite of unified hate speech detection datasets.
+- ***Hate Speech Detection***: The hate speech detection task consists of detecting whether a tweet is hateful towards a target community. The underlying model is based on a suite of unified hate speech detection datasets (see [reference paper](https://aclanthology.org/2023.woah-1.25/)).
 
 ```python
 import tweetnlp
