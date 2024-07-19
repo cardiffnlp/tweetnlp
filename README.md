@@ -10,7 +10,7 @@ emoji prediction, and named-entity recognition, powered by state-of-the-art lang
 
 ***News (December 2022):*** We presented a TweetNLP demo paper ("TweetNLP: Cutting-Edge Natural Language Processing for Social Media"), at EMNLP 2022. The final version can be found [here](https://aclanthology.org/2022.emnlp-demos.5/).
 
-*** TweetNLP Hugging Face page *** All the main TweetNLP models can be found [here on Hugging Face](https://huggingface.co/collections/cardiffnlp/tweetnlp-65e6f9ff5a0c4550ef7f1c70).
+***TweetNLP Hugging Face page*** All the main TweetNLP models can be found [here on Hugging Face](https://huggingface.co/collections/cardiffnlp/tweetnlp-65e6f9ff5a0c4550ef7f1c70).
 
 
 Resources:
