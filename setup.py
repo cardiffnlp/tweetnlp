@@ -32,7 +32,8 @@ setup(
         "ray",
         'numpy',
         'urlextract',
-        "transformers<=4.21.2",  # push-to-model is not working for latest version
+        "tokenizers-0.12.1",
+        "transformers>=4.36",  # push-to-model is not working for latest version
         "huggingface-hub<=0.9.1",
         'sentence_transformers',
         'torch',
