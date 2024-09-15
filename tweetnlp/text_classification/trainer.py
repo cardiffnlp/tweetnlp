@@ -10,7 +10,7 @@ from typing import Dict, List
 import torch
 import numpy as np
 from huggingface_hub import create_repo
-from datasets import load_metric
+from datasets import load_dataset
 from datasets.dataset_dict import DatasetDict
 from transformers import TrainingArguments, Trainer
 from ray import tune
