@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 with open('README.md', 'r', encoding="utf-8") as f:
     readme = f.read()
 
-version = '0.4.4'
+version = '0.4.5'
 setup(
     name='tweetnlp',
     packages=find_packages(exclude=["assets", "tests"]),
@@ -34,6 +34,7 @@ setup(
         'urlextract',
         "transformers",
         "huggingface-hub",
+        "evaluate",
         # "transformers<=4.21.2",  # push-to-model is not working for latest version
         # "huggingface-hub<=0.9.1",
         'sentence_transformers',
