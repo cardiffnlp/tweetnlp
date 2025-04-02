@@ -7,10 +7,10 @@ import multiprocessing
 from os.path import join as pj
 from typing import Dict, List
 
+from evaluate import load
 import torch
 import numpy as np
 from huggingface_hub import create_repo
-from datasets import load_metric
 from datasets.dataset_dict import DatasetDict
 from transformers import TrainingArguments, Trainer
 from ray import tune
@@ -88,11 +88,11 @@ class TrainerTextClassification:
 
     def get_metrics(self):
         if self.multi_label:
-            metric_accuracy = load_metric("accuracy", "multilabel")
-            metric_f1 = load_metric("f1", "multilabel")
+            metric_accuracy = load("accuracy", "multilabel")
+            metric_f1 = load("f1", "multilabel")
         else:
-            metric_accuracy = load_metric("accuracy")
-            metric_f1 = load_metric("f1")
+            metric_accuracy = load("accuracy")
+            metric_f1 = load("f1")
 
         def sigmoid(x):
             return 1 / (1 + math.exp(-x))
